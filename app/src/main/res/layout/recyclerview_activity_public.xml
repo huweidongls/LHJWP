@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_marginLeft="32px"
+            android:layout_marginBottom="18px"
+            android:layout_marginTop="16px"
+            android:src="@drawable/y"
+            android:layout_width="126px"
+            android:layout_height="126px" />
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:orientation="vertical"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_toLeftOf="@+id/iv_right"
+            android:layout_toRightOf="@+id/iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_marginTop="28px"
+                android:textColor="#22283B"
+                android:textSize="36px"
+                android:text="某某小区"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_marginTop="12px"
+                android:textColor="#686C7A"
+                android:textSize="28px"
+                android:text="采集时间：10-08 16:33:03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_right"
+            android:layout_marginRight="32px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/right"
+            android:layout_width="20px"
+            android:layout_height="34px" />
+        
+        <View
+            android:layout_alignLeft="@+id/ll"
+            android:layout_below="@+id/iv"
+            android:background="#E6E6E6"
+            android:layout_width="match_parent"
+            android:layout_height="2px"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
