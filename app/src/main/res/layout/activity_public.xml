@@ -20,6 +20,7 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/activity_public_tv_edit"
                 android:layout_centerInParent="true"
                 android:textColor="@color/white_ffffff"
                 android:textSize="32px"
@@ -46,9 +47,23 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:background="#F1F5F6"
+        android:layout_above="@+id/activity_public_tv_delete"
         android:id="@+id/activity_public_rv"
         android:layout_below="@+id/activity_public_rl_top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/activity_public_tv_delete"
+        android:background="#FF3A30"
+        android:gravity="center"
+        android:textColor="@color/white_ffffff"
+        android:textSize="38px"
+        android:layout_alignParentBottom="true"
+        android:text="删除"
+        android:layout_width="match_parent"
+        android:layout_height="110px" />
 
 </RelativeLayout>

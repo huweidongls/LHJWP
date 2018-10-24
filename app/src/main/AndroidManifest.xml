@@ -33,7 +33,8 @@
 
         <activity android:name=".activity.TypeActivity" />
         <activity android:name=".activity.ProfessionalActivity" />
-        <activity android:name=".activity.PublicActivity"></activity>
+        <activity android:name=".activity.PublicActivity" />
+        <activity android:name=".activity.PublicContentActivity"></activity>
     </application>
 
 </manifest>
