@@ -3,6 +3,7 @@ package com.jingna.lhjwp.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.activity.PublicContentActivity;
+import com.jingna.lhjwp.info.PublicInfo;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.ArrayList;
@@ -24,11 +26,11 @@ import java.util.List;
 public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublicRvAdapter.ViewHolder> {
 
     private Context context;
-    private List<String> data;
+    private ArrayList<PublicInfo> data;
     private boolean isEdit = false;
     private List<Integer> editList = new ArrayList<>();
 
-    public ActivityPublicRvAdapter(Context context, List<String> data) {
+    public ActivityPublicRvAdapter(Context context, ArrayList<PublicInfo> data) {
         this.context = context;
         this.data = data;
     }
@@ -76,6 +78,13 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
             holder.ivRight.setVisibility(View.GONE);
             holder.ivEdit.setImageResource(R.drawable.sure_kong);
             editList.clear();
+        }
+
+        holder.tvTitle.setText(data.get(position).getTitle());
+        if(TextUtils.isEmpty(data.get(position).getTime())){
+            holder.tvTime.setText("采集时间: 未采集项目信息");
+        }else {
+            holder.tvTime.setText("采集时间: "+data.get(position).getTime());
         }
 
         holder.rlEdit.setOnClickListener(new View.OnClickListener() {

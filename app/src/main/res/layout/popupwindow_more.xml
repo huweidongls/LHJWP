@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#49484B"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:orientation="horizontal"
+        android:layout_width="242px"
+        android:layout_height="90px">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30px"
+            android:src="@drawable/location_w"
+            android:layout_width="30px"
+            android:layout_height="40px" />
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="26px"
+            android:textSize="32px"
+            android:textColor="@color/white_ffffff"
+            android:text="照片地图"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_gravity="center_horizontal"
+        android:background="#555457"
+        android:layout_width="202px"
+        android:layout_height="2px"/>
+
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:orientation="horizontal"
+        android:layout_width="242px"
+        android:layout_height="90px">
+
+        <ImageView
+            android:src="@drawable/edit"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="24px"
+            android:layout_width="42px"
+            android:layout_height="40px" />
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20px"
+            android:textColor="@color/white_ffffff"
+            android:textSize="32px"
+            android:text="编辑"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>

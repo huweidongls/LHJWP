@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,9 @@ import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.ActivityPublicRvAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.dialog.AddDialog;
-import com.vise.utils.view.DialogUtil;
+import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.SpUtils;
+import com.vise.xsnow.cache.SpCache;
 import com.vise.xsnow.permission.OnPermissionCallback;
 import com.vise.xsnow.permission.PermissionManager;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -26,6 +29,8 @@ import butterknife.OnClick;
 
 public class PublicActivity extends BaseActivity {
 
+    private Context context = PublicActivity.this;
+
     @BindView(R.id.activity_public_rv)
     RecyclerView recyclerView;
     @BindView(R.id.activity_public_tv_delete)
@@ -34,7 +39,7 @@ public class PublicActivity extends BaseActivity {
     TextView tvEdit;
 
     private ActivityPublicRvAdapter adapter;
-    private List<String> mList = new ArrayList<>();
+    private ArrayList<PublicInfo> mList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,6 @@ public class PublicActivity extends BaseActivity {
 
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(PublicActivity.this);
-
         PermissionManager.instance().request(this, new OnPermissionCallback() {
             @Override
             public void onRequestAllow(String permissionName) {
@@ -71,9 +75,9 @@ public class PublicActivity extends BaseActivity {
 
     private void initData() {
 
-        mList.add("");
-        mList.add("");
-        mList.add("");
+//        if(SpUtils.getPublicInfo(context)!=null){
+            Log.e("123123", SpUtils.getPublicInfo(context)+"");
+//        }
         LinearLayoutManager manager = new LinearLayoutManager(PublicActivity.this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
@@ -100,7 +104,10 @@ public class PublicActivity extends BaseActivity {
                 AddDialog addDialog = new AddDialog(PublicActivity.this, new AddDialog.OnOkReturnListener() {
                     @Override
                     public void onReturn(String title) {
-
+                        mList.add(new PublicInfo(title));
+                        adapter.notifyDataSetChanged();
+                        Log.e("123123", mList.toString());
+                        SpUtils.setPublicInfo(context, mList);
                     }
                 });
                 addDialog.show();

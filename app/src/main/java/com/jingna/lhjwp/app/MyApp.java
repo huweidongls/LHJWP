@@ -3,6 +3,7 @@ package com.jingna.lhjwp.app;
 import android.app.Activity;
 import android.app.Application;
 
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.LinkedList;
@@ -31,6 +32,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         ScreenAdapterTools.init(this);
+        ZXingLibrary.initDisplayOpinion(this);
     }
 
     // add Activity

@@ -28,6 +28,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/activity_public_content_rl_more"
             android:layout_alignParentRight="true"
             android:layout_width="100px"
             android:layout_height="match_parent">

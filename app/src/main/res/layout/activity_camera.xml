@@ -36,18 +36,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!--<com.camerakit.CameraKitView-->
-        <!--android:layout_above="@+id/activity_camera_rl_bottom"-->
-        <!--android:layout_below="@+id/activity_camera_rl_top"-->
-        <!--android:id="@+id/camera"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:adjustViewBounds="true"-->
-        <!--android:keepScreenOn="true"-->
-        <!--app:camera_facing="back"-->
-        <!--app:camera_flash="auto"-->
-        <!--app:camera_focus="continuous"-->
-        <!--app:camera_permissions="camera" />-->
+    <LinearLayout
+        android:id="@+id/ll_info"
+        android:background="#91ffffff"
+        android:layout_marginBottom="20px"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/activity_camera_rl_bottom"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginTop="20px"
+            android:textColor="@color/black_333333"
+            android:textSize="28px"
+            android:text="地址：哈尔滨市南岗区汉广街"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginBottom="20px"
+            android:layout_marginTop="12px"
+            android:textColor="@color/black_333333"
+            android:textSize="28px"
+            android:text="经纬度：126，45"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/activity_camera_rl_bottom"
@@ -55,7 +75,7 @@
         android:layout_height="246px"
         android:layout_alignParentBottom="true"
         android:background="#010101">
-        
+
         <ImageView
             android:id="@+id/result"
             android:layout_width="200px"
@@ -68,13 +88,21 @@
             android:layout_centerInParent="true"
             android:src="@drawable/take_pic" />
 
-        <ImageView
-            android:layout_width="86px"
-            android:layout_height="20px"
+        <RelativeLayout
+            android:id="@+id/rl_more"
+            android:layout_marginRight="40px"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="40px"
-            android:src="@drawable/more" />
+            android:layout_width="86px"
+            android:layout_height="86px">
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_width="86px"
+                android:layout_height="20px"
+                android:src="@drawable/more" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
