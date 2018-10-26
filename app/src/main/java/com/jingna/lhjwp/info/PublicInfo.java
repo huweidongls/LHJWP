@@ -1,12 +1,13 @@
 package com.jingna.lhjwp.info;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2018/10/26.
  */
 
-public class PublicInfo {
+public class PublicInfo implements Serializable {
 
     String title;
     String time;
@@ -40,7 +41,7 @@ public class PublicInfo {
         this.picList = picList;
     }
 
-    class PicInfo{
+    class PicInfo implements Serializable{
         String picPath;
         String picLocation;
         String picAddress;

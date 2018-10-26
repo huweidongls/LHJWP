@@ -15,13 +15,11 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.dialog.AddDialog;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
-import com.vise.xsnow.cache.SpCache;
 import com.vise.xsnow.permission.OnPermissionCallback;
 import com.vise.xsnow.permission.PermissionManager;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,9 +73,7 @@ public class PublicActivity extends BaseActivity {
 
     private void initData() {
 
-//        if(SpUtils.getPublicInfo(context)!=null){
-            Log.e("123123", SpUtils.getPublicInfo(context)+"");
-//        }
+        mList.addAll(SpUtils.getPublicInfo(context));
         LinearLayoutManager manager = new LinearLayoutManager(PublicActivity.this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
@@ -114,6 +110,14 @@ public class PublicActivity extends BaseActivity {
                 break;
             case R.id.activity_public_tv_delete:
                 Log.e("123123", adapter.getEditList().toString());
+                for (int i = 0; i<adapter.getEditList().size(); i++){
+                    mList.remove((int)adapter.getEditList().get(i));
+                }
+                adapter.notifyDataSetChanged();
+                adapter.setEdit(false);
+                tvEdit.setText("编辑");
+                tvDelete.setVisibility(View.GONE);
+                SpUtils.setPublicInfo(context, mList);
                 break;
         }
     }
