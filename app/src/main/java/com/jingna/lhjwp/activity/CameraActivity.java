@@ -19,18 +19,33 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.google.gson.Gson;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.BitmapUtils;
+import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.vise.xsnow.http.ViseHttp;
+import com.vise.xsnow.http.callback.ACallback;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +74,10 @@ public class CameraActivity extends BaseActivity {
     RelativeLayout rlBottom;
     @BindView(R.id.ll_info)
     LinearLayout llInfo;
+    @BindView(R.id.tv_address)
+    TextView tvAddress;
+    @BindView(R.id.tv_lat)
+    TextView tvLat;
 
     Fotoapparat fotoapparat;
 
@@ -66,11 +85,19 @@ public class CameraActivity extends BaseActivity {
 
     private Dialog dialog;
 
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = new MyLocationListener();
+    private double latitude;
+    private double longitude;
+    private String address = "";
+
+    private int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-
+        position = getIntent().getIntExtra("position", 0);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(CameraActivity.this);
         init();
@@ -100,6 +127,7 @@ public class CameraActivity extends BaseActivity {
 //                        fileLogger(this)    // ... and to file
 //                ))
                 .build();
+        startLocate();
 
     }
 
@@ -183,6 +211,10 @@ public class CameraActivity extends BaseActivity {
                             bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                             fos.flush();
                             fos.close();
+                            ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                            list.get(position).setTime(DateUtils.stampToDateSecond(System.currentTimeMillis()+""));
+                            list.get(position).getPicList().add(new PublicInfo.PicInfo(someFile.getPath(), latitude, longitude, address, DateUtils.stampToDateSecond(System.currentTimeMillis()+"")));
+                            SpUtils.setPublicInfo(context, list);
                             Intent intent = new Intent();
                             intent.putExtra("path", someFile.getPath());
                             intent.setClass(context, PublicShowPicActivity.class);
@@ -209,6 +241,43 @@ public class CameraActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         fotoapparat.stop();
+    }
+
+    /**
+     * 定位
+     */
+    private void startLocate() {
+        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+        mLocationClient.registerLocationListener(myListener);    //注册监听函数
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        int span = 1000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+        //开启定位
+        mLocationClient.start();
+    }
+
+    private class MyLocationListener implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            address = location.getAddrStr();
+            tvAddress.setText("地址: "+location.getAddrStr());
+            tvLat.setText("经纬度: "+latitude+","+longitude);
+        }
     }
 
 }

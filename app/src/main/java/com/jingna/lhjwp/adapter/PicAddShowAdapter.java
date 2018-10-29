@@ -7,11 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.info.PublicInfo;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +24,9 @@ import java.util.List;
 public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.ViewHolder> {
 
     private Context context;
-    private List<String> data;
+    private List<PublicInfo.PicInfo> data;
+    private boolean isEdit = false;
+    private List<Integer> editList = new ArrayList<>();
 
     private static final int TYPE_ADD = 1;
     private static final int TYPE_PIC = 2;
@@ -33,8 +38,22 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
         this.addListener = addListener;
     }
 
-    public PicAddShowAdapter(List<String> data) {
+    public PicAddShowAdapter(List<PublicInfo.PicInfo> data) {
         this.data = data;
+    }
+
+    public void setEdit(boolean isEdit){
+        this.isEdit = isEdit;
+        editList.clear();
+        notifyDataSetChanged();
+    }
+
+    public boolean getEdit(){
+        return isEdit;
+    }
+
+    public List<Integer> getEditList(){
+        return editList;
     }
 
     @Override
@@ -58,14 +77,38 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
         if (getItemViewType(position) == TYPE_ADD) {
             holder.rlImg.setVisibility(View.GONE);
         } else {
+            if(isEdit){
+                holder.ivSure.setVisibility(View.VISIBLE);
+                holder.ivSure.setImageResource(R.drawable.sure_kong);
+            }else {
+                holder.ivSure.setVisibility(View.GONE);
+            }
             holder.rlAdd.setVisibility(View.GONE);
             holder.rlImg.setVisibility(View.VISIBLE);
-            Glide.with(context).load("file://" + data.get(position)).into(holder.iv);
+            Glide.with(context).load("file://" + data.get(position).getPicPath()).into(holder.iv);
+            holder.tvTime.setText(data.get(position).getPicTime());
         }
         holder.rlAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addListener.onAddImg();
+            }
+        });
+        holder.ivSure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean is = false;
+                for (int i = 0; i<editList.size(); i++){
+                    if(editList.get(i) == position){
+                        holder.ivSure.setImageResource(R.drawable.sure_kong);
+                        editList.remove(i);
+                        is = true;
+                    }
+                }
+                if(!is){
+                    holder.ivSure.setImageResource(R.drawable.sure);
+                    editList.add(position);
+                }
             }
         });
     }
@@ -89,12 +132,16 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
         private RelativeLayout rlAdd;
         private RelativeLayout rlImg;
         private ImageView iv;
+        private TextView tvTime;
+        private ImageView ivSure;
 
         public ViewHolder(View itemView) {
             super(itemView);
             rlAdd = itemView.findViewById(R.id.activity_create_intercalation_rv_rl_add);
             rlImg = itemView.findViewById(R.id.activity_create_intercalation_rv_rl_img);
             iv = itemView.findViewById(R.id.activity_create_intercalation_rv_iv_img);
+            tvTime = itemView.findViewById(R.id.tv_time);
+            ivSure = itemView.findViewById(R.id.iv_sure);
         }
     }
 

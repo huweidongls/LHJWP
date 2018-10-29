@@ -30,12 +30,10 @@ public class TypeActivity extends BaseActivity {
             case R.id.btn1:
                 intent.setClass(TypeActivity.this, PublicActivity.class);
                 startActivity(intent);
-                finish();
                 break;
             case R.id.btn2:
                 intent.setClass(TypeActivity.this, ProfessionalActivity.class);
                 startActivity(intent);
-                finish();
                 break;
         }
     }

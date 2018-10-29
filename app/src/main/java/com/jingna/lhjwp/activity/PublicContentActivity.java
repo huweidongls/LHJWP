@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.activity;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,20 +9,26 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,29 +38,46 @@ import butterknife.OnClick;
 
 public class PublicContentActivity extends BaseActivity {
 
+    private Context context = PublicContentActivity.this;
+
     @BindView(R.id.activity_public_content_rv_pic)
     RecyclerView recyclerView;
     @BindView(R.id.activity_public_content_rl_top)
     RelativeLayout rlTop;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.tv_cancel)
+    TextView tvCancel;
+    @BindView(R.id.activity_public_content_tv_bottom)
+    TextView tvBottom;
 
     private PicAddShowAdapter adapter;
-    private List<String> mList = new ArrayList<>();
+    private ArrayList<PublicInfo.PicInfo> mList = new ArrayList<>();
 
     private PopupWindow popupWindow;
+
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_content);
-
+        position = getIntent().getIntExtra("position", 0);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(PublicContentActivity.this);
-        initData();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initData();
     }
 
     private void initData() {
 
+        mList.clear();
+        mList.addAll(SpUtils.getPublicInfo(context).get(position).getPicList());
         GridLayoutManager manager = new GridLayoutManager(PublicContentActivity.this, 3);
         recyclerView.setLayoutManager(manager);
         adapter = new PicAddShowAdapter(mList);
@@ -62,6 +86,7 @@ public class PublicContentActivity extends BaseActivity {
             @Override
             public void onAddImg() {
                 Intent intent = new Intent();
+                intent.putExtra("position", position);
                 intent.setClass(PublicContentActivity.this, CameraActivity.class);
                 startActivity(intent);
             }
@@ -69,14 +94,41 @@ public class PublicContentActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.activity_public_content_rl_back, R.id.activity_public_content_rl_more})
+    @OnClick({R.id.activity_public_content_rl_back, R.id.activity_public_content_rl_more, R.id.activity_public_content_tv_bottom})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.activity_public_content_rl_back:
-                finish();
+                if(adapter.getEdit()){
+                    adapter.setEdit(false);
+                    ivBack.setVisibility(View.VISIBLE);
+                    tvCancel.setVisibility(View.GONE);
+                    tvBottom.setText("发送");
+                    tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+                }else {
+                    finish();
+                }
                 break;
             case R.id.activity_public_content_rl_more:
                 initMorePop();
+                break;
+            case R.id.activity_public_content_tv_bottom:
+                ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                List<Integer> editList = adapter.getEditList();
+//                Log.e("121212", mList.size()+"--"+editList.size());
+                for (int i = 0; i<editList.size(); i++){
+                    int num = editList.get(i);
+                    File file = new File(mList.get(num).getPicPath());
+                    file.delete();
+                    mList.remove(num);
+                    list.get(position).getPicList().remove(num);
+                }
+                adapter.setEdit(false);
+                adapter.notifyDataSetChanged();
+                SpUtils.setPublicInfo(context, list);
+                ivBack.setVisibility(View.VISIBLE);
+                tvCancel.setVisibility(View.GONE);
+                tvBottom.setText("发送");
+                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 break;
         }
     }
@@ -93,15 +145,24 @@ public class PublicContentActivity extends BaseActivity {
         ll1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent.setClass(PublicContentActivity.this, PublicPicLocationActivity.class);
-                startActivity(intent);
+                if (mList.size()>0){
+                    intent.putExtra("position", position);
+                    intent.setClass(PublicContentActivity.this, PublicPicLocationActivity.class);
+                    startActivity(intent);
+                }else {
+                    ToastUtil.showShort(context, "暂无图片信息");
+                }
                 popupWindow.dismiss();
             }
         });
         ll2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.showShort(PublicContentActivity.this, "编辑");
+                adapter.setEdit(true);
+                ivBack.setVisibility(View.GONE);
+                tvCancel.setVisibility(View.VISIBLE);
+                tvBottom.setText("删除");
+                tvBottom.setBackgroundColor(Color.parseColor("#FF3A30"));
                 popupWindow.dismiss();
             }
         });
@@ -133,4 +194,16 @@ public class PublicContentActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if(adapter.getEdit()){
+            adapter.setEdit(false);
+            ivBack.setVisibility(View.VISIBLE);
+            tvCancel.setVisibility(View.GONE);
+            tvBottom.setText("发送");
+            tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+        }else {
+            finish();
+        }
+    }
 }

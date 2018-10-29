@@ -37,6 +37,7 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
 
     public void setEdit(boolean isEdit){
         this.isEdit = isEdit;
+        editList.clear();
         notifyDataSetChanged();
     }
 
@@ -110,6 +111,7 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
             public void onClick(View v) {
                 if(getItemViewType(position) == 0){
                     Intent intent = new Intent();
+                    intent.putExtra("position", position);
                     intent.setClass(context, PublicContentActivity.class);
                     context.startActivity(intent);
                 }

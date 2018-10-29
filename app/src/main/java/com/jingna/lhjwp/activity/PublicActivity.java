@@ -100,7 +100,7 @@ public class PublicActivity extends BaseActivity {
                 AddDialog addDialog = new AddDialog(PublicActivity.this, new AddDialog.OnOkReturnListener() {
                     @Override
                     public void onReturn(String title) {
-                        mList.add(new PublicInfo(title));
+                        mList.add(0, new PublicInfo(title, "", new ArrayList<PublicInfo.PicInfo>()));
                         adapter.notifyDataSetChanged();
                         Log.e("123123", mList.toString());
                         SpUtils.setPublicInfo(context, mList);
@@ -111,7 +111,9 @@ public class PublicActivity extends BaseActivity {
             case R.id.activity_public_tv_delete:
                 Log.e("123123", adapter.getEditList().toString());
                 for (int i = 0; i<adapter.getEditList().size(); i++){
-                    mList.remove((int)adapter.getEditList().get(i));
+                    int num = adapter.getEditList().get(i);
+                    Log.e("123123", num+"");
+                    mList.remove(num);
                 }
                 adapter.notifyDataSetChanged();
                 adapter.setEdit(false);

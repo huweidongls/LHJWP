@@ -13,8 +13,10 @@ public class PublicInfo implements Serializable {
     String time;
     List<PicInfo> picList;
 
-    public PublicInfo(String title) {
+    public PublicInfo(String title, String time, List<PicInfo> picList) {
         this.title = title;
+        this.time = time;
+        this.picList = picList;
     }
 
     public String getTitle() {
@@ -41,11 +43,20 @@ public class PublicInfo implements Serializable {
         this.picList = picList;
     }
 
-    class PicInfo implements Serializable{
+    public static class PicInfo implements Serializable{
         String picPath;
-        String picLocation;
+        double picLatitude;
+        double picLongitude;
         String picAddress;
         String picTime;
+
+        public PicInfo(String picPath, double picLatitude, double picLongitude, String picAddress, String picTime) {
+            this.picPath = picPath;
+            this.picLatitude = picLatitude;
+            this.picLongitude = picLongitude;
+            this.picAddress = picAddress;
+            this.picTime = picTime;
+        }
 
         public String getPicPath() {
             return picPath;
@@ -55,12 +66,20 @@ public class PublicInfo implements Serializable {
             this.picPath = picPath;
         }
 
-        public String getPicLocation() {
-            return picLocation;
+        public double getPicLatitude() {
+            return picLatitude;
         }
 
-        public void setPicLocation(String picLocation) {
-            this.picLocation = picLocation;
+        public void setPicLatitude(double picLatitude) {
+            this.picLatitude = picLatitude;
+        }
+
+        public double getPicLongitude() {
+            return picLongitude;
+        }
+
+        public void setPicLongitude(double picLongitude) {
+            this.picLongitude = picLongitude;
         }
 
         public String getPicAddress() {

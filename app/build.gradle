@@ -16,6 +16,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+            //说明so的路径为该libs路径，关联所有地图SDK的so文件
+        }
+    }
     configurations.all {
 
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
@@ -52,4 +58,6 @@ dependencies {
     implementation 'me.yatoooon:screenadaptation:1.1.1'
     compile 'io.fotoapparat.fotoapparat:library:1.0.2'
     compile 'cn.yipianfengye.android:zxing-library:2.2'
+    implementation files('libs/BaiduLBS_Android.jar')
+    compile 'com.chenlittleping:recyclercoverflow:1.0.6'
 }

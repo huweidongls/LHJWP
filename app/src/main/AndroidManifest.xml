@@ -25,7 +25,6 @@
       
     <uses-feature android:name="android.hardware.camera" />
     <!-- 调用前置摄像头功能 -->
-      
     <uses-feature android:name="android.hardware.camera.front" />
 
     <application
@@ -64,6 +63,16 @@
         <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.PublicPicLocationActivity" />
         <activity android:name=".activity.PublicShowPicActivity"></activity>
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="4XAoZGsoWUHXUx7gPvCGAMGUm6jPF1z7" />
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+
     </application>
 
 </manifest>
