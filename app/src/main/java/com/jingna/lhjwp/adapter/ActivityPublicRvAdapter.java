@@ -112,6 +112,7 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
                 if(getItemViewType(position) == 0){
                     Intent intent = new Intent();
                     intent.putExtra("position", position);
+                    intent.putExtra("title", data.get(position).getTitle());
                     intent.setClass(context, PublicContentActivity.class);
                     context.startActivity(intent);
                 }

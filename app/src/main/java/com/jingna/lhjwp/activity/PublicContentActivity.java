@@ -24,12 +24,14 @@ import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.ShareUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,6 +52,8 @@ public class PublicContentActivity extends BaseActivity {
     TextView tvCancel;
     @BindView(R.id.activity_public_content_tv_bottom)
     TextView tvBottom;
+    @BindView(R.id.activity_public_content_tv_top)
+    TextView tvTop;
 
     private PicAddShowAdapter adapter;
     private ArrayList<PublicInfo.PicInfo> mList = new ArrayList<>();
@@ -57,12 +61,14 @@ public class PublicContentActivity extends BaseActivity {
     private PopupWindow popupWindow;
 
     private int position;
+    private String title = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_content);
         position = getIntent().getIntExtra("position", 0);
+        title = getIntent().getStringExtra("title");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(PublicContentActivity.this);
 
@@ -76,6 +82,7 @@ public class PublicContentActivity extends BaseActivity {
 
     private void initData() {
 
+        tvTop.setText(title);
         mList.clear();
         mList.addAll(SpUtils.getPublicInfo(context).get(position).getPicList());
         GridLayoutManager manager = new GridLayoutManager(PublicContentActivity.this, 3);
@@ -87,6 +94,7 @@ public class PublicContentActivity extends BaseActivity {
             public void onAddImg() {
                 Intent intent = new Intent();
                 intent.putExtra("position", position);
+                intent.putExtra("title", title);
                 intent.setClass(PublicContentActivity.this, CameraActivity.class);
                 startActivity(intent);
             }
@@ -112,23 +120,33 @@ public class PublicContentActivity extends BaseActivity {
                 initMorePop();
                 break;
             case R.id.activity_public_content_tv_bottom:
-                ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
-                List<Integer> editList = adapter.getEditList();
+                if(adapter.getEdit()){
+                    ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                    List<Integer> editList = adapter.getEditList();
+                    Collections.sort(editList);
+                    Collections.reverse(editList);
 //                Log.e("121212", mList.size()+"--"+editList.size());
-                for (int i = 0; i<editList.size(); i++){
-                    int num = editList.get(i);
-                    File file = new File(mList.get(num).getPicPath());
-                    file.delete();
-                    mList.remove(num);
-                    list.get(position).getPicList().remove(num);
+                    for (int i = 0; i<editList.size(); i++){
+                        int num = editList.get(i);
+                        File file = new File(mList.get(num).getPicPath());
+                        file.delete();
+                        mList.remove(num);
+                        list.get(position).getPicList().remove(num);
+                    }
+                    adapter.setEdit(false);
+                    adapter.notifyDataSetChanged();
+                    SpUtils.setPublicInfo(context, list);
+                    ivBack.setVisibility(View.VISIBLE);
+                    tvCancel.setVisibility(View.GONE);
+                    tvBottom.setText("发送");
+                    tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+                }else {
+                    List<File> fileList = new ArrayList<>();
+                    for (int i = 0; i<mList.size(); i++){
+                        fileList.add(new File(mList.get(i).getPicPath()));
+                    }
+                    ShareUtils.startShare(0, "测试", fileList, context);
                 }
-                adapter.setEdit(false);
-                adapter.notifyDataSetChanged();
-                SpUtils.setPublicInfo(context, list);
-                ivBack.setVisibility(View.VISIBLE);
-                tvCancel.setVisibility(View.GONE);
-                tvBottom.setText("发送");
-                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 break;
         }
     }
@@ -147,6 +165,7 @@ public class PublicContentActivity extends BaseActivity {
             public void onClick(View v) {
                 if (mList.size()>0){
                     intent.putExtra("position", position);
+                    intent.putExtra("title", title);
                     intent.setClass(PublicContentActivity.this, PublicPicLocationActivity.class);
                     startActivity(intent);
                 }else {

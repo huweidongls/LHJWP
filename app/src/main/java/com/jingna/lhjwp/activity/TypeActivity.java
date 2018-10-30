@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.imagepreview.StatusBarUtils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import butterknife.ButterKnife;
@@ -17,7 +18,7 @@ public class TypeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type);
-
+        StatusBarUtils.setStatusBarTransparent(TypeActivity.this);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(TypeActivity.this);
 
@@ -32,7 +33,7 @@ public class TypeActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.btn2:
-                intent.setClass(TypeActivity.this, ProfessionalActivity.class);
+                intent.setClass(TypeActivity.this, ProfessionalLoginActivity.class);
                 startActivity(intent);
                 break;
         }

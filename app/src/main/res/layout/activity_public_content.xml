@@ -11,7 +11,7 @@
         style="@style/rl_top_bar">
 
         <TextView
-            android:text="某某小区"
+            android:id="@+id/activity_public_content_tv_top"
             style="@style/tv_top_title" />
         
         <RelativeLayout

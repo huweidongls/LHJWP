@@ -20,6 +20,8 @@ import com.vise.xsnow.permission.PermissionManager;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,9 +111,12 @@ public class PublicActivity extends BaseActivity {
                 addDialog.show();
                 break;
             case R.id.activity_public_tv_delete:
-                Log.e("123123", adapter.getEditList().toString());
-                for (int i = 0; i<adapter.getEditList().size(); i++){
-                    int num = adapter.getEditList().get(i);
+                List<Integer> editList = adapter.getEditList();
+                Collections.sort(editList);
+                Collections.reverse(editList);
+                Log.e("123123", editList.toString());
+                for (int i = 0; i<editList.size(); i++){
+                    int num = editList.get(i);
                     Log.e("123123", num+"");
                     mList.remove(num);
                 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.imagepreview.StatusBarUtils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.Timer;
@@ -16,7 +17,7 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
+        StatusBarUtils.setStatusBarTransparent(WelcomeActivity.this);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
 
         init();

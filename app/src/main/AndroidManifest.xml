@@ -62,7 +62,7 @@
         <activity android:name=".activity.PublicContentActivity" />
         <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.PublicPicLocationActivity" />
-        <activity android:name=".activity.PublicShowPicActivity"></activity>
+        <activity android:name=".activity.PublicShowPicActivity" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -73,6 +73,23 @@
             android:enabled="true"
             android:process=":remote" />
 
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.jingna.lhjwp"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity android:name=".imagepreview.ImagePreviewActivity" />
+        <activity android:name=".activity.ProfessionalLoginActivity" />
+        <activity android:name=".activity.RukuListActivity"></activity>
     </application>
 
 </manifest>

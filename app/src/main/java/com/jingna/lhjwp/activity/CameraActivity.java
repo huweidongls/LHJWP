@@ -78,6 +78,8 @@ public class CameraActivity extends BaseActivity {
     TextView tvAddress;
     @BindView(R.id.tv_lat)
     TextView tvLat;
+    @BindView(R.id.activity_camera_tv_top)
+    TextView tvTop;
 
     Fotoapparat fotoapparat;
 
@@ -92,12 +94,14 @@ public class CameraActivity extends BaseActivity {
     private String address = "";
 
     private int position;
+    private String title = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         position = getIntent().getIntExtra("position", 0);
+        title = getIntent().getStringExtra("title");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(CameraActivity.this);
         init();
@@ -106,6 +110,7 @@ public class CameraActivity extends BaseActivity {
 
     private void init() {
 
+        tvTop.setText(title);
         fotoapparat = Fotoapparat
                 .with(context)
                 .into(cameraView)           // view which will draw the camera preview
@@ -217,6 +222,8 @@ public class CameraActivity extends BaseActivity {
                             SpUtils.setPublicInfo(context, list);
                             Intent intent = new Intent();
                             intent.putExtra("path", someFile.getPath());
+                            intent.putExtra("position", position);
+                            intent.putExtra("title", title);
                             intent.setClass(context, PublicShowPicActivity.class);
                             startActivity(intent);
                             WeiboDialogUtils.closeDialog(dialog);

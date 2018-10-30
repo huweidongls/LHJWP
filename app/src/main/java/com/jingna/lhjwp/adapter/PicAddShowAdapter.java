@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.imagepreview.Consts;
+import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
@@ -76,6 +79,7 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
         }
         if (getItemViewType(position) == TYPE_ADD) {
             holder.rlImg.setVisibility(View.GONE);
+//            holder.rlAdd.setVisibility(View.VISIBLE);
         } else {
             if(isEdit){
                 holder.ivSure.setVisibility(View.VISIBLE);
@@ -109,6 +113,22 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
                     holder.ivSure.setImageResource(R.drawable.sure);
                     editList.add(position);
                 }
+            }
+        });
+        holder.iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> urlList = new ArrayList<>();
+                for (int i = 0; i<data.size(); i++){
+                    urlList.add("file://"+data.get(i).getPicPath());
+                }
+                Intent intent = new Intent(context, ImagePreviewActivity.class);
+                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
+                intent.putExtra(Consts.START_ITEM_POSITION, position);
+                intent.putExtra(Consts.START_IAMGE_POSITION, position);
+//                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
+                context.startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
             }
         });
     }

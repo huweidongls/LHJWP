@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -39,11 +40,14 @@ public class PublicPicLocationActivity extends BaseActivity {
     MapView mMapView;
     @BindView(R.id.activity_public_pic_location_rv)
     RecyclerCoverFlow recyclerCoverFlow;
+    @BindView(R.id.activity_public_pic_location_tv_top)
+    TextView tvTop;
 
     private ActivityPublicLocationAdapter adapter;
     private ArrayList<PublicInfo.PicInfo> mList = new ArrayList<>();
 
     private int position;
+    private String title = "";
 
     private BaiduMap mBaiduMap;
 
@@ -52,6 +56,7 @@ public class PublicPicLocationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_pic_location);
         position = getIntent().getIntExtra("position", 0);
+        title = getIntent().getStringExtra("title");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(PublicPicLocationActivity.this);
         mBaiduMap = mMapView.getMap();
@@ -61,6 +66,7 @@ public class PublicPicLocationActivity extends BaseActivity {
 
     private void initData() {
 
+        tvTop.setText(title);
         mList.addAll(SpUtils.getPublicInfo(context).get(position).getPicList());
         adapter = new ActivityPublicLocationAdapter(context, mList);
 //        recyclerCoverFlow.setFlatFlow(true);//平面滚动

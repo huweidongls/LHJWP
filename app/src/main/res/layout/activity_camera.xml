@@ -11,8 +11,8 @@
         style="@style/rl_top_bar">
 
         <TextView
-            style="@style/tv_top_title"
-            android:text="某某小区" />
+            android:id="@+id/activity_camera_tv_top"
+            style="@style/tv_top_title" />
 
         <RelativeLayout
             android:id="@+id/activity_camera_rl_back"
