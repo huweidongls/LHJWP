@@ -21,21 +21,15 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.PublicInfo;
-import com.jingna.lhjwp.utils.ShareUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
-import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.vise.xsnow.http.ViseHttp;
 import com.vise.xsnow.http.callback.ACallback;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,9 +52,9 @@ import top.zibin.luban.CompressionPredicate;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
-public class PublicContentActivity extends BaseActivity {
+public class ProContentActivity extends BaseActivity {
 
-    private Context context = PublicContentActivity.this;
+    private Context context = ProContentActivity.this;
 
     @BindView(R.id.activity_public_content_rv_pic)
     RecyclerView recyclerView;
@@ -80,17 +74,13 @@ public class PublicContentActivity extends BaseActivity {
 
     private PopupWindow popupWindow;
 
-    private int position;
-    private String title = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_content);
-        position = getIntent().getIntExtra("position", 0);
-        title = getIntent().getStringExtra("title");
+        setContentView(R.layout.activity_pro_show_pic);
+
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
-        ButterKnife.bind(PublicContentActivity.this);
+        ButterKnife.bind(ProContentActivity.this);
 
     }
 
@@ -102,10 +92,8 @@ public class PublicContentActivity extends BaseActivity {
 
     private void initData() {
 
-        tvTop.setText(title);
         mList.clear();
-        mList.addAll(SpUtils.getPublicInfo(context).get(position).getPicList());
-        GridLayoutManager manager = new GridLayoutManager(PublicContentActivity.this, 3);
+        GridLayoutManager manager = new GridLayoutManager(context, 3);
         recyclerView.setLayoutManager(manager);
         adapter = new PicAddShowAdapter(mList);
         recyclerView.setAdapter(adapter);
@@ -113,9 +101,7 @@ public class PublicContentActivity extends BaseActivity {
             @Override
             public void onAddImg() {
                 Intent intent = new Intent();
-                intent.putExtra("position", position);
-                intent.putExtra("title", title);
-                intent.setClass(PublicContentActivity.this, CameraActivity.class);
+                intent.setClass(context, CameraActivity.class);
                 startActivity(intent);
             }
         });
@@ -147,11 +133,11 @@ public class PublicContentActivity extends BaseActivity {
                     Collections.reverse(editList);
 //                Log.e("121212", mList.size()+"--"+editList.size());
                     for (int i = 0; i<editList.size(); i++){
-                        int num = editList.get(i);
-                        File file = new File(mList.get(num).getPicPath());
-                        file.delete();
-                        mList.remove(num);
-                        list.get(position).getPicList().remove(num);
+//                        int num = editList.get(i);
+//                        File file = new File(mList.get(num).getPicPath());
+//                        file.delete();
+//                        mList.remove(num);
+//                        list.get(position).getPicList().remove(num);
                     }
                     adapter.setEdit(false);
                     adapter.notifyDataSetChanged();
@@ -161,51 +147,17 @@ public class PublicContentActivity extends BaseActivity {
                     tvBottom.setText("发送");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 }else {
-//                    List<File> fileList = new ArrayList<>();
-//                    for (int i = 0; i<mList.size(); i++){
-//                        fileList.add(new File(mList.get(i).getPicPath()));
-//                    }
-//                    ShareUtils.startShare(0, "测试", fileList, context);
                     ToastUtil.showShort(context, "上传");
                     uploadPic();
-//                    test();
                 }
                 break;
         }
-    }
-
-    private void test() {
-
-        String url = "/tzapp/phone/getVersion.action?device_type=1";
-        ViseHttp.GET(url)
-                .request(new ACallback<String>() {
-                    @Override
-                    public void onSuccess(String data) {
-                        Log.e("123123", data);
-                    }
-
-                    @Override
-                    public void onFail(int errCode, String errMsg) {
-                        Log.e("123123", errMsg);
-                    }
-                });
-
     }
 
     /**
      * 上传图片
      */
     private void uploadPic() {
-
-//        List<File> listFile = new ArrayList<>();
-//        for (int i = 0; i<mList.size(); i++){
-//            listFile.add(new File(mList.get(i).getPicPath()));
-//        }
-//        Map<String, File> fileMap = new LinkedHashMap<>();
-//        for (int i = 0; i < listFile.size(); i++) {
-//            fileMap.put("file" + i, listFile.get(i));
-//        }
-
 
         Observable<Map<String, File>> observable = Observable.create(new ObservableOnSubscribe<Map<String, File>>() {
             @Override
@@ -302,7 +254,7 @@ public class PublicContentActivity extends BaseActivity {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void initMorePop() {
 
-        View view = LayoutInflater.from(PublicContentActivity.this).inflate(R.layout.popupwindow_more, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.popupwindow_more, null);
         ScreenAdapterTools.getInstance().loadView(view);
 
         final Intent intent = new Intent();
@@ -312,9 +264,9 @@ public class PublicContentActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mList.size()>0){
-                    intent.putExtra("position", position);
-                    intent.putExtra("title", title);
-                    intent.setClass(PublicContentActivity.this, PublicPicLocationActivity.class);
+//                    intent.putExtra("position", position);
+//                    intent.putExtra("title", title);
+                    intent.setClass(context, PublicPicLocationActivity.class);
                     startActivity(intent);
                 }else {
                     ToastUtil.showShort(context, "暂无图片信息");
@@ -361,16 +313,4 @@ public class PublicContentActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if(adapter.getEdit()){
-            adapter.setEdit(false);
-            ivBack.setVisibility(View.VISIBLE);
-            tvCancel.setVisibility(View.GONE);
-            tvBottom.setText("发送");
-            tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
-        }else {
-            finish();
-        }
-    }
 }

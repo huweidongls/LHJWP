@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jingna.lhjwp.activity.VersionActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        style="@style/rl_top_bar">
+
+        <TextView
+            android:text="系统版本"
+            style="@style/tv_top_title" />
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="100px"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:src="@drawable/back_w"
+                android:layout_width="20px"
+                android:layout_height="34px" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginTop="80px"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/rl_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:textSize="32px"
+            android:textColor="@color/black_333333"
+            android:text="当前版本："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black_333333"
+            android:textSize="30px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_marginBottom="50px"
+        android:textColor="#808080"
+        android:textSize="28px"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="哈尔滨精纳科技有限公司"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_above="@+id/tv1"
+        android:layout_marginBottom="12px"
+        android:textColor="#808080"
+        android:textSize="28px"
+        android:layout_centerHorizontal="true"
+        android:text="哈尔滨市龙浩信息科技开发有限公司"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

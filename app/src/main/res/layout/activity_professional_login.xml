@@ -42,6 +42,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/et_name"
             android:textColorHint="@color/white_ffffff"
             android:textColor="@color/white_ffffff"
             android:textSize="28px"
@@ -69,6 +70,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/et_pwd"
             android:textColorHint="@color/white_ffffff"
             android:textColor="@color/white_ffffff"
             android:textSize="28px"

@@ -5,7 +5,9 @@ import android.app.Application;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.jingna.lhjwp.utils.Const;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+import com.vise.xsnow.http.ViseHttp;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.LinkedList;
@@ -40,6 +42,10 @@ public class MyApp extends Application {
         SDKInitializer.setCoordType(CoordType.BD09LL);
         ScreenAdapterTools.init(this);
         ZXingLibrary.initDisplayOpinion(this);
+        ViseHttp.init(this);
+        ViseHttp.CONFIG()
+                //配置请求主机地址
+                .baseUrl(Const.BASE_URL);
     }
 
     // add Activity

@@ -1,5 +1,6 @@
 package com.jingna.lhjwp.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,8 @@ import android.view.View;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.imagepreview.StatusBarUtils;
+import com.vise.xsnow.permission.OnPermissionCallback;
+import com.vise.xsnow.permission.PermissionManager;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import butterknife.ButterKnife;
@@ -21,6 +24,27 @@ public class TypeActivity extends BaseActivity {
         StatusBarUtils.setStatusBarTransparent(TypeActivity.this);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(TypeActivity.this);
+
+        PermissionManager.instance().request(this, new OnPermissionCallback() {
+                    @Override
+                    public void onRequestAllow(String permissionName) {
+//                DialogUtil.showTips(mContext, getString(R.string.permission_control),
+//                        getString(R.string.permission_allow) + "\n" + permissionName);
+                    }
+
+                    @Override
+                    public void onRequestRefuse(String permissionName) {
+//                DialogUtil.showTips(mContext, getString(R.string.permission_control),
+//                        getString(R.string.permission_refuse) + "\n" + permissionName);
+                    }
+
+                    @Override
+                    public void onRequestNoAsk(String permissionName) {
+//                DialogUtil.showTips(mContext, getString(R.string.permission_control),
+//                        getString(R.string.permission_noAsk) + "\n" + permissionName);
+                    }
+                }, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE);
 
     }
 

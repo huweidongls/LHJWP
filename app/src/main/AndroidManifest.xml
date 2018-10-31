@@ -89,7 +89,11 @@
 
         <activity android:name=".imagepreview.ImagePreviewActivity" />
         <activity android:name=".activity.ProfessionalLoginActivity" />
-        <activity android:name=".activity.RukuListActivity"></activity>
+        <activity android:name=".activity.RukuListActivity" />
+        <activity android:name=".activity.ProContentActivity" />
+        <activity android:name=".activity.PersonActivity" />
+        <activity android:name=".activity.VersionActivity" />
+        <activity android:name=".activity.AboutActivity"></activity>
     </application>
 
 </manifest>

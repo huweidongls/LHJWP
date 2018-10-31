@@ -205,8 +205,9 @@ public class CameraActivity extends BaseActivity {
                     @Override
                     public void onResult(BitmapPhoto result) {
                         Bitmap mBitmap;
-                        String textContent = "地址：哈尔滨市南岗区汉广街,经纬度：126，45";
-                        mBitmap = CodeUtils.createImage(textContent, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+                        String textContent = latitude+";"+longitude+";"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
+                        Log.e("123123", textContent);
+                        mBitmap = CodeUtils.createImage(textContent, 400, 400, null);
 
                         Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees), BitmapUtils.getViewBitmap(llInfo));
                         Bitmap bitmap1 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);

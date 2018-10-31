@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F1F5F6"
+    tools:context="com.jingna.lhjwp.activity.PersonActivity">
+
+    <ImageView
+        android:id="@+id/iv_top"
+        android:scaleType="centerCrop"
+        android:src="@drawable/person_bg"
+        android:layout_width="match_parent"
+        android:layout_height="372px" />
+
+    <RelativeLayout
+        android:layout_marginTop="45px"
+        android:id="@+id/activity_person_rl_back"
+        android:layout_width="100px"
+        android:layout_height="100px">
+
+        <ImageView
+            android:layout_centerInParent="true"
+            android:src="@drawable/back_w"
+            android:layout_width="20px"
+            android:layout_height="34px" />
+
+    </RelativeLayout>
+    
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_avatar"
+        android:layout_marginTop="135px"
+        android:layout_centerHorizontal="true"
+        android:layout_width="118px"
+        android:layout_height="118px" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_marginTop="20px"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/iv_avatar"
+        android:textColor="@color/white_ffffff"
+        android:textSize="32px"
+        android:text="用户账号"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/ll_version"
+        android:layout_below="@+id/iv_top"
+        android:layout_width="match_parent"
+        android:layout_height="112px">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40px"
+            android:src="@drawable/version"
+            android:layout_width="52px"
+            android:layout_height="52px" />
+
+        <TextView
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40px"
+            android:textColor="@color/black_333333"
+            android:textSize="36px"
+            android:text="当前版本"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_about"
+        android:layout_below="@+id/ll_version"
+        android:layout_width="match_parent"
+        android:layout_height="112px">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40px"
+            android:src="@drawable/about"
+            android:layout_width="52px"
+            android:layout_height="52px" />
+
+        <TextView
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40px"
+            android:textColor="@color/black_333333"
+            android:textSize="36px"
+            android:text="关于我们"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_exit"
+        android:background="#2276F6"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:textSize="36px"
+        android:textColor="@color/white_ffffff"
+        android:text="退出"
+        android:layout_width="match_parent"
+        android:layout_height="110px" />
+
+</RelativeLayout>
