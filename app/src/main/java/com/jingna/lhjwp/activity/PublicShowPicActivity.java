@@ -11,8 +11,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
+import com.jingna.lhjwp.utils.ToastUtil;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,11 +60,22 @@ public class PublicShowPicActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.activity_public_show_pic_rl_back})
+    @OnClick({R.id.activity_public_show_pic_rl_back, R.id.rl_delete})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.activity_public_show_pic_rl_back:
                 finish();
+                break;
+            case R.id.rl_delete:
+                File file = new File(path);
+                if(file.delete()){
+                    ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                    list.get(position).getPicList().remove(list.get(position).getPicList().size()-1);
+                    SpUtils.setPublicInfo(context, list);
+                    finish();
+                }else {
+                    ToastUtil.showShort(context, "图片删除失败");
+                }
                 break;
         }
     }

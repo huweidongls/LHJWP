@@ -83,6 +83,8 @@ public class PublicContentActivity extends BaseActivity {
     private int position;
     private String title = "";
 
+    private PopupWindow sharePop;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,16 +125,16 @@ public class PublicContentActivity extends BaseActivity {
     }
 
     @OnClick({R.id.activity_public_content_rl_back, R.id.activity_public_content_rl_more, R.id.activity_public_content_tv_bottom})
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.activity_public_content_rl_back:
-                if(adapter.getEdit()){
+                if (adapter.getEdit()) {
                     adapter.setEdit(false);
                     ivBack.setVisibility(View.VISIBLE);
                     tvCancel.setVisibility(View.GONE);
                     tvBottom.setText("发送");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
-                }else {
+                } else {
                     finish();
                 }
                 break;
@@ -140,13 +142,13 @@ public class PublicContentActivity extends BaseActivity {
                 initMorePop();
                 break;
             case R.id.activity_public_content_tv_bottom:
-                if(adapter.getEdit()){
+                if (adapter.getEdit()) {
                     ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
                     List<Integer> editList = adapter.getEditList();
                     Collections.sort(editList);
                     Collections.reverse(editList);
 //                Log.e("121212", mList.size()+"--"+editList.size());
-                    for (int i = 0; i<editList.size(); i++){
+                    for (int i = 0; i < editList.size(); i++) {
                         int num = editList.get(i);
                         File file = new File(mList.get(num).getPicPath());
                         file.delete();
@@ -160,36 +162,76 @@ public class PublicContentActivity extends BaseActivity {
                     tvCancel.setVisibility(View.GONE);
                     tvBottom.setText("发送");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
-                }else {
+                } else {
 //                    List<File> fileList = new ArrayList<>();
 //                    for (int i = 0; i<mList.size(); i++){
 //                        fileList.add(new File(mList.get(i).getPicPath()));
 //                    }
 //                    ShareUtils.startShare(0, "测试", fileList, context);
-                    ToastUtil.showShort(context, "上传");
-                    uploadPic();
-//                    test();
+//                    ToastUtil.showShort(context, "上传");
+//                    uploadPic();
+                    showShare();
                 }
                 break;
         }
     }
 
-    private void test() {
+    /**
+     * 分享的pop
+     */
+    private void showShare() {
+        View view = LayoutInflater.from(PublicContentActivity.this).inflate(R.layout.popupwindow_share, null);
+        ScreenAdapterTools.getInstance().loadView(view);
 
-        String url = "/tzapp/phone/getVersion.action?device_type=1";
-        ViseHttp.GET(url)
-                .request(new ACallback<String>() {
-                    @Override
-                    public void onSuccess(String data) {
-                        Log.e("123123", data);
-                    }
+        ImageView weixin = view.findViewById(R.id.weixin);
+        ImageView qq = view.findViewById(R.id.iv_qq);
 
-                    @Override
-                    public void onFail(int errCode, String errMsg) {
-                        Log.e("123123", errMsg);
-                    }
-                });
+        weixin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<File> fileList = new ArrayList<>();
+                for (int i = 0; i < mList.size(); i++) {
+                    fileList.add(new File(mList.get(i).getPicPath()));
+                }
+                ShareUtils.startShare(0, "龙浩经纬拍", fileList, context);
+            }
+        });
 
+        qq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<File> fileList = new ArrayList<>();
+                for (int i = 0; i < mList.size(); i++) {
+                    fileList.add(new File(mList.get(i).getPicPath()));
+                }
+                ShareUtils.startShare(2, "龙浩经纬拍", fileList, context);
+            }
+        });
+
+        sharePop = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+        sharePop.setTouchable(true);
+        sharePop.setFocusable(true);
+        // 设置点击窗口外边窗口消失
+        sharePop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        sharePop.setOutsideTouchable(true);
+        sharePop.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+//        popupWindow.showAsDropDown(rlBottom, 0, 0, Gravity.TOP|Gravity.RIGHT);
+        // 设置popWindow的显示和消失动画
+        sharePop.setAnimationStyle(R.style.mypopwindow_anim_style);
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.alpha = 0.5f;
+        getWindow().setAttributes(params);
+        sharePop.update();
+
+        sharePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            // 在dismiss中恢复透明度
+            public void onDismiss() {
+                WindowManager.LayoutParams params = getWindow().getAttributes();
+                params.alpha = 1f;
+                getWindow().setAttributes(params);
+            }
+        });
     }
 
     /**
@@ -197,21 +239,11 @@ public class PublicContentActivity extends BaseActivity {
      */
     private void uploadPic() {
 
-//        List<File> listFile = new ArrayList<>();
-//        for (int i = 0; i<mList.size(); i++){
-//            listFile.add(new File(mList.get(i).getPicPath()));
-//        }
-//        Map<String, File> fileMap = new LinkedHashMap<>();
-//        for (int i = 0; i < listFile.size(); i++) {
-//            fileMap.put("file" + i, listFile.get(i));
-//        }
-
-
         Observable<Map<String, File>> observable = Observable.create(new ObservableOnSubscribe<Map<String, File>>() {
             @Override
             public void subscribe(final ObservableEmitter<Map<String, File>> e) throws Exception {
                 final List<String> list = new ArrayList<>();
-                for (int i = 0; i<mList.size(); i++){
+                for (int i = 0; i < mList.size(); i++) {
                     list.add(mList.get(i).getPicPath());
                 }
                 final List<File> listFile = new ArrayList<>();
@@ -241,7 +273,7 @@ public class PublicContentActivity extends BaseActivity {
                                 if (listFile.size() == list.size()) {
                                     Map<String, File> fileMap = new LinkedHashMap<>();
                                     for (int i = 0; i < listFile.size(); i++) {
-                                        fileMap.put("file"+i, listFile.get(i));
+                                        fileMap.put("file" + i, listFile.get(i));
                                     }
                                     e.onNext(fileMap);
                                 }
@@ -273,7 +305,7 @@ public class PublicContentActivity extends BaseActivity {
                         .request(new ACallback<String>() {
                             @Override
                             public void onSuccess(String data) {
-                                Log.e("123123", data+"返回的json");
+                                Log.e("123123", data + "返回的json");
                             }
 
                             @Override
@@ -311,12 +343,17 @@ public class PublicContentActivity extends BaseActivity {
         ll1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mList.size()>0){
+                if (mList.size() > 0) {
+                    adapter.setEdit(false);
+                    ivBack.setVisibility(View.VISIBLE);
+                    tvCancel.setVisibility(View.GONE);
+                    tvBottom.setText("发送");
+                    tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                     intent.putExtra("position", position);
                     intent.putExtra("title", title);
                     intent.setClass(PublicContentActivity.this, PublicPicLocationActivity.class);
                     startActivity(intent);
-                }else {
+                } else {
                     ToastUtil.showShort(context, "暂无图片信息");
                 }
                 popupWindow.dismiss();
@@ -363,13 +400,13 @@ public class PublicContentActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(adapter.getEdit()){
+        if (adapter.getEdit()) {
             adapter.setEdit(false);
             ivBack.setVisibility(View.VISIBLE);
             tvCancel.setVisibility(View.GONE);
             tvBottom.setText("发送");
             tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
-        }else {
+        } else {
             finish();
         }
     }

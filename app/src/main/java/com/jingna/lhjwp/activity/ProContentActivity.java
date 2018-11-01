@@ -116,7 +116,7 @@ public class ProContentActivity extends BaseActivity {
                     adapter.setEdit(false);
                     ivBack.setVisibility(View.VISIBLE);
                     tvCancel.setVisibility(View.GONE);
-                    tvBottom.setText("发送");
+                    tvBottom.setText("上传");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 }else {
                     finish();
@@ -144,7 +144,7 @@ public class ProContentActivity extends BaseActivity {
                     SpUtils.setPublicInfo(context, list);
                     ivBack.setVisibility(View.VISIBLE);
                     tvCancel.setVisibility(View.GONE);
-                    tvBottom.setText("发送");
+                    tvBottom.setText("上传");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 }else {
                     ToastUtil.showShort(context, "上传");
@@ -311,6 +311,19 @@ public class ProContentActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (adapter.getEdit()) {
+            adapter.setEdit(false);
+            ivBack.setVisibility(View.VISIBLE);
+            tvCancel.setVisibility(View.GONE);
+            tvBottom.setText("上传");
+            tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+        } else {
+            finish();
+        }
     }
 
 }
