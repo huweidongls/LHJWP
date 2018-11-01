@@ -3,7 +3,6 @@ package com.jingna.lhjwp.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,10 +18,8 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.ActivityProLocationAdapter;
-import com.jingna.lhjwp.adapter.ActivityPublicLocationAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
-import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.widget.LocateCenterHorizontalView;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -34,8 +31,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import recycler.coverflow.CoverFlowLayoutManger;
-import recycler.coverflow.RecyclerCoverFlow;
 
 public class ProPicLocationActivity extends BaseActivity {
 

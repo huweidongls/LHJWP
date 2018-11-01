@@ -59,7 +59,6 @@ dependencies {
     compile 'io.fotoapparat.fotoapparat:library:1.0.2'
     compile 'cn.yipianfengye.android:zxing-library:2.2'
     implementation files('libs/BaiduLBS_Android.jar')
-    compile 'com.chenlittleping:recyclercoverflow:1.0.6'
     compile 'com.github.donkingliang:ImageSelector:1.6.0'
     implementation 'top.zibin:Luban:1.1.8'
     compile 'de.hdodenhof:circleimageview:2.2.0'
