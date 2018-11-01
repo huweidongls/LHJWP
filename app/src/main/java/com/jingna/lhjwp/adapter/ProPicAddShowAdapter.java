@@ -2,6 +2,7 @@ package com.jingna.lhjwp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,7 +92,17 @@ public class ProPicAddShowAdapter extends RecyclerView.Adapter<ProPicAddShowAdap
             holder.rlAdd.setVisibility(View.GONE);
             holder.rlImg.setVisibility(View.VISIBLE);
             Glide.with(context).load("file://" + data.get(position).getPicPath()).into(holder.iv);
-            holder.tvTime.setText(data.get(position).getTime());
+            if(data.get(position).isUpload()){
+                holder.tvTime.setTextColor(Color.parseColor("#333333"));
+                holder.tvType.setTextColor(Color.parseColor("#333333"));
+                holder.tvTime.setText(data.get(position).getTime());
+                holder.tvType.setText("已上传");
+            }else {
+                holder.tvTime.setTextColor(Color.parseColor("#F13232"));
+                holder.tvType.setTextColor(Color.parseColor("#F13232"));
+                holder.tvTime.setText(data.get(position).getTime());
+                holder.tvType.setText("未上传");
+            }
         }
         holder.rlAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +166,7 @@ public class ProPicAddShowAdapter extends RecyclerView.Adapter<ProPicAddShowAdap
         private ImageView iv;
         private TextView tvTime;
         private ImageView ivSure;
+        private TextView tvType;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -163,6 +175,7 @@ public class ProPicAddShowAdapter extends RecyclerView.Adapter<ProPicAddShowAdap
             iv = itemView.findViewById(R.id.activity_create_intercalation_rv_iv_img);
             tvTime = itemView.findViewById(R.id.tv_time);
             ivSure = itemView.findViewById(R.id.iv_sure);
+            tvType = itemView.findViewById(R.id.tv_type);
         }
     }
 
