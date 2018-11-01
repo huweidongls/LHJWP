@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.widget.LocateCenterHorizontalView;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -19,13 +20,13 @@ import java.util.List;
  * Created by Administrator on 2018/10/29.
  */
 
-public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<ActivityPublicLocationAdapter.ViewHolder> implements LocateCenterHorizontalView.IAutoLocateHorizontalView {
+public class ActivityProLocationAdapter extends RecyclerView.Adapter<ActivityProLocationAdapter.ViewHolder> implements LocateCenterHorizontalView.IAutoLocateHorizontalView {
 
     private Context context;
-    private List<PublicInfo.PicInfo> data;
+    private List<ProPicInfo> data;
     private View view;
 
-    public ActivityPublicLocationAdapter(Context context, List<PublicInfo.PicInfo> data) {
+    public ActivityProLocationAdapter(Context context, List<ProPicInfo> data) {
         this.context = context;
         this.data = data;
     }
@@ -45,11 +46,6 @@ public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<Activity
     }
 
     @Override
-    public int getItemCount() {
-        return data == null?0:data.size();
-    }
-
-    @Override
     public View getItemView() {
         return view;
     }
@@ -62,6 +58,11 @@ public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<Activity
         } else {
             ((ViewHolder) holder).iv1.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return data == null?0:data.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{

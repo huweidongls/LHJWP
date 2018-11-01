@@ -77,12 +77,14 @@ public class ProContentActivity extends BaseActivity {
     private PopupWindow popupWindow;
 
     private String uuid = "";
+    private String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pro_show_pic);
         uuid = getIntent().getStringExtra("uuid");
+        username = SpUtils.getUsername(context);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProContentActivity.this);
 
@@ -226,12 +228,12 @@ public class ProContentActivity extends BaseActivity {
             @Override
             public void onNext(Map<String, File> value) {
                 ViseHttp.UPLOAD("/tzapp/phone/upPic.action")
-                        .addParam("S_CORP_UUID", "cc7c8fbb99654caa9017031c97c779a0")
+                        .addParam("S_CORP_UUID", uuid)
                         .addParam("S_SJ", "201805")
                         .addParam("S_TAB", "S812_2018_TZ_RKSQ")
                         .addParam("S_TASK_ID", "")
                         .addParam("type", "1")
-                        .addParam("user_name", "230102")
+                        .addParam("user_name", username)
                         .addFiles(value)
                         .request(new ACallback<String>() {
                             @Override
@@ -275,9 +277,13 @@ public class ProContentActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mList.size()>0){
-//                    intent.putExtra("position", position);
-//                    intent.putExtra("title", title);
-                    intent.setClass(context, PublicPicLocationActivity.class);
+                    adapter.setEdit(false);
+                    ivBack.setVisibility(View.VISIBLE);
+                    tvCancel.setVisibility(View.GONE);
+                    tvBottom.setText("上传");
+                    tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+                    intent.putExtra("uuid", uuid);
+                    intent.setClass(context, ProPicLocationActivity.class);
                     startActivity(intent);
                 }else {
                     ToastUtil.showShort(context, "暂无图片信息");

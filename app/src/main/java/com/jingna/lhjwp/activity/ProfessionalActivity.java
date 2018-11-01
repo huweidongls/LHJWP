@@ -27,6 +27,8 @@ public class ProfessionalActivity extends BaseActivity {
 
     private Context context = ProfessionalActivity.this;
 
+    @BindView(R.id.tv_last_time)
+    TextView tvLastTime;
     @BindView(R.id.tv_rk_tz)
     TextView tvRkTz;
     @BindView(R.id.tv_rk_fdc)
@@ -46,6 +48,12 @@ public class ProfessionalActivity extends BaseActivity {
 
         initData();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        tvLastTime.setText("采集任务最后更新时间: "+SpUtils.getLastTime(context));
     }
 
     private void initData() {

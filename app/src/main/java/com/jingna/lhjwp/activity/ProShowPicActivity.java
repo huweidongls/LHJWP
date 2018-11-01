@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
+import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -61,6 +62,7 @@ public class ProShowPicActivity extends BaseActivity {
     public void onClick(View view){
         switch (view.getId()){
             case R.id.activity_public_show_pic_rl_back:
+                SpUtils.setLastTime(context, DateUtils.stampToDateSecond(System.currentTimeMillis()+""));
                 finish();
                 break;
             case R.id.rl_delete:
@@ -79,4 +81,9 @@ public class ProShowPicActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        SpUtils.setLastTime(context, DateUtils.stampToDateSecond(System.currentTimeMillis()+""));
+        finish();
+    }
 }

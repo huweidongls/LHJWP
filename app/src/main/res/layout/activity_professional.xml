@@ -35,6 +35,7 @@
         android:layout_height="108px">
 
         <TextView
+            android:id="@+id/tv_last_time"
             android:layout_centerInParent="true"
             android:textColor="#545658"
             android:textSize="32px"

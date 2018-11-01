@@ -26,6 +26,17 @@ public class SpUtils {
     public static String PRO_USERNAME = "prousername";
     public static String PRO_S_ORGAN = "S_ORGAN";
     public static String PRO_PIC_INFO = "pro_pic_info";
+    public static String PRO_LAST_TIME = "pro_last_time";
+
+    public static void setLastTime(Context context, String time){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_LAST_TIME, time);
+    }
+
+    public static String getLastTime(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(PRO_LAST_TIME, "");
+    }
 
     public static void setProPicInfo(Context context, Map<String, ArrayList<ProPicInfo>> map){
         spCache = new SpCache(context, "pro_info");

@@ -2,6 +2,7 @@ package com.jingna.lhjwp.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.jingna.lhjwp.adapter.ActivityPublicLocationAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
+import com.jingna.lhjwp.widget.LocateCenterHorizontalView;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class PublicPicLocationActivity extends BaseActivity {
     @BindView(R.id.activity_public_pic_location_mapview)
     MapView mMapView;
     @BindView(R.id.activity_public_pic_location_rv)
-    RecyclerCoverFlow recyclerCoverFlow;
+    LocateCenterHorizontalView recyclerview;
     @BindView(R.id.activity_public_pic_location_tv_top)
     TextView tvTop;
 
@@ -67,15 +69,16 @@ public class PublicPicLocationActivity extends BaseActivity {
     private void initData() {
 
         tvTop.setText(title);
+
         mList.addAll(SpUtils.getPublicInfo(context).get(position).getPicList());
-        adapter = new ActivityPublicLocationAdapter(context, mList);
-//        recyclerCoverFlow.setFlatFlow(true);//平面滚动
-        recyclerCoverFlow.setAdapter(adapter);
-        recyclerCoverFlow.setOnItemSelectedListener(new CoverFlowLayoutManger.OnSelected() {
+        recyclerview.setHasFixedSize(true);
+        recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        adapter = new ActivityPublicLocationAdapter(this, mList);
+        recyclerview.setAdapter(adapter);
+        recyclerview.setOnSelectedPositionChangedListener(new LocateCenterHorizontalView.OnSelectedPositionChangedListener() {
             @Override
-            public void onItemSelected(int position) {
-                Log.e("123123", position+"");
-                onMap(position);
+            public void selectedPositionChanged(int pos) {
+                onMap(pos);
             }
         });
 
@@ -94,6 +97,7 @@ public class PublicPicLocationActivity extends BaseActivity {
 
     private void onMap(int position){
 
+        mBaiduMap.clear();
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.location);

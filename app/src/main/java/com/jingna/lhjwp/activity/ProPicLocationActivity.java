@@ -2,6 +2,7 @@ package com.jingna.lhjwp.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -17,13 +18,18 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.adapter.ActivityProLocationAdapter;
 import com.jingna.lhjwp.adapter.ActivityPublicLocationAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.SpUtils;
+import com.jingna.lhjwp.widget.LocateCenterHorizontalView;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,19 +44,22 @@ public class ProPicLocationActivity extends BaseActivity {
     @BindView(R.id.activity_public_pic_location_mapview)
     MapView mMapView;
     @BindView(R.id.activity_public_pic_location_rv)
-    RecyclerCoverFlow recyclerCoverFlow;
+    LocateCenterHorizontalView recyclerview;
     @BindView(R.id.activity_public_pic_location_tv_top)
     TextView tvTop;
 
-    private ActivityPublicLocationAdapter adapter;
-    private ArrayList<PublicInfo.PicInfo> mList = new ArrayList<>();
+    private ActivityProLocationAdapter adapter;
+    private ArrayList<ProPicInfo> mList = new ArrayList<>();
 
     private BaiduMap mBaiduMap;
+
+    private String uuid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pro_pic_location);
+        uuid = getIntent().getStringExtra("uuid");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProPicLocationActivity.this);
         mBaiduMap = mMapView.getMap();
@@ -60,15 +69,19 @@ public class ProPicLocationActivity extends BaseActivity {
 
     private void initData() {
 
-//        mList.addAll(SpUtils.getPublicInfo(context).get(position).getPicList());
-        adapter = new ActivityPublicLocationAdapter(context, mList);
-//        recyclerCoverFlow.setFlatFlow(true);//平面滚动
-        recyclerCoverFlow.setAdapter(adapter);
-        recyclerCoverFlow.setOnItemSelectedListener(new CoverFlowLayoutManger.OnSelected() {
+        Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+        if(map.get(uuid) != null){
+            mList.clear();
+            mList.addAll(map.get(uuid));
+        }
+        recyclerview.setHasFixedSize(true);
+        recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        adapter = new ActivityProLocationAdapter(this, mList);
+        recyclerview.setAdapter(adapter);
+        recyclerview.setOnSelectedPositionChangedListener(new LocateCenterHorizontalView.OnSelectedPositionChangedListener() {
             @Override
-            public void onItemSelected(int position) {
-                Log.e("123123", position+"");
-                onMap(position);
+            public void selectedPositionChanged(int pos) {
+                onMap(pos);
             }
         });
 
@@ -87,6 +100,7 @@ public class ProPicLocationActivity extends BaseActivity {
 
     private void onMap(int position){
 
+        mBaiduMap.clear();
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.location);
@@ -96,16 +110,16 @@ public class ProPicLocationActivity extends BaseActivity {
         List<OverlayOptions> options = new ArrayList<OverlayOptions>();
         for (int i = 0; i<mList.size(); i++){
             if(i == position){
-                options.add(new MarkerOptions().position(new LatLng(mList.get(i).getPicLatitude(), mList.get(i).getPicLongitude())).icon(bitmap1));
+                options.add(new MarkerOptions().position(new LatLng(mList.get(i).getLatitude(), mList.get(i).getLongitude())).icon(bitmap1));
             }else {
-                options.add(new MarkerOptions().position(new LatLng(mList.get(i).getPicLatitude(), mList.get(i).getPicLongitude())).icon(bitmap));
+                options.add(new MarkerOptions().position(new LatLng(mList.get(i).getLatitude(), mList.get(i).getLongitude())).icon(bitmap));
             }
         }
         mBaiduMap.addOverlays(options);
 
         //定位到规定路线起点
         //设定中心点坐标
-        LatLng cenpt =  new LatLng(mList.get(position).getPicLatitude(),mList.get(position).getPicLongitude());
+        LatLng cenpt =  new LatLng(mList.get(position).getLatitude(),mList.get(position).getLongitude());
         //定义地图状态
         MapStatus mMapStatus = new MapStatus.Builder()
                 //要移动的点
