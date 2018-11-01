@@ -42,7 +42,7 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         if(data.get(position).getS_ZY().equals("1")){
             Glide.with(context).load(R.drawable.tz).into(holder.iv);
         }else {
@@ -54,6 +54,7 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProContentActivity.class);
+                intent.putExtra("uuid", data.get(position).getS_CORP_UUID());
                 context.startActivity(intent);
             }
         });

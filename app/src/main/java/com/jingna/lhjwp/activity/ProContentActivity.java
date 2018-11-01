@@ -23,7 +23,9 @@ import android.widget.TextView;
 
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
+import com.jingna.lhjwp.adapter.ProPicAddShowAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
@@ -69,16 +71,18 @@ public class ProContentActivity extends BaseActivity {
     @BindView(R.id.activity_public_content_tv_top)
     TextView tvTop;
 
-    private PicAddShowAdapter adapter;
-    private ArrayList<PublicInfo.PicInfo> mList = new ArrayList<>();
+    private ProPicAddShowAdapter adapter;
+    private ArrayList<ProPicInfo> mList = new ArrayList<>();
 
     private PopupWindow popupWindow;
+
+    private String uuid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pro_show_pic);
-
+        uuid = getIntent().getStringExtra("uuid");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProContentActivity.this);
 
@@ -92,16 +96,21 @@ public class ProContentActivity extends BaseActivity {
 
     private void initData() {
 
-        mList.clear();
+        Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+        if(map.get(uuid) != null){
+            mList.clear();
+            mList.addAll(map.get(uuid));
+        }
         GridLayoutManager manager = new GridLayoutManager(context, 3);
         recyclerView.setLayoutManager(manager);
-        adapter = new PicAddShowAdapter(mList);
+        adapter = new ProPicAddShowAdapter(mList);
         recyclerView.setAdapter(adapter);
-        adapter.setListener(new PicAddShowAdapter.OnAddImgListener() {
+        adapter.setListener(new ProPicAddShowAdapter.OnAddImgListener() {
             @Override
             public void onAddImg() {
                 Intent intent = new Intent();
-                intent.setClass(context, CameraActivity.class);
+                intent.putExtra("uuid", uuid);
+                intent.setClass(context, ProCameraActivity.class);
                 startActivity(intent);
             }
         });
@@ -127,21 +136,23 @@ public class ProContentActivity extends BaseActivity {
                 break;
             case R.id.activity_public_content_tv_bottom:
                 if(adapter.getEdit()){
-                    ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                    Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                    ArrayList<ProPicInfo> list = map.get(uuid);
                     List<Integer> editList = adapter.getEditList();
                     Collections.sort(editList);
                     Collections.reverse(editList);
 //                Log.e("121212", mList.size()+"--"+editList.size());
                     for (int i = 0; i<editList.size(); i++){
-//                        int num = editList.get(i);
-//                        File file = new File(mList.get(num).getPicPath());
-//                        file.delete();
-//                        mList.remove(num);
-//                        list.get(position).getPicList().remove(num);
+                        int num = editList.get(i);
+                        File file = new File(mList.get(num).getPicPath());
+                        file.delete();
+                        mList.remove(num);
+                        list.remove(num);
                     }
                     adapter.setEdit(false);
                     adapter.notifyDataSetChanged();
-                    SpUtils.setPublicInfo(context, list);
+                    map.put(uuid, list);
+                    SpUtils.setProPicInfo(context, map);
                     ivBack.setVisibility(View.VISIBLE);
                     tvCancel.setVisibility(View.GONE);
                     tvBottom.setText("上传");

@@ -6,11 +6,14 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 
+import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.vise.xsnow.cache.SpCache;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/10/26.
@@ -22,6 +25,21 @@ public class SpUtils {
     public static String PUBLIC_INFO = "publicinfo";
     public static String PRO_USERNAME = "prousername";
     public static String PRO_S_ORGAN = "S_ORGAN";
+    public static String PRO_PIC_INFO = "pro_pic_info";
+
+    public static void setProPicInfo(Context context, Map<String, ArrayList<ProPicInfo>> map){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_PIC_INFO, map);
+    }
+
+    public static Map<String, ArrayList<ProPicInfo>> getProPicInfo(Context context){
+        spCache = new SpCache(context, "pro_info");
+        if(spCache.get(PRO_PIC_INFO) == null){
+            return new HashMap<String, ArrayList<ProPicInfo>>();
+        }else {
+            return (Map<String, ArrayList<ProPicInfo>>) spCache.get(PRO_PIC_INFO);
+        }
+    }
 
     public static void setPublicInfo(Context context, ArrayList<PublicInfo> publicInfo){
         spCache = new SpCache(context, "public_info");

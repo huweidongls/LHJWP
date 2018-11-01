@@ -93,7 +93,10 @@
         <activity android:name=".activity.ProContentActivity" />
         <activity android:name=".activity.PersonActivity" />
         <activity android:name=".activity.VersionActivity" />
-        <activity android:name=".activity.AboutActivity"></activity>
+        <activity android:name=".activity.AboutActivity" />
+        <activity android:name=".activity.ProCameraActivity" />
+        <activity android:name=".activity.ProShowPicActivity" />
+        <activity android:name=".activity.ProPicLocationActivity"></activity>
     </application>
 
 </manifest>
