@@ -62,7 +62,6 @@ public class ProShowPicActivity extends BaseActivity {
     public void onClick(View view){
         switch (view.getId()){
             case R.id.activity_public_show_pic_rl_back:
-                SpUtils.setLastTime(context, DateUtils.stampToDateSecond(System.currentTimeMillis()+""));
                 finish();
                 break;
             case R.id.rl_delete:

@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.model.TaskListModel;
+import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.vise.xsnow.http.ViseHttp;
 import com.vise.xsnow.http.callback.ACallback;
@@ -51,9 +52,31 @@ public class ProfessionalActivity extends BaseActivity {
     }
 
     @Override
+    public void onNetChange(int netMobile) {
+        // TODO Auto-generated method stub
+        //在这个判断，根据需要做处理
+        if (netMobile == 1) {
+            Log.e("2222", "inspectNet:连接wifi");
+            String time = DateUtils.stampToDateSecond(System.currentTimeMillis()+"");
+            tvLastTime.setText("采集任务最后更新时间: "+ time);
+            SpUtils.setLastTime(context, time);
+            initData();
+        } else if (netMobile == 0) {
+            Log.e("2222", "inspectNet:连接移动数据");
+            String time = DateUtils.stampToDateSecond(System.currentTimeMillis()+"");
+            tvLastTime.setText("采集任务最后更新时间: "+ time);
+            SpUtils.setLastTime(context, time);
+            initData();
+        } else if (netMobile == -1) {
+            Log.e("2222", "inspectNet:当前没有网络");
+            tvLastTime.setText("网络连接不可用,上次更新时间为: "+ SpUtils.getLastTime(context));
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
-        tvLastTime.setText("采集任务最后更新时间: "+SpUtils.getLastTime(context));
+//        tvLastTime.setText("采集任务最后更新时间: "+SpUtils.getLastTime(context));
     }
 
     private void initData() {

@@ -47,4 +47,54 @@
 
     </com.baidu.mapapi.map.MapView>
 
+    <LinearLayout
+        android:background="@color/white_ffffff"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_alignTop="@+id/activity_public_pic_location_mapview"
+        android:layout_width="wrap_content"
+        android:layout_height="56px">
+
+        <TextView
+            android:layout_marginLeft="20px"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black_333333"
+            android:textSize="28px"
+            android:text="显示参考位置"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/iv_is_show"
+            android:scaleType="fitXY"
+            android:src="@drawable/on"
+            android:layout_marginRight="20px"
+            android:layout_marginLeft="20px"
+            android:layout_gravity="center_vertical"
+            android:layout_width="66px"
+            android:layout_height="40px" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_location"
+        android:background="#ccffffff"
+        android:layout_marginBottom="52px"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="88px">
+
+        <TextView
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_centerInParent="true"
+            android:id="@+id/tv_location"
+            android:textColor="@color/black_333333"
+            android:textSize="28px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -3,8 +3,10 @@ package com.jingna.lhjwp.base;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -16,18 +18,36 @@ import android.widget.Toast;
 
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.app.MyApp;
+import com.jingna.lhjwp.broadcastreceiver.NetBroadcastReceiver;
+import com.jingna.lhjwp.utils.NetUtil;
 
 /**
  * Created by a on 2018/9/12.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements NetBroadcastReceiver.NetEvevt {
+
+    NetBroadcastReceiver receiver;
+
+    public static NetBroadcastReceiver.NetEvevt evevt;
+    /**
+     * 网络类型
+     */
+    private int netMobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         MyApp.getInstance().addActivity(this);
+        receiver = new NetBroadcastReceiver(this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filter);
+        evevt = this;
+        inspectNet();
     }
 
     /**
@@ -115,6 +135,47 @@ public class BaseActivity extends AppCompatActivity {
             InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    /**
+     * 初始化时判断有没有网络
+     */
+
+    public boolean inspectNet() {
+        this.netMobile = NetUtil.getNetWorkState(BaseActivity.this);
+        return isNetConnect();
+
+        // if (netMobile == 1) {
+        // System.out.println("inspectNet：连接wifi");
+        // } else if (netMobile == 0) {
+        // System.out.println("inspectNet:连接移动数据");
+        // } else if (netMobile == -1) {
+        // System.out.println("inspectNet:当前没有网络");
+        //
+        // }
+    }
+
+    @Override
+    public void onNetChange(int netMobile) {
+        this.netMobile = netMobile;
+        isNetConnect();
+    }
+
+    /**
+     * 判断有无网络 。
+     *
+     * @return true 有网, false 没有网络.
+     */
+    public boolean isNetConnect() {
+        if (netMobile == 1) {
+            return true;
+        } else if (netMobile == 0) {
+            return true;
+        } else if (netMobile == -1) {
+            return false;
+
+        }
+        return false;
     }
 
 }

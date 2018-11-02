@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -16,6 +18,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.ActivityProLocationAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
@@ -42,6 +45,12 @@ public class ProPicLocationActivity extends BaseActivity {
     LocateCenterHorizontalView recyclerview;
     @BindView(R.id.activity_public_pic_location_tv_top)
     TextView tvTop;
+    @BindView(R.id.iv_is_show)
+    ImageView ivIsShow;
+    @BindView(R.id.tv_location)
+    TextView tvLocation;
+    @BindView(R.id.rl_location)
+    RelativeLayout rlLocation;
 
     private ActivityProLocationAdapter adapter;
     private ArrayList<ProPicInfo> mList = new ArrayList<>();
@@ -49,6 +58,8 @@ public class ProPicLocationActivity extends BaseActivity {
     private BaiduMap mBaiduMap;
 
     private String uuid = "";
+
+    private boolean isShow = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +88,7 @@ public class ProPicLocationActivity extends BaseActivity {
             @Override
             public void selectedPositionChanged(int pos) {
                 onMap(pos);
+                tvLocation.setText("参考位置: "+mList.get(pos).getLatitude()+","+mList.get(pos).getLongitude());
             }
         });
 
@@ -84,11 +96,22 @@ public class ProPicLocationActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.activity_public_pic_location_rl_back})
+    @OnClick({R.id.activity_public_pic_location_rl_back, R.id.iv_is_show})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.activity_public_pic_location_rl_back:
                 finish();
+                break;
+            case R.id.iv_is_show:
+                if(isShow){
+                    Glide.with(context).load(R.drawable.off).into(ivIsShow);
+                    rlLocation.setVisibility(View.GONE);
+                    isShow = false;
+                }else {
+                    Glide.with(context).load(R.drawable.on).into(ivIsShow);
+                    rlLocation.setVisibility(View.VISIBLE);
+                    isShow = true;
+                }
                 break;
         }
     }
