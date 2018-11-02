@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F1F5F6"
+    tools:context="com.jingna.lhjwp.activity.VoiceActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        style="@style/rl_top_bar">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="100px"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:src="@drawable/back_w"
+                android:layout_width="20px"
+                android:layout_height="34px" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/rl_top"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_marginTop="40px"
+            android:layout_marginRight="30px"
+            android:layout_marginLeft="30px"
+            android:background="@drawable/bg_voice1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_marginLeft="24px"
+                android:layout_marginTop="32px"
+                android:textSize="32px"
+                android:textColor="#7C7C7C"
+                android:text="查找这么说"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginLeft="26px"
+                android:layout_marginBottom="32px"
+                android:layout_marginTop="2px"
+                android:textColor="@color/black_333333"
+                android:textSize="44px"
+                android:text="某某小区"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/rl_result"
+            android:background="@drawable/bg_voice2"
+            android:layout_marginRight="30px"
+            android:layout_marginTop="40px"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="88px">
+
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_marginLeft="26px"
+                android:layout_marginRight="26px"
+                android:layout_centerInParent="true"
+                android:text="123123"
+                android:textColor="@color/white_ffffff"
+                android:textSize="44px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_voice"
+        android:layout_marginBottom="30px"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/voice"
+        android:layout_width="162px"
+        android:layout_height="162px" />
+
+</RelativeLayout>

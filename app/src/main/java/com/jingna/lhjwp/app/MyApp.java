@@ -5,6 +5,8 @@ import android.app.Application;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 import com.jingna.lhjwp.utils.Const;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.vise.xsnow.http.ViseHttp;
@@ -46,6 +48,7 @@ public class MyApp extends Application {
         ViseHttp.CONFIG()
                 //配置请求主机地址
                 .baseUrl(Const.BASE_URL);
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5bdbc71f");
     }
 
     // add Activity

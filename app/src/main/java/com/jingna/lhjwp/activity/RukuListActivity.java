@@ -1,11 +1,15 @@
 package com.jingna.lhjwp.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.jingna.lhjwp.R;
@@ -32,6 +36,8 @@ public class RukuListActivity extends BaseActivity {
 
     @BindView(R.id.activity_ruku_list_rv)
     RecyclerView recyclerView;
+    @BindView(R.id.et_search)
+    EditText etSearch;
 
     private String type = "";
 
@@ -71,6 +77,22 @@ public class RukuListActivity extends BaseActivity {
                                 mList = model.getXmList();
                                 adapter = new ActivityProRukuListAdapter(context, mList);
                                 recyclerView.setAdapter(adapter);
+                                etSearch.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence sequence, int i, int i1, int i2) {
+
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence sequence, int i, int i1, int i2) {
+                                        adapter.getFilter().filter(sequence.toString());
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable editable) {
+
+                                    }
+                                });
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -85,13 +107,23 @@ public class RukuListActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.activity_ruku_list_rl_back})
+    @OnClick({R.id.activity_ruku_list_rl_back, R.id.iv_record})
     public void onClick(View view){
+        Intent intent = new Intent();
         switch (view.getId()){
             case R.id.activity_ruku_list_rl_back:
                 finish();
                 break;
+            case R.id.iv_record:
+                intent.setClass(context, VoiceActivity.class);
+                startActivityForResult(intent, 1);
+                break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String result = data.getStringExtra("result");
+        adapter.getFilter().filter(result);
+    }
 }

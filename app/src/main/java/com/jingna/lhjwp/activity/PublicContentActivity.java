@@ -139,7 +139,11 @@ public class PublicContentActivity extends BaseActivity {
                 }
                 break;
             case R.id.activity_public_content_rl_more:
-                initMorePop();
+                if(mList.size() == 0){
+                    ToastUtil.showShort(context, "当前没有照片，无法查看地图");
+                }else {
+                    initMorePop();
+                }
                 break;
             case R.id.activity_public_content_tv_bottom:
                 if (adapter.getEdit()) {
@@ -170,7 +174,11 @@ public class PublicContentActivity extends BaseActivity {
 //                    ShareUtils.startShare(0, "测试", fileList, context);
 //                    ToastUtil.showShort(context, "上传");
 //                    uploadPic();
-                    showShare();
+                    if(mList.size()<3||mList.size()>10){
+                        ToastUtil.showShort(context, "只能发送3~10张照片");
+                    }else {
+                        showShare();
+                    }
                 }
                 break;
         }

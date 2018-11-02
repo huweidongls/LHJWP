@@ -27,6 +27,28 @@ public class SpUtils {
     public static String PRO_S_ORGAN = "S_ORGAN";
     public static String PRO_PIC_INFO = "pro_pic_info";
     public static String PRO_LAST_TIME = "pro_last_time";
+    public static String MAX_PIC = "max_pic";
+    public static String MIN_PIC = "min_pic";
+
+    public static String getMinPic(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(MIN_PIC, "10");
+    }
+
+    public static void setMinPic(Context context, String minpic){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(MIN_PIC, minpic);
+    }
+
+    public static String getMaxPic(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(MAX_PIC, "10");
+    }
+
+    public static void setMaxPic(Context context, String maxpic){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(MAX_PIC, maxpic);
+    }
 
     public static void setLastTime(Context context, String time){
         spCache = new SpCache(context, "pro_info");

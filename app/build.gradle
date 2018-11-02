@@ -62,4 +62,5 @@ dependencies {
     compile 'com.github.donkingliang:ImageSelector:1.6.0'
     implementation 'top.zibin:Luban:1.1.8'
     compile 'de.hdodenhof:circleimageview:2.2.0'
+    implementation files('libs/Msc.jar')
 }

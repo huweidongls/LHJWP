@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,20 +18,23 @@ import com.jingna.lhjwp.activity.ProContentActivity;
 import com.jingna.lhjwp.model.RukuListModel;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Administrator on 2018/10/31.
  */
 
-public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityProRukuListAdapter.ViewHolder> {
+public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityProRukuListAdapter.ViewHolder> implements Filterable {
 
     private Context context;
     private List<RukuListModel.XmListBean> data;
+    private List<RukuListModel.XmListBean> mFilterList = new ArrayList<>();
 
     public ActivityProRukuListAdapter(Context context, List<RukuListModel.XmListBean> data) {
         this.context = context;
         this.data = data;
+        this.mFilterList = data;
     }
 
     @Override
@@ -43,29 +48,64 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        if(data.get(position).getS_ZY().equals("1")){
+        if (mFilterList.get(position).getS_ZY().equals("1")) {
             Glide.with(context).load(R.drawable.tz).into(holder.iv);
-        }else {
+        } else {
             Glide.with(context).load(R.drawable.lou).into(holder.iv);
         }
-        holder.tvTitle.setText(data.get(position).getS_XMMC());
-        holder.tvAddress.setText(data.get(position).getS_ADDRESS());
+        holder.tvTitle.setText(mFilterList.get(position).getS_XMMC());
+        holder.tvAddress.setText(mFilterList.get(position).getS_ADDRESS());
         holder.rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProContentActivity.class);
-                intent.putExtra("uuid", data.get(position).getS_CORP_UUID());
+                intent.putExtra("uuid", mFilterList.get(position).getS_CORP_UUID());
                 context.startActivity(intent);
             }
         });
     }
 
     @Override
-    public int getItemCount() {
-        return data == null?0:data.size();
+    public Filter getFilter() {
+        return new Filter() {
+            //执行过滤操作
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    //没有过滤的内容，则使用源数据
+                    mFilterList = data;
+                } else {
+                    List<RukuListModel.XmListBean> filteredList = new ArrayList<>();
+                    for (int i = 0; i < data.size(); i++) {
+                        if (data.get(i).getS_XMMC().contains(charString)) {
+                            filteredList.add(data.get(i));
+                        }
+                    }
+
+                    mFilterList = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mFilterList;
+                return filterResults;
+            }
+
+            //把过滤后的值返回出来
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mFilterList = (List<RukuListModel.XmListBean>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    public int getItemCount() {
+        return mFilterList == null ? 0 : mFilterList.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView iv;
         private TextView tvTitle;

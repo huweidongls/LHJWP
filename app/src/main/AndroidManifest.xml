@@ -87,6 +87,10 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <meta-data
+            android:name="IFLYTEK_APPKEY"
+            android:value="5bdbc71f"/>
+
         <activity android:name=".imagepreview.ImagePreviewActivity" />
         <activity android:name=".activity.ProfessionalLoginActivity" />
         <activity android:name=".activity.RukuListActivity" />
@@ -96,7 +100,8 @@
         <activity android:name=".activity.AboutActivity" />
         <activity android:name=".activity.ProCameraActivity" />
         <activity android:name=".activity.ProShowPicActivity" />
-        <activity android:name=".activity.ProPicLocationActivity"></activity>
+        <activity android:name=".activity.ProPicLocationActivity" />
+        <activity android:name=".activity.VoiceActivity"></activity>
     </application>
 
 </manifest>
