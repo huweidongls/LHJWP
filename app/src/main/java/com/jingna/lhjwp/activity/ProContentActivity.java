@@ -382,12 +382,18 @@ public class ProContentActivity extends BaseActivity {
                                         map.put(uuid, mList);
                                         SpUtils.setProPicInfo(context, map);
                                         adapter.notifyDataSetChanged();
+                                        ToastUtil.showShort(context, "上传照片成功");
+                                    }else if(jsonObject.getString("result").equals("0")){
+                                        ToastUtil.showShort(context, "上传照片失败");
+                                    }else if(jsonObject.getString("result").equals("-1")){
+                                        ToastUtil.showShort(context, "图像内二维码不存在");
+                                    }else if(jsonObject.getString("result").equals("-2")){
+                                        ToastUtil.showShort(context, jsonObject.getString("errorInfo"));
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                                 WeiboDialogUtils.closeDialog(dialog);
-                                ToastUtil.showShort(context, "上传照片成功");
                             }
 
                             @Override

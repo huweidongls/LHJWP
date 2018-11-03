@@ -17,6 +17,7 @@
     </style>
     <!--顶部标题样式-->
     <style name="tv_top_title">
+        <item name="android:gravity">center</item>
         <item name="android:layout_width">500px</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">36px</item>
