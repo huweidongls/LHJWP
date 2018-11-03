@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.activity;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,9 +39,13 @@ import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.FileUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
+import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.vise.xsnow.http.ViseHttp;
 import com.vise.xsnow.http.callback.ACallback;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -94,8 +99,13 @@ public class ProContentActivity extends BaseActivity {
     private String uuid = "";
     private String username = "";
     private String title = "";
+    private String S_SJ = "";
+    private String S_TAB = "";
+    private String type = "";
 
     private static final int REQUEST_CODE = 0x00000011;
+
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +113,9 @@ public class ProContentActivity extends BaseActivity {
         setContentView(R.layout.activity_pro_show_pic);
         uuid = getIntent().getStringExtra("uuid");
         title = getIntent().getStringExtra("title");
+        S_SJ = getIntent().getStringExtra("S_SJ");
+        S_TAB = getIntent().getStringExtra("S_TAB");
+        type = getIntent().getStringExtra("type");
         username = SpUtils.getUsername(context);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProContentActivity.this);
@@ -275,8 +288,13 @@ public class ProContentActivity extends BaseActivity {
                     tvBottom.setText("上传");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 }else {
-                    ToastUtil.showShort(context, "上传");
-                    uploadPic();
+                    int maxPic = Integer.valueOf(SpUtils.getMaxPic(context));
+                    int minPic = Integer.valueOf(SpUtils.getMinPic(context));
+                    if(mList.size()<minPic||mList.size()>maxPic){
+                        ToastUtil.showShort(context, "只能上传"+minPic+"~"+maxPic+"张照片");
+                    }else {
+                        uploadPic();
+                    }
                 }
                 break;
         }
@@ -286,7 +304,7 @@ public class ProContentActivity extends BaseActivity {
      * 上传图片
      */
     private void uploadPic() {
-
+        dialog = WeiboDialogUtils.createLoadingDialog(context, "请等待");
         Observable<Map<String, File>> observable = Observable.create(new ObservableOnSubscribe<Map<String, File>>() {
             @Override
             public void subscribe(final ObservableEmitter<Map<String, File>> e) throws Exception {
@@ -344,21 +362,38 @@ public class ProContentActivity extends BaseActivity {
             public void onNext(Map<String, File> value) {
                 ViseHttp.UPLOAD("/tzapp/phone/upPic.action")
                         .addParam("S_CORP_UUID", uuid)
-                        .addParam("S_SJ", "201805")
-                        .addParam("S_TAB", "S812_2018_TZ_RKSQ")
+                        .addParam("S_SJ", S_SJ)
+                        .addParam("S_TAB", S_TAB)
                         .addParam("S_TASK_ID", "")
-                        .addParam("type", "1")
+                        .addParam("type", type)
                         .addParam("user_name", username)
                         .addFiles(value)
                         .request(new ACallback<String>() {
                             @Override
                             public void onSuccess(String data) {
                                 Log.e("123123", data+"返回的json");
+                                try {
+                                    JSONObject jsonObject = new JSONObject(data);
+                                    if(jsonObject.getString("result").equals("1")){
+                                        for (int i = 0; i<mList.size(); i++){
+                                            mList.get(i).setUpload(true);
+                                        }
+                                        Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                                        map.put(uuid, mList);
+                                        SpUtils.setProPicInfo(context, map);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                WeiboDialogUtils.closeDialog(dialog);
+                                ToastUtil.showShort(context, "上传照片成功");
                             }
 
                             @Override
                             public void onFail(int errCode, String errMsg) {
                                 Log.e("123123", errMsg);
+                                WeiboDialogUtils.closeDialog(dialog);
                             }
                         });
             }

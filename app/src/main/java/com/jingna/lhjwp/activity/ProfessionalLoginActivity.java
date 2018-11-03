@@ -68,6 +68,8 @@ public class ProfessionalLoginActivity extends BaseActivity {
                             if(jsonObject.getString("result").equals("1")){
                                 SpUtils.setUsername(context, name);
                                 SpUtils.setS_ORGAN(context, jsonObject.getString("S_ORGAN"));
+                                SpUtils.setMinPic(context, jsonObject.getString("minPic"));
+                                SpUtils.setMaxPic(context, jsonObject.getString("maxPic"));
                                 Intent intent = new Intent(context, ProfessionalActivity.class);
                                 startActivity(intent);
                             }

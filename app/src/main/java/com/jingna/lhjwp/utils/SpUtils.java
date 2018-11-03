@@ -32,7 +32,7 @@ public class SpUtils {
 
     public static String getMinPic(Context context){
         spCache = new SpCache(context, "pro_info");
-        return spCache.get(MIN_PIC, "10");
+        return spCache.get(MIN_PIC, "3");
     }
 
     public static void setMinPic(Context context, String minpic){

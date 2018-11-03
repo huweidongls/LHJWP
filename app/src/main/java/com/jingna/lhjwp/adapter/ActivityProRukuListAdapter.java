@@ -67,6 +67,9 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProContentActivity.class);
+                intent.putExtra("type", mFilterList.get(position).getType());
+                intent.putExtra("S_SJ", mFilterList.get(position).getS_SJ());
+                intent.putExtra("S_TAB", mFilterList.get(position).getS_TAB());
                 intent.putExtra("title", mFilterList.get(position).getS_XMMC());
                 intent.putExtra("uuid", mFilterList.get(position).getS_CORP_UUID());
                 context.startActivity(intent);
