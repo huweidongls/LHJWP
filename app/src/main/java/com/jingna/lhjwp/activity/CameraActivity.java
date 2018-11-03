@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -25,6 +26,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
@@ -80,6 +82,12 @@ public class CameraActivity extends BaseActivity {
     TextView tvLat;
     @BindView(R.id.activity_camera_tv_top)
     TextView tvTop;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
+    @BindView(R.id.tv_long)
+    TextView tvLong;
+    @BindView(R.id.tv_imei)
+    TextView tvImei;
 
     Fotoapparat fotoapparat;
 
@@ -95,6 +103,12 @@ public class CameraActivity extends BaseActivity {
 
     private int position;
     private String title = "";
+
+    private boolean isText = true;
+    private boolean isCode = true;
+    private boolean isGps = true;
+    private boolean isTime = true;
+    private boolean isImei = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +173,115 @@ public class CameraActivity extends BaseActivity {
 
         int y = rlBottom.getMeasuredHeight();
         Log.e("123123", y+"");
+
+        final ImageView ivText = view.findViewById(R.id.iv_text);
+        final ImageView ivCode = view.findViewById(R.id.iv_code);
+        final ImageView ivGps = view.findViewById(R.id.iv_gps);
+        final ImageView ivTime = view.findViewById(R.id.iv_time);
+        final ImageView ivImei = view.findViewById(R.id.iv_imei);
+
+        if(isText){
+            Glide.with(context).load(R.drawable.on).into(ivText);
+        }else {
+            Glide.with(context).load(R.drawable.off).into(ivText);
+        }
+        if(isCode){
+            Glide.with(context).load(R.drawable.on).into(ivCode);
+        }else {
+            Glide.with(context).load(R.drawable.off).into(ivCode);
+        }
+        if(isGps){
+            Glide.with(context).load(R.drawable.on).into(ivGps);
+        }else {
+            Glide.with(context).load(R.drawable.off).into(ivGps);
+        }
+        if(isTime){
+            Glide.with(context).load(R.drawable.on).into(ivTime);
+        }else {
+            Glide.with(context).load(R.drawable.off).into(ivTime);
+        }
+        if(isImei){
+            Glide.with(context).load(R.drawable.on).into(ivImei);
+        }else {
+            Glide.with(context).load(R.drawable.off).into(ivImei);
+        }
+
+        ivText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isText){
+                    Glide.with(context).load(R.drawable.off).into(ivText);
+                    isText = false;
+                    llInfo.setVisibility(View.GONE);
+                }else {
+                    Glide.with(context).load(R.drawable.on).into(ivText);
+                    isText = true;
+                    llInfo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ivCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isCode){
+                    Glide.with(context).load(R.drawable.off).into(ivCode);
+                    isCode = false;
+                }else {
+                    Glide.with(context).load(R.drawable.on).into(ivCode);
+                    isCode = true;
+                }
+            }
+        });
+
+        ivGps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isGps){
+                    Glide.with(context).load(R.drawable.off).into(ivGps);
+                    isGps = false;
+                    tvAddress.setVisibility(View.GONE);
+                    tvLat.setVisibility(View.GONE);
+                    tvLong.setVisibility(View.GONE);
+                }else {
+                    Glide.with(context).load(R.drawable.on).into(ivGps);
+                    isGps = true;
+                    tvAddress.setVisibility(View.VISIBLE);
+                    tvLat.setVisibility(View.VISIBLE);
+                    tvLong.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ivTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isTime){
+                    Glide.with(context).load(R.drawable.off).into(ivTime);
+                    isTime = false;
+                    tvTime.setVisibility(View.GONE);
+                }else {
+                    Glide.with(context).load(R.drawable.on).into(ivTime);
+                    isTime = true;
+                    tvTime.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ivImei.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isImei){
+                    Glide.with(context).load(R.drawable.off).into(ivImei);
+                    isImei = false;
+                    tvImei.setVisibility(View.GONE);
+                }else {
+                    Glide.with(context).load(R.drawable.on).into(ivImei);
+                    isImei = true;
+                    tvImei.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
@@ -251,6 +374,12 @@ public class CameraActivity extends BaseActivity {
         fotoapparat.stop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocationClient.stop();
+    }
+
     /**
      * 定位
      */
@@ -283,8 +412,11 @@ public class CameraActivity extends BaseActivity {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
             address = location.getAddrStr();
+            tvTime.setText(DateUtils.stampToDateSecond1(System.currentTimeMillis()+""));
             tvAddress.setText("地址: "+location.getAddrStr());
-            tvLat.setText("经纬度: "+latitude+","+longitude);
+            tvLong.setText("经度: "+longitude);
+            tvLat.setText("纬度: "+latitude);
+            tvImei.setText("IMEI: "+SpUtils.getDeviceId(context));
         }
     }
 

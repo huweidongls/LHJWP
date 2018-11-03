@@ -36,12 +36,13 @@ public class ProShowPicActivity extends BaseActivity {
 
     private String path;
     private String uuid = "";
+    private String title = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pro_show_pic2);
-
+        title = getIntent().getStringExtra("title");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProShowPicActivity.this);
         init();
@@ -50,6 +51,7 @@ public class ProShowPicActivity extends BaseActivity {
 
     private void init() {
 
+        tvTop.setText(title);
         Intent intent = getIntent();
         path = intent.getStringExtra("path");
         uuid = intent.getStringExtra("uuid");

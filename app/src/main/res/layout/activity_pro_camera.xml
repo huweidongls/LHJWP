@@ -11,6 +11,8 @@
         style="@style/rl_top_bar">
 
         <TextView
+            android:lines="1"
+            android:ellipsize="end"
             android:id="@+id/activity_camera_tv_top"
             style="@style/tv_top_title" />
 
@@ -47,11 +49,22 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tv_address"
+            android:id="@+id/tv_time"
             android:layout_marginTop="20px"
             android:textColor="@color/black_333333"
             android:textSize="28px"
-            android:text="地址：哈尔滨市南岗区汉广街"
+            android:text="时间："
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_long"
+            android:layout_marginTop="12px"
+            android:textColor="@color/black_333333"
+            android:textSize="28px"
+            android:text="经度："
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:layout_width="wrap_content"
@@ -59,11 +72,33 @@
 
         <TextView
             android:id="@+id/tv_lat"
-            android:layout_marginBottom="20px"
             android:layout_marginTop="12px"
             android:textColor="@color/black_333333"
             android:textSize="28px"
-            android:text="经纬度：126，45"
+            android:text="纬度："
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_marginTop="12px"
+            android:textColor="@color/black_333333"
+            android:textSize="28px"
+            android:text="地址："
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginBottom="20px"
+            android:id="@+id/tv_imei"
+            android:layout_marginTop="12px"
+            android:textColor="@color/black_333333"
+            android:textSize="28px"
+            android:text="IMEI："
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:layout_width="wrap_content"

@@ -3,6 +3,7 @@ package com.jingna.lhjwp.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -38,6 +39,14 @@ public class ProfessionalActivity extends BaseActivity {
     TextView tvJgTz;
     @BindView(R.id.tv_jg_fdc)
     TextView tvJgFdc;
+    @BindView(R.id.tv_jd_tz)
+    TextView tvJdTz;
+    @BindView(R.id.tv_jd_fdc)
+    TextView tvJdFdc;
+    @BindView(R.id.tv_bg_tz)
+    TextView tvBgTz;
+    @BindView(R.id.tv_bg_fdc)
+    TextView tvBgFdc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +104,49 @@ public class ProfessionalActivity extends BaseActivity {
                                 Gson gson = new Gson();
                                 TaskListModel model = gson.fromJson(data, TaskListModel.class);
                                 //入库项目采集
-                                tvRkTz.setText("投资: "+model.getXkgTask().getTzTime()+"  完成: "+model.getXkgTask().getTzFinish()+"/"+model.getXkgTask().getTzAllXm());
-                                tvRkFdc.setText("房地产: "+model.getXkgTask().getFdcTime()+"  完成: "+model.getXkgTask().getFdcFinish()+"/"+model.getXkgTask().getFdcAllXm());
+                                if(TextUtils.isEmpty(model.getXkgTask().getTzTime())){
+                                    tvRkTz.setText("未发布");
+                                }else {
+                                    tvRkTz.setText("投资: "+model.getXkgTask().getTzTime()+"  完成: "+model.getXkgTask().getTzFinish()+"/"+model.getXkgTask().getTzAllXm());
+                                }
+                                if(TextUtils.isEmpty(model.getXkgTask().getFdcTime())){
+                                    tvRkFdc.setText("未发布");
+                                }else {
+                                    tvRkFdc.setText("房地产: "+model.getXkgTask().getFdcTime()+"  完成: "+model.getXkgTask().getFdcFinish()+"/"+model.getXkgTask().getFdcAllXm());
+                                }
                                 //竣工项目采集
-                                tvJgTz.setText("投资: "+model.getJgTask().getTzTime()+"  完成: "+model.getJgTask().getTzFinish()+"/"+model.getJgTask().getTzAllXm());
-                                tvJgFdc.setText("房地产: "+model.getJgTask().getFdcTime()+"  完成: "+model.getJgTask().getFdcFinish()+"/"+model.getJgTask().getFdcAllXm());
+                                if(TextUtils.isEmpty(model.getJgTask().getTzTime())){
+                                    tvJgTz.setText("未发布");
+                                }else {
+                                    tvJgTz.setText("投资: "+model.getJgTask().getTzTime()+"  完成: "+model.getJgTask().getTzFinish()+"/"+model.getJgTask().getTzAllXm());
+                                }
+                                if(TextUtils.isEmpty(model.getJgTask().getFdcTime())){
+                                    tvJgFdc.setText("未发布");
+                                }else {
+                                    tvJgFdc.setText("房地产: "+model.getJgTask().getFdcTime()+"  完成: "+model.getJgTask().getFdcFinish()+"/"+model.getJgTask().getFdcAllXm());
+                                }
+                                //进度项目采集
+                                if(TextUtils.isEmpty(model.getJdTask().getTzTime())){
+                                    tvJdTz.setText("未发布");
+                                }else {
+                                    tvJdTz.setText("投资: "+model.getJdTask().getTzTime()+"  完成: "+model.getJdTask().getTzFinish()+"/"+model.getJdTask().getTzAllXm());
+                                }
+                                if(TextUtils.isEmpty(model.getJdTask().getFdcTime())){
+                                    tvJdFdc.setText("未发布");
+                                }else {
+                                    tvJdFdc.setText("房地产: "+model.getJdTask().getFdcTime()+"  完成: "+model.getJdTask().getFdcFinish()+"/"+model.getJdTask().getFdcAllXm());
+                                }
+                                //变更项目采集
+                                if(TextUtils.isEmpty(model.getBgTask().getTzTime())){
+                                    tvBgTz.setText("未发布");
+                                }else {
+                                    tvBgTz.setText("投资: "+model.getBgTask().getTzTime()+"  完成: "+model.getBgTask().getTzFinish()+"/"+model.getBgTask().getTzAllXm());
+                                }
+                                if(TextUtils.isEmpty(model.getBgTask().getFdcTime())){
+                                    tvBgFdc.setText("未发布");
+                                }else {
+                                    tvBgFdc.setText("房地产: "+model.getBgTask().getFdcTime()+"  完成: "+model.getBgTask().getFdcFinish()+"/"+model.getBgTask().getFdcAllXm());
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -114,7 +161,7 @@ public class ProfessionalActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.ll1, R.id.rl_person})
+    @OnClick({R.id.ll1, R.id.rl_person, R.id.ll2, R.id.ll3, R.id.ll4})
     public void onClick(View view){
         Intent intent = new Intent();
         switch (view.getId()){
@@ -125,6 +172,21 @@ public class ProfessionalActivity extends BaseActivity {
                 break;
             case R.id.rl_person:
                 intent.setClass(context, PersonActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.ll2:
+                intent.setClass(context, RukuListActivity.class);
+                intent.putExtra("type", "2");
+                startActivity(intent);
+                break;
+            case R.id.ll3:
+                intent.setClass(context, RukuListActivity.class);
+                intent.putExtra("type", "3");
+                startActivity(intent);
+                break;
+            case R.id.ll4:
+                intent.setClass(context, RukuListActivity.class);
+                intent.putExtra("type", "4");
                 startActivity(intent);
                 break;
         }

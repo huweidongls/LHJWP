@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -21,12 +22,20 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.donkingliang.imageselector.utils.ImageSelector;
+import com.donkingliang.imageselector.utils.ImageSelectorUtils;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
 import com.jingna.lhjwp.adapter.ProPicAddShowAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.FileUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.vise.xsnow.http.ViseHttp;
@@ -71,6 +80,12 @@ public class ProContentActivity extends BaseActivity {
     @BindView(R.id.activity_public_content_tv_top)
     TextView tvTop;
 
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = new MyLocationListener();
+    private double latitude;
+    private double longitude;
+    private String address = "";
+
     private ProPicAddShowAdapter adapter;
     private ArrayList<ProPicInfo> mList = new ArrayList<>();
 
@@ -78,16 +93,19 @@ public class ProContentActivity extends BaseActivity {
 
     private String uuid = "";
     private String username = "";
+    private String title = "";
+
+    private static final int REQUEST_CODE = 0x00000011;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pro_show_pic);
         uuid = getIntent().getStringExtra("uuid");
+        title = getIntent().getStringExtra("title");
         username = SpUtils.getUsername(context);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProContentActivity.this);
-
     }
 
     @Override
@@ -98,6 +116,7 @@ public class ProContentActivity extends BaseActivity {
 
     private void initData() {
 
+        tvTop.setText(title);
         Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
         if(map.get(uuid) != null){
             mList.clear();
@@ -110,13 +129,109 @@ public class ProContentActivity extends BaseActivity {
         adapter.setListener(new ProPicAddShowAdapter.OnAddImgListener() {
             @Override
             public void onAddImg() {
-                Intent intent = new Intent();
-                intent.putExtra("uuid", uuid);
-                intent.setClass(context, ProCameraActivity.class);
-                startActivity(intent);
+                showAddTypePop();
             }
         });
 
+    }
+
+    private void showAddTypePop(){
+        View view = LayoutInflater.from(context).inflate(R.layout.popupwindow_pro_add_type, null);
+        ScreenAdapterTools.getInstance().loadView(view);
+
+        TextView tvCamera = view.findViewById(R.id.tv_camera);
+        TextView tvPhoto = view.findViewById(R.id.tv_photo);
+        TextView tvCancel = view.findViewById(R.id.tv_cancel);
+
+        tvCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("uuid", uuid);
+                intent.putExtra("title", title);
+                intent.setClass(context, ProCameraActivity.class);
+                startActivity(intent);
+                popupWindow.dismiss();
+            }
+        });
+
+        tvPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLocate();
+                //不限数量的多选
+                ImageSelector.builder()
+                        .useCamera(false) // 设置是否使用拍照
+                        .setSingle(false)  //设置是否单选
+                        .setMaxSelectCount(0) // 图片的最大选择数量，小于等于0时，不限数量。
+//                        .setSelected(selected) // 把已选的图片传入默认选中。
+                        .setViewImage(true) //是否点击放大图片查看,，默认为true
+                        .start(ProContentActivity.this, REQUEST_CODE); // 打开相册
+                popupWindow.dismiss();
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+        // 设置点击窗口外边窗口消失
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+        // 设置popWindow的显示和消失动画
+        popupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.alpha = 0.5f;
+        getWindow().setAttributes(params);
+        popupWindow.update();
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            // 在dismiss中恢复透明度
+            public void onDismiss() {
+                WindowManager.LayoutParams params = getWindow().getAttributes();
+                params.alpha = 1f;
+                getWindow().setAttributes(params);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && data != null) {
+            //获取选择器返回的数据
+            ArrayList<String> images = data.getStringArrayListExtra(ImageSelectorUtils.SELECT_RESULT);
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            File dir = new File(path+"/lhjwp/");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+            ArrayList<ProPicInfo> list = map.get(uuid);
+            if(list == null){
+                list = new ArrayList<>();
+            }
+            for (int i = 0; i<images.size(); i++){
+                String newPath = path+"/lhjwp/"+System.currentTimeMillis()+i+".jpg";
+                boolean isSuccess = FileUtils.copyFile(images.get(i), newPath);
+                if(isSuccess){
+                    list.add(new ProPicInfo(newPath, DateUtils.stampToDateSecond(System.currentTimeMillis()+""), latitude, longitude, address, false));
+                }
+            }
+            map.put(uuid, list);
+            SpUtils.setProPicInfo(context, map);
+            mLocationClient.stop();
+            initData();
+        }
     }
 
     @OnClick({R.id.activity_public_content_rl_back, R.id.activity_public_content_rl_more, R.id.activity_public_content_tv_bottom})
@@ -340,6 +455,46 @@ public class ProContentActivity extends BaseActivity {
             tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
         } else {
             finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    /**
+     * 定位
+     */
+    private void startLocate() {
+        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+        mLocationClient.registerLocationListener(myListener);    //注册监听函数
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        int span = 1000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+        //开启定位
+        mLocationClient.start();
+    }
+
+    private class MyLocationListener implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            address = location.getAddrStr();
         }
     }
 

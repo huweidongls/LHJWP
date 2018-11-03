@@ -2,6 +2,7 @@ package com.jingna.lhjwp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,10 +56,18 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
         }
         holder.tvTitle.setText(mFilterList.get(position).getS_XMMC());
         holder.tvAddress.setText(mFilterList.get(position).getS_ADDRESS());
+        if(mFilterList.get(position).getS_UP_FLAG().equals("1")){
+            holder.tvType.setTextColor(Color.parseColor("#007AFF"));
+            holder.tvType.setText("已上传");
+        }else {
+            holder.tvType.setTextColor(Color.parseColor("#FF7800"));
+            holder.tvType.setText("未上传");
+        }
         holder.rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProContentActivity.class);
+                intent.putExtra("title", mFilterList.get(position).getS_XMMC());
                 intent.putExtra("uuid", mFilterList.get(position).getS_CORP_UUID());
                 context.startActivity(intent);
             }

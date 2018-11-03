@@ -29,6 +29,7 @@
             android:layout_height="wrap_content" />
         
         <ImageView
+            android:id="@+id/iv_text"
             android:layout_marginRight="25px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -52,6 +53,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
+            android:id="@+id/iv_code"
             android:layout_marginRight="25px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -85,6 +87,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
+            android:id="@+id/iv_gps"
             android:layout_marginRight="25px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -108,6 +111,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
+            android:id="@+id/iv_time"
             android:layout_marginRight="25px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -132,6 +136,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
+            android:id="@+id/iv_imei"
             android:layout_marginRight="25px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
