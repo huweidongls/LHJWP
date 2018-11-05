@@ -33,6 +33,9 @@ import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
 import com.jingna.lhjwp.adapter.ProPicAddShowAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.dialog.CustomDialog;
+import com.jingna.lhjwp.imagepreview.Consts;
+import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.DateUtils;
@@ -145,6 +148,35 @@ public class ProContentActivity extends BaseActivity {
                 showAddTypePop();
             }
         });
+        adapter.setShowImgListener(new ProPicAddShowAdapter.ShowImgListener() {
+            @Override
+            public void showImg(int pos) {
+                adapter.setEdit(false);
+                ivBack.setVisibility(View.VISIBLE);
+                tvCancel.setVisibility(View.GONE);
+                tvBottom.setText("上传");
+                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+
+                Intent intent = new Intent();
+                intent.putExtra("path", mList.get(pos).getPicPath());
+                intent.putExtra("uuid", uuid);
+                intent.putExtra("title", title);
+                intent.setClass(context, ProShowPicActivity.class);
+                startActivity(intent);
+
+//                List<String> urlList = new ArrayList<>();
+//                for (int i = 0; i<data.size(); i++){
+//                    urlList.add("file://"+data.get(i).getPicPath());
+//                }
+//                Intent intent = new Intent(context, ImagePreviewActivity.class);
+//                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
+//                intent.putExtra(Consts.START_ITEM_POSITION, position);
+//                intent.putExtra(Consts.START_IAMGE_POSITION, position);
+////                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
+//                context.startActivity(intent);
+////                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
+            }
+        });
 
     }
 
@@ -154,11 +186,16 @@ public class ProContentActivity extends BaseActivity {
 
         TextView tvCamera = view.findViewById(R.id.tv_camera);
         TextView tvPhoto = view.findViewById(R.id.tv_photo);
-        TextView tvCancel = view.findViewById(R.id.tv_cancel);
+        TextView tvCancelPop = view.findViewById(R.id.tv_cancel);
 
         tvCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                adapter.setEdit(false);
+                ivBack.setVisibility(View.VISIBLE);
+                tvCancel.setVisibility(View.GONE);
+                tvBottom.setText("上传");
+                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 Intent intent = new Intent();
                 intent.putExtra("uuid", uuid);
                 intent.putExtra("title", title);
@@ -171,6 +208,11 @@ public class ProContentActivity extends BaseActivity {
         tvPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                adapter.setEdit(false);
+                ivBack.setVisibility(View.VISIBLE);
+                tvCancel.setVisibility(View.GONE);
+                tvBottom.setText("上传");
+                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 startLocate();
                 //不限数量的多选
                 ImageSelector.builder()
@@ -184,7 +226,7 @@ public class ProContentActivity extends BaseActivity {
             }
         });
 
-        tvCancel.setOnClickListener(new View.OnClickListener() {
+        tvCancelPop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
@@ -266,27 +308,33 @@ public class ProContentActivity extends BaseActivity {
                 break;
             case R.id.activity_public_content_tv_bottom:
                 if(adapter.getEdit()){
-                    Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
-                    ArrayList<ProPicInfo> list = map.get(uuid);
-                    List<Integer> editList = adapter.getEditList();
-                    Collections.sort(editList);
-                    Collections.reverse(editList);
+                    CustomDialog customDialog = new CustomDialog(context, "是否删除照片", new CustomDialog.OnSureListener() {
+                        @Override
+                        public void onSure() {
+                            Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                            ArrayList<ProPicInfo> list = map.get(uuid);
+                            List<Integer> editList = adapter.getEditList();
+                            Collections.sort(editList);
+                            Collections.reverse(editList);
 //                Log.e("121212", mList.size()+"--"+editList.size());
-                    for (int i = 0; i<editList.size(); i++){
-                        int num = editList.get(i);
-                        File file = new File(mList.get(num).getPicPath());
-                        file.delete();
-                        mList.remove(num);
-                        list.remove(num);
-                    }
-                    adapter.setEdit(false);
-                    adapter.notifyDataSetChanged();
-                    map.put(uuid, list);
-                    SpUtils.setProPicInfo(context, map);
-                    ivBack.setVisibility(View.VISIBLE);
-                    tvCancel.setVisibility(View.GONE);
-                    tvBottom.setText("上传");
-                    tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+                            for (int i = 0; i<editList.size(); i++){
+                                int num = editList.get(i);
+                                File file = new File(mList.get(num).getPicPath());
+                                file.delete();
+                                mList.remove(num);
+                                list.remove(num);
+                            }
+                            adapter.setEdit(false);
+                            adapter.notifyDataSetChanged();
+                            map.put(uuid, list);
+                            SpUtils.setProPicInfo(context, map);
+                            ivBack.setVisibility(View.VISIBLE);
+                            tvCancel.setVisibility(View.GONE);
+                            tvBottom.setText("上传");
+                            tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+                        }
+                    });
+                    customDialog.show();
                 }else {
                     int maxPic = Integer.valueOf(SpUtils.getMaxPic(context));
                     int minPic = Integer.valueOf(SpUtils.getMinPic(context));
@@ -439,6 +487,7 @@ public class ProContentActivity extends BaseActivity {
                     tvBottom.setText("上传");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                     intent.putExtra("uuid", uuid);
+                    intent.putExtra("title", title);
                     intent.setClass(context, ProPicLocationActivity.class);
                     startActivity(intent);
                 }else {

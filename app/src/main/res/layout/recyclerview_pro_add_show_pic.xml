@@ -12,7 +12,7 @@
 
         <ImageView
             android:scaleType="fitXY"
-            android:src="@drawable/add_pic"
+            android:src="@drawable/add_pic_pro"
             android:layout_width="226px"
             android:layout_height="226px" />
 

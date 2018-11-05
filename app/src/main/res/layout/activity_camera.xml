@@ -39,8 +39,8 @@
     <LinearLayout
         android:id="@+id/ll_info"
         android:background="#91ffffff"
+        android:layout_marginLeft="20px"
         android:layout_marginBottom="20px"
-        android:layout_centerHorizontal="true"
         android:layout_above="@+id/activity_camera_rl_bottom"
         android:orientation="vertical"
         android:layout_width="wrap_content"

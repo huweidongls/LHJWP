@@ -25,6 +25,9 @@ import com.google.gson.Gson;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.dialog.CustomDialog;
+import com.jingna.lhjwp.imagepreview.Consts;
+import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.ShareUtils;
 import com.jingna.lhjwp.utils.SpUtils;
@@ -114,11 +117,45 @@ public class PublicContentActivity extends BaseActivity {
         adapter.setListener(new PicAddShowAdapter.OnAddImgListener() {
             @Override
             public void onAddImg() {
+                adapter.setEdit(false);
+                ivBack.setVisibility(View.VISIBLE);
+                tvCancel.setVisibility(View.GONE);
+                tvBottom.setText("分享");
+                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 Intent intent = new Intent();
                 intent.putExtra("position", position);
                 intent.putExtra("title", title);
                 intent.setClass(PublicContentActivity.this, CameraActivity.class);
                 startActivity(intent);
+            }
+        });
+        adapter.setShowImgListener(new PicAddShowAdapter.ShowImgListener() {
+            @Override
+            public void showImg(int pos) {
+                adapter.setEdit(false);
+                ivBack.setVisibility(View.VISIBLE);
+                tvCancel.setVisibility(View.GONE);
+                tvBottom.setText("分享");
+                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+
+                Intent intent = new Intent();
+                intent.putExtra("title", title);
+                intent.putExtra("path", mList.get(pos).getPicPath());
+                intent.putExtra("position", position);
+                intent.setClass(context, PublicShowPicActivity.class);
+                startActivity(intent);
+
+//                List<String> urlList = new ArrayList<>();
+//                for (int i = 0; i<mList.size(); i++){
+//                    urlList.add("file://"+mList.get(i).getPicPath());
+//                }
+//                Intent intent = new Intent(context, ImagePreviewActivity.class);
+//                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
+//                intent.putExtra(Consts.START_ITEM_POSITION, pos);
+//                intent.putExtra(Consts.START_IAMGE_POSITION, pos);
+////                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
+//                startActivity(intent);
+////                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
             }
         });
 
@@ -132,7 +169,7 @@ public class PublicContentActivity extends BaseActivity {
                     adapter.setEdit(false);
                     ivBack.setVisibility(View.VISIBLE);
                     tvCancel.setVisibility(View.GONE);
-                    tvBottom.setText("发送");
+                    tvBottom.setText("分享");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                 } else {
                     finish();
@@ -147,25 +184,31 @@ public class PublicContentActivity extends BaseActivity {
                 break;
             case R.id.activity_public_content_tv_bottom:
                 if (adapter.getEdit()) {
-                    ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
-                    List<Integer> editList = adapter.getEditList();
-                    Collections.sort(editList);
-                    Collections.reverse(editList);
+                    CustomDialog customDialog = new CustomDialog(context, "是否删除照片", new CustomDialog.OnSureListener() {
+                        @Override
+                        public void onSure() {
+                            ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                            List<Integer> editList = adapter.getEditList();
+                            Collections.sort(editList);
+                            Collections.reverse(editList);
 //                Log.e("121212", mList.size()+"--"+editList.size());
-                    for (int i = 0; i < editList.size(); i++) {
-                        int num = editList.get(i);
-                        File file = new File(mList.get(num).getPicPath());
-                        file.delete();
-                        mList.remove(num);
-                        list.get(position).getPicList().remove(num);
-                    }
-                    adapter.setEdit(false);
-                    adapter.notifyDataSetChanged();
-                    SpUtils.setPublicInfo(context, list);
-                    ivBack.setVisibility(View.VISIBLE);
-                    tvCancel.setVisibility(View.GONE);
-                    tvBottom.setText("发送");
-                    tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+                            for (int i = 0; i < editList.size(); i++) {
+                                int num = editList.get(i);
+                                File file = new File(mList.get(num).getPicPath());
+                                file.delete();
+                                mList.remove(num);
+                                list.get(position).getPicList().remove(num);
+                            }
+                            adapter.setEdit(false);
+                            adapter.notifyDataSetChanged();
+                            SpUtils.setPublicInfo(context, list);
+                            ivBack.setVisibility(View.VISIBLE);
+                            tvCancel.setVisibility(View.GONE);
+                            tvBottom.setText("分享");
+                            tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
+                        }
+                    });
+                    customDialog.show();
                 } else {
 //                    List<File> fileList = new ArrayList<>();
 //                    for (int i = 0; i<mList.size(); i++){
@@ -355,7 +398,7 @@ public class PublicContentActivity extends BaseActivity {
                     adapter.setEdit(false);
                     ivBack.setVisibility(View.VISIBLE);
                     tvCancel.setVisibility(View.GONE);
-                    tvBottom.setText("发送");
+                    tvBottom.setText("分享");
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                     intent.putExtra("position", position);
                     intent.putExtra("title", title);
@@ -412,7 +455,7 @@ public class PublicContentActivity extends BaseActivity {
             adapter.setEdit(false);
             ivBack.setVisibility(View.VISIBLE);
             tvCancel.setVisibility(View.GONE);
-            tvBottom.setText("发送");
+            tvBottom.setText("分享");
             tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
         } else {
             finish();

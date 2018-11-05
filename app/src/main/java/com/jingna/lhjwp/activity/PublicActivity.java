@@ -12,10 +12,12 @@ import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.ActivityPublicRvAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.dialog.AddDialog;
+import com.jingna.lhjwp.dialog.CustomDialog;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,20 +90,33 @@ public class PublicActivity extends BaseActivity {
                 addDialog.show();
                 break;
             case R.id.activity_public_tv_delete:
-                List<Integer> editList = adapter.getEditList();
-                Collections.sort(editList);
-                Collections.reverse(editList);
-                Log.e("123123", editList.toString());
-                for (int i = 0; i<editList.size(); i++){
-                    int num = editList.get(i);
-                    Log.e("123123", num+"");
-                    mList.remove(num);
-                }
-                adapter.notifyDataSetChanged();
-                adapter.setEdit(false);
-                tvEdit.setText("编辑");
-                tvDelete.setVisibility(View.GONE);
-                SpUtils.setPublicInfo(context, mList);
+                CustomDialog customDialog = new CustomDialog(context, "是否删除选中项目", new CustomDialog.OnSureListener() {
+                    @Override
+                    public void onSure() {
+                        List<Integer> editList = adapter.getEditList();
+                        Collections.sort(editList);
+                        Collections.reverse(editList);
+                        Log.e("123123", editList.toString());
+                        for (int i = 0; i<editList.size(); i++){
+                            int num = editList.get(i);
+                            if(mList.get(num).getPicList()!=null&&mList.size()>0){
+                                List<PublicInfo.PicInfo> list = mList.get(num).getPicList();
+                                for (int a = 0; a<list.size(); a++){
+                                    File file = new File(list.get(a).getPicPath());
+                                    file.delete();
+                                }
+                            }
+                            Log.e("123123", num+"");
+                            mList.remove(num);
+                        }
+                        adapter.notifyDataSetChanged();
+                        adapter.setEdit(false);
+                        tvEdit.setText("编辑");
+                        tvDelete.setVisibility(View.GONE);
+                        SpUtils.setPublicInfo(context, mList);
+                    }
+                });
+                customDialog.show();
                 break;
         }
     }

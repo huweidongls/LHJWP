@@ -36,6 +36,11 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
     private static final int MAX_SIZE = 9;
 
     private OnAddImgListener addListener;
+    private ShowImgListener showImgListener;
+
+    public void setShowImgListener(ShowImgListener showImgListener) {
+        this.showImgListener = showImgListener;
+    }
 
     public void setListener(OnAddImgListener addListener) {
         this.addListener = addListener;
@@ -118,17 +123,7 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
         holder.iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> urlList = new ArrayList<>();
-                for (int i = 0; i<data.size(); i++){
-                    urlList.add("file://"+data.get(i).getPicPath());
-                }
-                Intent intent = new Intent(context, ImagePreviewActivity.class);
-                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
-                intent.putExtra(Consts.START_ITEM_POSITION, position);
-                intent.putExtra(Consts.START_IAMGE_POSITION, position);
-//                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
-                context.startActivity(intent);
-//                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
+                showImgListener.showImg(position);
             }
         });
     }
@@ -167,6 +162,10 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
 
     public interface OnAddImgListener {
         void onAddImg();
+    }
+
+    public interface ShowImgListener{
+        void showImg(int pos);
     }
 
 }

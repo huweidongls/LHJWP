@@ -11,7 +11,7 @@
         style="@style/rl_top_bar">
 
         <TextView
-            android:text="入库项目采集"
+            android:id="@+id/tv_title"
             style="@style/tv_top_title" />
         
         <RelativeLayout
@@ -50,21 +50,21 @@
         android:layout_width="match_parent"
         android:layout_height="102px">
 
-        <ImageView
-            android:id="@+id/iv_record"
-            android:layout_marginLeft="32px"
-            android:layout_marginTop="42px"
-            android:src="@drawable/record"
-            android:layout_width="36px"
-            android:layout_height="50px" />
+        <!--<ImageView-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/iv_record"-->
+            <!--android:layout_marginLeft="32px"-->
+            <!--android:layout_marginTop="42px"-->
+            <!--android:src="@drawable/record"-->
+            <!--android:layout_width="36px"-->
+            <!--android:layout_height="50px" />-->
 
         <RelativeLayout
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:background="@drawable/bg_search"
             android:layout_marginRight="32px"
-            android:layout_marginLeft="20px"
-            android:layout_toRightOf="@+id/iv_record"
+            android:layout_marginLeft="32px"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="70px">

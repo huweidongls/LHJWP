@@ -31,8 +31,8 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:lines="1"
-            android:ellipsize="end"
+            android:singleLine="true"
+            android:ellipsize="middle"
             android:id="@+id/tv_title"
             android:layout_marginTop="28px"
             android:textColor="#22283B"

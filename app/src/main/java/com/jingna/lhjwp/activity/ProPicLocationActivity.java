@@ -58,6 +58,7 @@ public class ProPicLocationActivity extends BaseActivity {
     private BaiduMap mBaiduMap;
 
     private String uuid = "";
+    private String title = "";
 
     private boolean isShow = true;
 
@@ -66,6 +67,7 @@ public class ProPicLocationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pro_pic_location);
         uuid = getIntent().getStringExtra("uuid");
+        title = getIntent().getStringExtra("title");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProPicLocationActivity.this);
         mBaiduMap = mMapView.getMap();
@@ -75,6 +77,7 @@ public class ProPicLocationActivity extends BaseActivity {
 
     private void initData() {
 
+        tvTop.setText(title);
         Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
         if(map.get(uuid) != null){
             mList.clear();
@@ -143,7 +146,7 @@ public class ProPicLocationActivity extends BaseActivity {
                 //要移动的点
                 .target(cenpt)
                 //放大地图到20倍
-                .zoom(16)
+                .zoom(19)
                 .build();
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);

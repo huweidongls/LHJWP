@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.activity;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,8 +30,11 @@ import com.jingna.lhjwp.adapter.ActivityProRukuListAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.model.RukuListModel;
 import com.jingna.lhjwp.utils.SpUtils;
+import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.vise.xsnow.http.ViseHttp;
 import com.vise.xsnow.http.callback.ACallback;
+import com.vise.xsnow.http.mode.CacheMode;
+import com.vise.xsnow.http.mode.CacheResult;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import org.json.JSONException;
@@ -70,6 +74,8 @@ public class RukuListActivity extends BaseActivity {
     TextView tvSort;
     @BindView(R.id.iv_sort)
     ImageView ivSort;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
 
     private String type = "";
 
@@ -82,6 +88,8 @@ public class RukuListActivity extends BaseActivity {
     private int popPro = 0;
     private int popType = 0;
     private int popSort = 0;
+
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,19 +105,31 @@ public class RukuListActivity extends BaseActivity {
 
     private void initData() {
 
+        if(type.equals("1")){
+            tvTitle.setText("入库项目采集");
+        }else if(type.equals("2")){
+            tvTitle.setText("进度项目采集");
+        }else if(type.equals("3")){
+            tvTitle.setText("变更项目采集");
+        }else if(type.equals("4")){
+            tvTitle.setText("竣工项目采集");
+        }
+
         String name = SpUtils.getUsername(context);
         String S_ORGAN = SpUtils.getS_ORGAN(context);
         String url = "/tzapp/phone/getXmList.action?type="+type+"&user_name="+name+"&S_ORGAN="+S_ORGAN;
         ViseHttp.GET(url)
-                .request(new ACallback<String>() {
+                .setLocalCache(true)//设置是否使用缓存，如果使用缓存必须设置为true
+                .cacheMode(CacheMode.FIRST_CACHE) //配置缓存策略
+                .request(new ACallback<CacheResult<String>>() {
                     @Override
-                    public void onSuccess(String data) {
-                        Log.e("123123", data);
+                    public void onSuccess(CacheResult<String> data) {
+                        Log.e("123123", data.getCacheData());
                         try {
-                            JSONObject jsonObject = new JSONObject(data);
+                            JSONObject jsonObject = new JSONObject(data.getCacheData());
                             if(jsonObject.getString("result").equals("1")){
                                 Gson gson = new Gson();
-                                RukuListModel model = gson.fromJson(data, RukuListModel.class);
+                                RukuListModel model = gson.fromJson(data.getCacheData(), RukuListModel.class);
                                 LinearLayoutManager manager = new LinearLayoutManager(context);
                                 manager.setOrientation(LinearLayoutManager.VERTICAL);
                                 recyclerView.setLayoutManager(manager);
@@ -148,17 +168,17 @@ public class RukuListActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.activity_ruku_list_rl_back, R.id.iv_record, R.id.rl_pro, R.id.rl_type, R.id.rl_sort, R.id.rl_refresh})
+    @OnClick({R.id.activity_ruku_list_rl_back, R.id.rl_pro, R.id.rl_type, R.id.rl_sort, R.id.rl_refresh})
     public void onClick(View view){
         Intent intent = new Intent();
         switch (view.getId()){
             case R.id.activity_ruku_list_rl_back:
                 finish();
                 break;
-            case R.id.iv_record:
-                intent.setClass(context, VoiceActivity.class);
-                startActivityForResult(intent, 1);
-                break;
+//            case R.id.iv_record:
+//                intent.setClass(context, VoiceActivity.class);
+//                startActivityForResult(intent, 1);
+//                break;
             case R.id.rl_pro:
                 tvPro.setTextColor(Color.parseColor("#007AFF"));
                 Glide.with(context).load(R.drawable.to_top).into(ivPro);
@@ -175,6 +195,7 @@ public class RukuListActivity extends BaseActivity {
                 showSortPop();
                 break;
             case R.id.rl_refresh:
+                dialog = WeiboDialogUtils.createLoadingDialog(context, "请等待...");
                 String name = SpUtils.getUsername(context);
                 String S_ORGAN = SpUtils.getS_ORGAN(context);
                 String url = "/tzapp/phone/getXmList.action?type="+type+"&user_name="+name+"&S_ORGAN="+S_ORGAN;
@@ -200,6 +221,7 @@ public class RukuListActivity extends BaseActivity {
                                         tvType.setText("状态");
                                         tvSort.setText("排序");
                                     }
+                                    WeiboDialogUtils.closeDialog(dialog);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -207,7 +229,7 @@ public class RukuListActivity extends BaseActivity {
 
                             @Override
                             public void onFail(int errCode, String errMsg) {
-
+                                WeiboDialogUtils.closeDialog(dialog);
                             }
                         });
                 break;

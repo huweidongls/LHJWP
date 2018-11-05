@@ -119,7 +119,7 @@ public class PublicPicLocationActivity extends BaseActivity {
                 //要移动的点
                 .target(cenpt)
                 //放大地图到20倍
-                .zoom(16)
+                .zoom(19)
                 .build();
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);

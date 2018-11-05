@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.dialog.CustomDialog;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.SpUtils;
@@ -67,17 +68,23 @@ public class ProShowPicActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_delete:
-                File file = new File(path);
-                if(file.delete()){
-                    Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
-                    ArrayList<ProPicInfo> list = map.get(uuid);
-                    list.remove(list.size()-1);
-                    map.put(uuid, list);
-                    SpUtils.setProPicInfo(context, map);
-                    finish();
-                }else {
-                    ToastUtil.showShort(context, "图片删除失败");
-                }
+                CustomDialog customDialog = new CustomDialog(context, "是否删除照片", new CustomDialog.OnSureListener() {
+                    @Override
+                    public void onSure() {
+                        File file = new File(path);
+                        if(file.delete()){
+                            Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                            ArrayList<ProPicInfo> list = map.get(uuid);
+                            list.remove(list.size()-1);
+                            map.put(uuid, list);
+                            SpUtils.setProPicInfo(context, map);
+                            finish();
+                        }else {
+                            ToastUtil.showShort(context, "图片删除失败");
+                        }
+                    }
+                });
+                customDialog.show();
                 break;
         }
     }

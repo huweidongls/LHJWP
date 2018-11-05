@@ -11,8 +11,8 @@
         style="@style/rl_top_bar">
 
         <TextView
-            android:lines="1"
-            android:ellipsize="end"
+            android:singleLine="true"
+            android:ellipsize="middle"
             android:id="@+id/activity_public_content_tv_top"
             style="@style/tv_top_title" />
 
