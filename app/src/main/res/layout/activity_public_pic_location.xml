@@ -29,7 +29,7 @@
 
     </RelativeLayout>
     
-    <com.jingna.lhjwp.widget.LocateCenterHorizontalView
+    <android.support.v7.widget.RecyclerView
         android:layout_marginTop="32px"
         android:layout_marginBottom="32px"
         android:id="@+id/activity_public_pic_location_rv"

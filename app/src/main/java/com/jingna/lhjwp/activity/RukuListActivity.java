@@ -119,17 +119,15 @@ public class RukuListActivity extends BaseActivity {
         String S_ORGAN = SpUtils.getS_ORGAN(context);
         String url = "/tzapp/phone/getXmList.action?type="+type+"&user_name="+name+"&S_ORGAN="+S_ORGAN;
         ViseHttp.GET(url)
-                .setLocalCache(true)//设置是否使用缓存，如果使用缓存必须设置为true
-                .cacheMode(CacheMode.FIRST_CACHE) //配置缓存策略
-                .request(new ACallback<CacheResult<String>>() {
+                .request(new ACallback<String>() {
                     @Override
-                    public void onSuccess(CacheResult<String> data) {
-                        Log.e("123123", data.getCacheData());
+                    public void onSuccess(String data) {
+                        Log.e("123123", data);
                         try {
-                            JSONObject jsonObject = new JSONObject(data.getCacheData());
+                            JSONObject jsonObject = new JSONObject(data);
                             if(jsonObject.getString("result").equals("1")){
                                 Gson gson = new Gson();
-                                RukuListModel model = gson.fromJson(data.getCacheData(), RukuListModel.class);
+                                RukuListModel model = gson.fromJson(data, RukuListModel.class);
                                 LinearLayoutManager manager = new LinearLayoutManager(context);
                                 manager.setOrientation(LinearLayoutManager.VERTICAL);
                                 recyclerView.setLayoutManager(manager);
@@ -217,8 +215,8 @@ public class RukuListActivity extends BaseActivity {
                                         popPro = 0;
                                         popType = 0;
                                         popSort = 0;
-                                        tvPro.setText("专业");
-                                        tvType.setText("状态");
+                                        tvPro.setText("专业/全部");
+                                        tvType.setText("状态/全部");
                                         tvSort.setText("排序");
                                     }
                                     WeiboDialogUtils.closeDialog(dialog);
@@ -260,7 +258,7 @@ public class RukuListActivity extends BaseActivity {
                 if(popSort != 0){
                     Collections.reverse(mList);
                 }
-                tvSort.setText("正序");
+                tvSort.setText("排序/正序");
                 popSort = 0;
                 popupWindow.dismiss();
                 adapter.notifyDataSetChanged();
@@ -273,7 +271,7 @@ public class RukuListActivity extends BaseActivity {
                 if(popSort != 1){
                     Collections.reverse(mList);
                 }
-                tvSort.setText("倒序");
+                tvSort.setText("排序/倒序");
                 popSort = 1;
                 popupWindow.dismiss();
                 adapter.notifyDataSetChanged();
@@ -338,7 +336,7 @@ public class RukuListActivity extends BaseActivity {
         rl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvType.setText("全部");
+                tvType.setText("状态/全部");
                 popType = 0;
                 popupWindow.dismiss();
                 mList.clear();
@@ -367,7 +365,7 @@ public class RukuListActivity extends BaseActivity {
         rl2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvType.setText("已采集");
+                tvType.setText("状态/已上报");
                 popType = 1;
                 popupWindow.dismiss();
                 mList.clear();
@@ -396,7 +394,7 @@ public class RukuListActivity extends BaseActivity {
         rl3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvType.setText("未采集");
+                tvType.setText("状态/未上报");
                 popType = 2;
                 popupWindow.dismiss();
                 mList.clear();
@@ -480,7 +478,7 @@ public class RukuListActivity extends BaseActivity {
         rl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvPro.setText("全部");
+                tvPro.setText("专业/全部");
                 popPro = 0;
                 popupWindow.dismiss();
                 mList.clear();
@@ -523,7 +521,7 @@ public class RukuListActivity extends BaseActivity {
         rl2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvPro.setText("投资");
+                tvPro.setText("专业/投资");
                 popPro = 1;
                 popupWindow.dismiss();
                 mList.clear();
@@ -552,7 +550,7 @@ public class RukuListActivity extends BaseActivity {
         rl3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvPro.setText("房地产");
+                tvPro.setText("专业/房地产");
                 popPro = 2;
                 popupWindow.dismiss();
                 mList.clear();

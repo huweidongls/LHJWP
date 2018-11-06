@@ -11,12 +11,41 @@ public class PublicInfo implements Serializable {
 
     String title;
     String time;
+    String createDate;
+    int collect;
+    boolean isShare = false;
     List<PicInfo> picList;
 
-    public PublicInfo(String title, String time, List<PicInfo> picList) {
+    public PublicInfo(String title, String time, String createDate, int collect, List<PicInfo> picList) {
         this.title = title;
         this.time = time;
+        this.createDate = createDate;
+        this.collect = collect;
         this.picList = picList;
+    }
+
+    public boolean getIsShare() {
+        return isShare;
+    }
+
+    public void setIsShare(boolean isShare) {
+        this.isShare = isShare;
+    }
+
+    public int getCollect() {
+        return collect;
+    }
+
+    public void setCollect(int collect) {
+        this.collect = collect;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
     }
 
     public String getTitle() {

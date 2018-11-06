@@ -14,6 +14,8 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.dialog.AddDialog;
 import com.jingna.lhjwp.dialog.CustomDialog;
 import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.FormatCurrentData;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
@@ -52,14 +54,63 @@ public class PublicActivity extends BaseActivity {
 
     }
 
-    private void initData() {
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mList.clear();
         mList.addAll(SpUtils.getPublicInfo(context));
         LinearLayoutManager manager = new LinearLayoutManager(PublicActivity.this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
         adapter = new ActivityPublicRvAdapter(PublicActivity.this, mList);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void initData() {
+
+        mList.clear();
+        mList.addAll(SpUtils.getPublicInfo(context));
+        LinearLayoutManager manager = new LinearLayoutManager(PublicActivity.this);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(manager);
+        adapter = new ActivityPublicRvAdapter(PublicActivity.this, mList);
+        recyclerView.setAdapter(adapter);
+
+        checkList();
+
+    }
+
+    private void checkList() {
+
+        final List<Integer> list = new ArrayList<>();
+        for(int i = 0; i<mList.size(); i++){
+            if(FormatCurrentData.getTimeRange(mList.get(i).getCreateDate())){
+                list.add(i);
+            }
+        }
+        if(list.size()>0){
+            CustomDialog customDialog = new CustomDialog(context, "列表存在超过1个月的相册，是否删除", new CustomDialog.OnSureListener() {
+                @Override
+                public void onSure() {
+                    Collections.reverse(list);
+                    for (int i = 0; i<list.size(); i++){
+                        int num = list.get(i);
+                        if(mList.get(num).getPicList()!=null&&mList.size()>0){
+                            List<PublicInfo.PicInfo> list = mList.get(num).getPicList();
+                            for (int a = 0; a<list.size(); a++){
+                                File file = new File(list.get(a).getPicPath());
+                                file.delete();
+                            }
+                        }
+                        Log.e("123123", num+"");
+                        mList.remove(num);
+                        adapter.notifyDataSetChanged();
+                        SpUtils.setPublicInfo(context, mList);
+                    }
+                }
+            });
+            customDialog.show();
+        }
 
     }
 
@@ -81,7 +132,7 @@ public class PublicActivity extends BaseActivity {
                 AddDialog addDialog = new AddDialog(PublicActivity.this, new AddDialog.OnOkReturnListener() {
                     @Override
                     public void onReturn(String title) {
-                        mList.add(0, new PublicInfo(title, "", new ArrayList<PublicInfo.PicInfo>()));
+                        mList.add(0, new PublicInfo(title, "", DateUtils.stampToDateSecond1(System.currentTimeMillis()+""), 0, new ArrayList<PublicInfo.PicInfo>()));
                         adapter.notifyDataSetChanged();
                         Log.e("123123", mList.toString());
                         SpUtils.setPublicInfo(context, mList);
@@ -90,7 +141,7 @@ public class PublicActivity extends BaseActivity {
                 addDialog.show();
                 break;
             case R.id.activity_public_tv_delete:
-                CustomDialog customDialog = new CustomDialog(context, "是否删除选中项目", new CustomDialog.OnSureListener() {
+                CustomDialog customDialog = new CustomDialog(context, "是否删除选中相册", new CustomDialog.OnSureListener() {
                     @Override
                     public void onSure() {
                         List<Integer> editList = adapter.getEditList();

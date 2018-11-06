@@ -3,8 +3,10 @@ package com.jingna.lhjwp.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,7 +44,7 @@ public class ProPicLocationActivity extends BaseActivity {
     @BindView(R.id.activity_public_pic_location_mapview)
     MapView mMapView;
     @BindView(R.id.activity_public_pic_location_rv)
-    LocateCenterHorizontalView recyclerview;
+    RecyclerView recyclerview;
     @BindView(R.id.activity_public_pic_location_tv_top)
     TextView tvTop;
     @BindView(R.id.iv_is_show)
@@ -51,6 +53,8 @@ public class ProPicLocationActivity extends BaseActivity {
     TextView tvLocation;
     @BindView(R.id.rl_location)
     RelativeLayout rlLocation;
+    @BindView(R.id.ll_cankaoweizhi)
+    LinearLayout llCankaoweizhi;
 
     private ActivityProLocationAdapter adapter;
     private ArrayList<ProPicInfo> mList = new ArrayList<>();
@@ -59,6 +63,7 @@ public class ProPicLocationActivity extends BaseActivity {
 
     private String uuid = "";
     private String title = "";
+    private String type = "";
 
     private boolean isShow = true;
 
@@ -68,6 +73,7 @@ public class ProPicLocationActivity extends BaseActivity {
         setContentView(R.layout.activity_pro_pic_location);
         uuid = getIntent().getStringExtra("uuid");
         title = getIntent().getStringExtra("title");
+        type = getIntent().getStringExtra("type");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProPicLocationActivity.this);
         mBaiduMap = mMapView.getMap();
@@ -77,21 +83,25 @@ public class ProPicLocationActivity extends BaseActivity {
 
     private void initData() {
 
+        if(type.equals("1")){
+            llCankaoweizhi.setVisibility(View.GONE);
+            rlLocation.setVisibility(View.GONE);
+        }
         tvTop.setText(title);
         Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
         if(map.get(uuid) != null){
             mList.clear();
             mList.addAll(map.get(uuid));
         }
-        recyclerview.setHasFixedSize(true);
-        recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        LinearLayoutManager manager = new LinearLayoutManager(context);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerview.setLayoutManager(manager);
         adapter = new ActivityProLocationAdapter(this, mList);
         recyclerview.setAdapter(adapter);
-        recyclerview.setOnSelectedPositionChangedListener(new LocateCenterHorizontalView.OnSelectedPositionChangedListener() {
+        adapter.setSelectListener(new ActivityProLocationAdapter.OnSelectListener() {
             @Override
-            public void selectedPositionChanged(int pos) {
+            public void onSelect(int pos) {
                 onMap(pos);
-                tvLocation.setText("参考位置: "+mList.get(pos).getLatitude()+","+mList.get(pos).getLongitude());
             }
         });
 

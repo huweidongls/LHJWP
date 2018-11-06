@@ -4,6 +4,7 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/rl"
         android:layout_width="140px"
         android:layout_height="140px">
 

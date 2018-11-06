@@ -31,7 +31,7 @@
 
     </RelativeLayout>
 
-    <com.jingna.lhjwp.widget.LocateCenterHorizontalView
+    <android.support.v7.widget.RecyclerView
         android:layout_marginTop="32px"
         android:layout_marginBottom="32px"
         android:id="@+id/activity_public_pic_location_rv"
@@ -50,6 +50,7 @@
     </com.baidu.mapapi.map.MapView>
 
     <LinearLayout
+        android:id="@+id/ll_cankaoweizhi"
         android:background="@color/white_ffffff"
         android:layout_alignParentRight="true"
         android:orientation="horizontal"

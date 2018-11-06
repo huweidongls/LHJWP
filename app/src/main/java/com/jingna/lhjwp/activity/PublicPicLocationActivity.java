@@ -3,6 +3,7 @@ package com.jingna.lhjwp.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ public class PublicPicLocationActivity extends BaseActivity {
     @BindView(R.id.activity_public_pic_location_mapview)
     MapView mMapView;
     @BindView(R.id.activity_public_pic_location_rv)
-    LocateCenterHorizontalView recyclerview;
+    RecyclerView recyclerview;
     @BindView(R.id.activity_public_pic_location_tv_top)
     TextView tvTop;
 
@@ -68,13 +69,14 @@ public class PublicPicLocationActivity extends BaseActivity {
         tvTop.setText(title);
 
         mList.addAll(SpUtils.getPublicInfo(context).get(position).getPicList());
-        recyclerview.setHasFixedSize(true);
-        recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        LinearLayoutManager manager = new LinearLayoutManager(context);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerview.setLayoutManager(manager);
         adapter = new ActivityPublicLocationAdapter(this, mList);
         recyclerview.setAdapter(adapter);
-        recyclerview.setOnSelectedPositionChangedListener(new LocateCenterHorizontalView.OnSelectedPositionChangedListener() {
+        adapter.setSelectListener(new ActivityPublicLocationAdapter.OnSelectListener() {
             @Override
-            public void selectedPositionChanged(int pos) {
+            public void onSelect(int pos) {
                 onMap(pos);
             }
         });

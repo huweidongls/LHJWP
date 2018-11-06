@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
@@ -19,11 +20,17 @@ import java.util.List;
  * Created by Administrator on 2018/10/29.
  */
 
-public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<ActivityPublicLocationAdapter.ViewHolder> implements LocateCenterHorizontalView.IAutoLocateHorizontalView {
+public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<ActivityPublicLocationAdapter.ViewHolder> {
 
     private Context context;
     private List<PublicInfo.PicInfo> data;
     private View view;
+    private int select = 0;
+    private OnSelectListener selectListener;
+
+    public void setSelectListener(OnSelectListener selectListener) {
+        this.selectListener = selectListener;
+    }
 
     public ActivityPublicLocationAdapter(Context context, List<PublicInfo.PicInfo> data) {
         this.context = context;
@@ -40,8 +47,29 @@ public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<Activity
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Glide.with(context).load(data.get(position).getPicPath()).into(holder.iv);
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        if(getItemViewType(position) == 1){
+            Glide.with(context).load(data.get(position).getPicPath()).into(holder.iv1);
+        }else {
+            Glide.with(context).load(data.get(position).getPicPath()).into(holder.iv);
+        }
+        holder.rl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                select = position;
+                notifyDataSetChanged();
+                selectListener.onSelect(position);
+            }
+        });
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(select == position){
+            return 1;
+        }else {
+            return 2;
+        }
     }
 
     @Override
@@ -49,31 +77,22 @@ public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<Activity
         return data == null?0:data.size();
     }
 
-    @Override
-    public View getItemView() {
-        return view;
-    }
-
-    @Override
-    public void onViewSelected(boolean isSelected, int pos, RecyclerView.ViewHolder holder, int itemWidth) {
-        if (isSelected) {
-            ((ViewHolder) holder).iv1.setVisibility(View.VISIBLE);
-            Glide.with(context).load(data.get(pos).getPicPath()).into(((ViewHolder) holder).iv1);
-        } else {
-            ((ViewHolder) holder).iv1.setVisibility(View.GONE);
-        }
-    }
-
     class ViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView iv;
         private ImageView iv1;
+        private RelativeLayout rl;
 
         public ViewHolder(View itemView) {
             super(itemView);
             iv = itemView.findViewById(R.id.iv);
             iv1 = itemView.findViewById(R.id.iv1);
+            rl = itemView.findViewById(R.id.rl);
         }
+    }
+
+    public interface OnSelectListener{
+        void onSelect(int pos);
     }
 
 }

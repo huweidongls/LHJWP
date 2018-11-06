@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -29,6 +30,7 @@ import com.jingna.lhjwp.dialog.CustomDialog;
 import com.jingna.lhjwp.imagepreview.Consts;
 import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.FileUtils;
 import com.jingna.lhjwp.utils.ShareUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
@@ -103,6 +105,11 @@ public class PublicContentActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         initData();
+        ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+        if(list.get(position).getPicList()!=null&&list.get(position).getPicList().size()>0){
+            list.get(position).setCollect(1);
+        }
+        SpUtils.setPublicInfo(context, list);
     }
 
     private void initData() {
@@ -221,6 +228,8 @@ public class PublicContentActivity extends BaseActivity {
                         ToastUtil.showShort(context, "只能发送3~10张照片");
                     }else {
                         showShare();
+//                        ToastUtil.showShort(context, "开始压缩");
+//                        uploadPic();
                     }
                 }
                 break;
@@ -245,6 +254,10 @@ public class PublicContentActivity extends BaseActivity {
                     fileList.add(new File(mList.get(i).getPicPath()));
                 }
                 ShareUtils.startShare(0, "龙浩经纬拍", fileList, context);
+                ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                list.get(position).setIsShare(true);
+                SpUtils.setPublicInfo(context, list);
+                popupWindow.dismiss();
             }
         });
 
@@ -256,6 +269,10 @@ public class PublicContentActivity extends BaseActivity {
                     fileList.add(new File(mList.get(i).getPicPath()));
                 }
                 ShareUtils.startShare(2, "龙浩经纬拍", fileList, context);
+                ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                list.get(position).setIsShare(true);
+                SpUtils.setPublicInfo(context, list);
+                popupWindow.dismiss();
             }
         });
 
@@ -300,7 +317,7 @@ public class PublicContentActivity extends BaseActivity {
                 final List<File> listFile = new ArrayList<>();
                 Luban.with(context)
                         .load(list)
-                        .ignoreBy(500)
+                        .ignoreBy(1024)
                         .filter(new CompressionPredicate() {
                             @Override
                             public boolean apply(String path) {
@@ -316,18 +333,21 @@ public class PublicContentActivity extends BaseActivity {
                             @Override
                             public void onSuccess(File file) {
                                 // TODO 压缩成功后调用，返回压缩后的图片文件
+                                String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                                String newPath = path+"/lhjwp/"+System.currentTimeMillis()+11111111+".jpg";
+                                FileUtils.copyFile(file.getPath(), newPath);
 
-                                listFile.add(file);
+//                                listFile.add(file);
 
-                                Log.e("123123", file.getName());
-
-                                if (listFile.size() == list.size()) {
-                                    Map<String, File> fileMap = new LinkedHashMap<>();
-                                    for (int i = 0; i < listFile.size(); i++) {
-                                        fileMap.put("file" + i, listFile.get(i));
-                                    }
-                                    e.onNext(fileMap);
-                                }
+//                                Log.e("123123", file.getName());
+//
+//                                if (listFile.size() == list.size()) {
+//                                    Map<String, File> fileMap = new LinkedHashMap<>();
+//                                    for (int i = 0; i < listFile.size(); i++) {
+//                                        fileMap.put("file" + i, listFile.get(i));
+//                                    }
+//                                    e.onNext(fileMap);
+//                                }
                             }
 
                             @Override

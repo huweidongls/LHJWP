@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.View;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.imagepreview.StatusBarUtils;
+import com.jingna.lhjwp.utils.SpUtils;
 import com.vise.xsnow.permission.OnPermissionCallback;
 import com.vise.xsnow.permission.PermissionManager;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -16,6 +18,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TypeActivity extends BaseActivity {
+
+    private Context context = TypeActivity.this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,11 @@ public class TypeActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.btn2:
-                intent.setClass(TypeActivity.this, ProfessionalLoginActivity.class);
+                if(SpUtils.getUsername(context).equals("0")){
+                    intent.setClass(TypeActivity.this, ProfessionalLoginActivity.class);
+                }else {
+                    intent.setClass(context, ProfessionalActivity.class);
+                }
                 startActivity(intent);
                 break;
         }

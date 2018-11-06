@@ -103,6 +103,32 @@
             android:layout_width="match_parent"
             android:layout_height="1px"/>
 
+        <LinearLayout
+            android:id="@+id/ll_jizhu"
+            android:layout_gravity="right"
+            android:layout_marginTop="20px"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_jizhu"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/jizhu_kong"
+                android:layout_width="32px"
+                android:layout_height="32px" />
+
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="12px"
+                android:textColor="@color/white_ffffff"
+                android:textSize="28px"
+                android:text="记住密码"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
     </LinearLayout>
     
     <Button

@@ -2,6 +2,7 @@ package com.jingna.lhjwp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -80,7 +81,13 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
             holder.ivEdit.setImageResource(R.drawable.sure_kong);
             editList.clear();
         }
-
+        if(data.get(position).getCollect() == 0){
+            holder.tvTitle.setTextColor(Color.parseColor("#ff0000"));
+        }else if(data.get(position).getCollect() == 1&&!data.get(position).getIsShare()){
+            holder.tvTitle.setTextColor(Color.parseColor("#FF7800"));
+        }else if(data.get(position).getCollect() == 1&&data.get(position).getIsShare()){
+            holder.tvTitle.setTextColor(Color.parseColor("#00ff00"));
+        }
         holder.tvTitle.setText(data.get(position).getTitle());
         if(TextUtils.isEmpty(data.get(position).getTime())){
             holder.tvTime.setText("采集时间: 未采集项目信息");

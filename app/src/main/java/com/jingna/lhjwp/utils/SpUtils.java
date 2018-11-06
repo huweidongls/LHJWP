@@ -29,6 +29,39 @@ public class SpUtils {
     public static String PRO_LAST_TIME = "pro_last_time";
     public static String MAX_PIC = "max_pic";
     public static String MIN_PIC = "min_pic";
+    public static String PRO_LOGIN_INFO = "pro_login_info";
+    public static String PRO_LOGIN_JIZHU = "pro_login_jizhu";
+    public static String PRO_PWD = "propwd";
+
+    public static void setProPwd(Context context, String pwd){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_PWD, pwd);
+    }
+
+    public static String getProPwd(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(PRO_PWD, "");
+    }
+
+    public static boolean getJizhu(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(PRO_LOGIN_JIZHU, false);
+    }
+
+    public static void setJizhu(Context context, boolean jizhu){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_LOGIN_JIZHU, jizhu);
+    }
+
+    public static String getLoginInfo(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(PRO_LOGIN_INFO, "");
+    }
+
+    public static void setLoginInfo(Context context, String data){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_LOGIN_INFO, data);
+    }
 
     public static String getMinPic(Context context){
         spCache = new SpCache(context, "pro_info");

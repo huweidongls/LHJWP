@@ -39,10 +39,16 @@ public class ProfessionalLoginActivity extends BaseActivity {
     EditText etPwd;
     @BindView(R.id.iv_is_kejian)
     ImageView ivIsKejian;
+    @BindView(R.id.iv_jizhu)
+    ImageView ivJizhu;
 
     private boolean isKejian = false;
 
     private Dialog dialog;
+
+    private boolean isNet = true;
+
+    private boolean isJizhu = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +58,65 @@ public class ProfessionalLoginActivity extends BaseActivity {
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProfessionalLoginActivity.this);
 
-        etName.setText("230102");
-        etPwd.setText("13001300130");
+        if(SpUtils.getJizhu(context)){
+            isJizhu = true;
+            Glide.with(context).load(R.drawable.jizhu).into(ivJizhu);
+        }
+        if (SpUtils.getJizhu(context)) {
+            etName.setText(SpUtils.getUsername(context));
+            etPwd.setText(SpUtils.getProPwd(context));
+        }
+
+//        etName.setText("230102");
+//        etPwd.setText("13001300130");
     }
 
-    @OnClick({R.id.btn_login, R.id.iv_is_kejian})
-    public void onClick(View view){
-        switch (view.getId()){
+    @Override
+    public void onNetChange(int netMobile) {
+        // TODO Auto-generated method stub
+        //在这个判断，根据需要做处理
+        if (netMobile == 1) {
+            Log.e("2222", "inspectNet:连接wifi");
+            isNet = true;
+        } else if (netMobile == 0) {
+            Log.e("2222", "inspectNet:连接移动数据");
+            isNet = true;
+        } else if (netMobile == -1) {
+            Log.e("2222", "inspectNet:当前没有网络");
+            isNet = false;
+        }
+    }
+
+    @OnClick({R.id.btn_login, R.id.iv_is_kejian, R.id.ll_jizhu})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.btn_login:
                 dialog = WeiboDialogUtils.createLoadingDialog(context, "请等待...");
-                login();
+                if (isNet) {
+                    login();
+                } else {
+
+                    String data = SpUtils.getLoginInfo(context);
+                }
                 break;
             case R.id.iv_is_kejian:
-                if(isKejian){
+                if (isKejian) {
                     Glide.with(context).load(R.drawable.bukejian).into(ivIsKejian);
-                    etPwd.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_CLASS_TEXT);
+                    etPwd.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
                     isKejian = false;
-                }else {
+                } else {
                     Glide.with(context).load(R.drawable.kejian).into(ivIsKejian);
                     etPwd.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     isKejian = true;
+                }
+                break;
+            case R.id.ll_jizhu:
+                if (isJizhu) {
+                    Glide.with(context).load(R.drawable.jizhu_kong).into(ivJizhu);
+                    isJizhu = false;
+                } else {
+                    Glide.with(context).load(R.drawable.jizhu).into(ivJizhu);
+                    isJizhu = true;
                 }
                 break;
         }
@@ -80,20 +125,25 @@ public class ProfessionalLoginActivity extends BaseActivity {
     private void login() {
 
         final String name = etName.getText().toString();
-        String pwd = etPwd.getText().toString();
+        final String pwd = etPwd.getText().toString();
         String deviceId = SpUtils.getDeviceId(context);
-        String url = "/tzapp/phone/userlogin.action?user_name="+name+"&password="+pwd+"&device_id="+deviceId+"&device_type=1";
+        String url = "/tzapp/phone/userlogin.action?user_name=" + name + "&password=" + pwd + "&device_id=" + deviceId + "&device_type=1";
         ViseHttp.GET(url)
-                .setLocalCache(true)//设置是否使用缓存，如果使用缓存必须设置为true
-                .cacheMode(CacheMode.FIRST_CACHE) //配置缓存策略
-                .request(new ACallback<CacheResult<String>>() {
+                .request(new ACallback<String>() {
                     @Override
-                    public void onSuccess(CacheResult<String> data) {
-                        Log.e("123123", data.getCacheData());
+                    public void onSuccess(String data) {
+                        Log.e("123123", data);
                         try {
-                            JSONObject jsonObject = new JSONObject(data.getCacheData());
-                            if(jsonObject.getString("result").equals("1")){
+                            JSONObject jsonObject = new JSONObject(data);
+                            if (jsonObject.getString("result").equals("1")) {
+                                if (isJizhu) {
+                                    SpUtils.setJizhu(context, true);
+                                } else {
+                                    SpUtils.setJizhu(context, false);
+                                }
+                                SpUtils.setLoginInfo(context, data);
                                 SpUtils.setUsername(context, name);
+                                SpUtils.setProPwd(context, pwd);
                                 SpUtils.setS_ORGAN(context, jsonObject.getString("S_ORGAN"));
                                 SpUtils.setMinPic(context, jsonObject.getString("minPic"));
                                 SpUtils.setMaxPic(context, jsonObject.getString("maxPic"));

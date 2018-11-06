@@ -488,6 +488,7 @@ public class ProContentActivity extends BaseActivity {
                     tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                     intent.putExtra("uuid", uuid);
                     intent.putExtra("title", title);
+                    intent.putExtra("type", type);
                     intent.setClass(context, ProPicLocationActivity.class);
                     startActivity(intent);
                 }else {

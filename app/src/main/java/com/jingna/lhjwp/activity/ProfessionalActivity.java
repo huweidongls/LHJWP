@@ -101,17 +101,15 @@ public class ProfessionalActivity extends BaseActivity {
         String S_ORGAN = SpUtils.getS_ORGAN(context);
         String url = "/tzapp/phone/getTaskList.action?user_name="+name+"&S_ORGAN="+S_ORGAN;
         ViseHttp.GET(url)
-                .setLocalCache(true)//设置是否使用缓存，如果使用缓存必须设置为true
-                .cacheMode(CacheMode.FIRST_CACHE) //配置缓存策略
-                .request(new ACallback<CacheResult<String>>() {
+                .request(new ACallback<String>() {
                     @Override
-                    public void onSuccess(CacheResult<String> data) {
-                        Log.e("123123", data.getCacheData());
+                    public void onSuccess(String data) {
+                        Log.e("123123", data);
                         try {
-                            JSONObject jsonObject = new JSONObject(data.getCacheData());
+                            JSONObject jsonObject = new JSONObject(data);
                             if(jsonObject.getString("result").equals("1")){
                                 Gson gson = new Gson();
-                                TaskListModel model = gson.fromJson(data.getCacheData(), TaskListModel.class);
+                                TaskListModel model = gson.fromJson(data, TaskListModel.class);
                                 //入库项目采集
                                 if(TextUtils.isEmpty(model.getXkgTask().getTzTime())){
                                     tvRkTz.setText("未发布");

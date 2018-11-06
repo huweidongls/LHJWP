@@ -53,7 +53,7 @@ public class PersonActivity extends BaseActivity {
             case R.id.tv_exit:
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setClass(PersonActivity.this, TypeActivity.class);
+                intent.setClass(PersonActivity.this, ProfessionalLoginActivity.class);
                 startActivity(intent);
                 finish();
                 break;
