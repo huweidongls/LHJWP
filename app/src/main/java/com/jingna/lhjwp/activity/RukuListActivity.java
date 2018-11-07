@@ -42,7 +42,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,6 +80,7 @@ public class RukuListActivity extends BaseActivity {
     TextView tvTitle;
 
     private String type = "";
+    private boolean isNet = true;
 
     private ActivityProRukuListAdapter adapter;
     private List<RukuListModel.XmListBean> mList = new ArrayList<>();
@@ -95,6 +98,7 @@ public class RukuListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ruku_list);
+        isNet = getIntent().getBooleanExtra("isnet", false);
         type = getIntent().getStringExtra("type");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(RukuListActivity.this);
@@ -115,54 +119,91 @@ public class RukuListActivity extends BaseActivity {
             tvTitle.setText("竣工项目采集");
         }
 
-        String name = SpUtils.getUsername(context);
-        String S_ORGAN = SpUtils.getS_ORGAN(context);
-        String url = "/tzapp/phone/getXmList.action?type="+type+"&user_name="+name+"&S_ORGAN="+S_ORGAN;
-        ViseHttp.GET(url)
-                .request(new ACallback<String>() {
-                    @Override
-                    public void onSuccess(String data) {
-                        Log.e("123123", data);
-                        try {
-                            JSONObject jsonObject = new JSONObject(data);
-                            if(jsonObject.getString("result").equals("1")){
-                                Gson gson = new Gson();
-                                RukuListModel model = gson.fromJson(data, RukuListModel.class);
-                                LinearLayoutManager manager = new LinearLayoutManager(context);
-                                manager.setOrientation(LinearLayoutManager.VERTICAL);
-                                recyclerView.setLayoutManager(manager);
-                                mList.addAll(model.getXmList());
-                                mData.addAll(model.getXmList());
-                                Log.e("123123", mData.size()+"");
-                                adapter = new ActivityProRukuListAdapter(context, mList);
-                                recyclerView.setAdapter(adapter);
-                                etSearch.addTextChangedListener(new TextWatcher() {
-                                    @Override
-                                    public void beforeTextChanged(CharSequence sequence, int i, int i1, int i2) {
-
+        if(isNet){
+            String name = SpUtils.getUsername(context);
+            String S_ORGAN = SpUtils.getS_ORGAN(context);
+            String url = "/tzapp/phone/getXmList.action?type="+type+"&user_name="+name+"&S_ORGAN="+S_ORGAN;
+            ViseHttp.GET(url)
+                    .request(new ACallback<String>() {
+                        @Override
+                        public void onSuccess(String data) {
+                            Log.e("123123", data);
+                            try {
+                                JSONObject jsonObject = new JSONObject(data);
+                                if(jsonObject.getString("result").equals("1")){
+                                    Gson gson = new Gson();
+                                    RukuListModel model = gson.fromJson(data, RukuListModel.class);
+                                    Map<String, RukuListModel> map = SpUtils.getRukuCache(context);
+                                    if(map == null){
+                                        map = new LinkedHashMap<>();
                                     }
+                                    map.put(type, model);
+                                    SpUtils.setRukuCache(context, map);
+                                    LinearLayoutManager manager = new LinearLayoutManager(context);
+                                    manager.setOrientation(LinearLayoutManager.VERTICAL);
+                                    recyclerView.setLayoutManager(manager);
+                                    mList.addAll(model.getXmList());
+                                    mData.addAll(model.getXmList());
+                                    Log.e("123123", mData.size()+"");
+                                    adapter = new ActivityProRukuListAdapter(context, mList);
+                                    recyclerView.setAdapter(adapter);
+                                    etSearch.addTextChangedListener(new TextWatcher() {
+                                        @Override
+                                        public void beforeTextChanged(CharSequence sequence, int i, int i1, int i2) {
 
-                                    @Override
-                                    public void onTextChanged(CharSequence sequence, int i, int i1, int i2) {
-                                        adapter.getFilter().filter(sequence.toString());
-                                    }
+                                        }
 
-                                    @Override
-                                    public void afterTextChanged(Editable editable) {
+                                        @Override
+                                        public void onTextChanged(CharSequence sequence, int i, int i1, int i2) {
+                                            adapter.getFilter().filter(sequence.toString());
+                                        }
 
-                                    }
-                                });
+                                        @Override
+                                        public void afterTextChanged(Editable editable) {
+
+                                        }
+                                    });
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+
+                        @Override
+                        public void onFail(int errCode, String errMsg) {
+
+                        }
+                    });
+        }else {
+            Map<String, RukuListModel> listModelMap = SpUtils.getRukuCache(context);
+            RukuListModel listModel = listModelMap.get(type);
+            if(listModel!=null){
+                LinearLayoutManager manager = new LinearLayoutManager(context);
+                manager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(manager);
+                mList.addAll(listModel.getXmList());
+                mData.addAll(listModel.getXmList());
+                Log.e("123123", mData.size()+"");
+                adapter = new ActivityProRukuListAdapter(context, mList);
+                recyclerView.setAdapter(adapter);
+                etSearch.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence sequence, int i, int i1, int i2) {
+
                     }
 
                     @Override
-                    public void onFail(int errCode, String errMsg) {
+                    public void onTextChanged(CharSequence sequence, int i, int i1, int i2) {
+                        adapter.getFilter().filter(sequence.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
 
                     }
                 });
+            }
+        }
 
     }
 

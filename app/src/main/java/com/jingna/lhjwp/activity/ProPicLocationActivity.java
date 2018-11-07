@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,8 +65,11 @@ public class ProPicLocationActivity extends BaseActivity {
     private String uuid = "";
     private String title = "";
     private String type = "";
+    private String cankao = "";
 
     private boolean isShow = true;
+
+    private int select = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class ProPicLocationActivity extends BaseActivity {
         uuid = getIntent().getStringExtra("uuid");
         title = getIntent().getStringExtra("title");
         type = getIntent().getStringExtra("type");
+        cankao = getIntent().getStringExtra("cankao");
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProPicLocationActivity.this);
         mBaiduMap = mMapView.getMap();
@@ -101,11 +106,12 @@ public class ProPicLocationActivity extends BaseActivity {
         adapter.setSelectListener(new ActivityProLocationAdapter.OnSelectListener() {
             @Override
             public void onSelect(int pos) {
-                onMap(pos);
+                select = pos;
+                onMap();
             }
         });
 
-        onMap(0);
+        onMap();
 
     }
 
@@ -118,18 +124,18 @@ public class ProPicLocationActivity extends BaseActivity {
             case R.id.iv_is_show:
                 if(isShow){
                     Glide.with(context).load(R.drawable.off).into(ivIsShow);
-                    rlLocation.setVisibility(View.GONE);
                     isShow = false;
+                    onMap();
                 }else {
                     Glide.with(context).load(R.drawable.on).into(ivIsShow);
-                    rlLocation.setVisibility(View.VISIBLE);
                     isShow = true;
+                    onMap();
                 }
                 break;
         }
     }
 
-    private void onMap(int position){
+    private void onMap(){
 
         mBaiduMap.clear();
         //构建Marker图标
@@ -137,20 +143,35 @@ public class ProPicLocationActivity extends BaseActivity {
                 .fromResource(R.drawable.location);
         BitmapDescriptor bitmap1 = BitmapDescriptorFactory
                 .fromResource(R.drawable.location_big);
+        BitmapDescriptor bitmap2 = BitmapDescriptorFactory
+                .fromResource(R.drawable.location_y);
 
         List<OverlayOptions> options = new ArrayList<OverlayOptions>();
         for (int i = 0; i<mList.size(); i++){
-            if(i == position){
+            if(i == select){
                 options.add(new MarkerOptions().position(new LatLng(mList.get(i).getLatitude(), mList.get(i).getLongitude())).icon(bitmap1));
             }else {
                 options.add(new MarkerOptions().position(new LatLng(mList.get(i).getLatitude(), mList.get(i).getLongitude())).icon(bitmap));
             }
         }
+
+        if(!TextUtils.isEmpty(cankao)){
+            if(isShow){
+
+                String[] s = cankao.split("\\+");
+                for (int i = 0; i<s.length; i++){
+                    String[] ss = s[i].split(",");
+                    options.add(new MarkerOptions().position(new LatLng(Double.valueOf(ss[0]), Double.valueOf(ss[1]))).icon(bitmap2));
+                }
+
+            }
+        }
+
         mBaiduMap.addOverlays(options);
 
         //定位到规定路线起点
         //设定中心点坐标
-        LatLng cenpt =  new LatLng(mList.get(position).getLatitude(),mList.get(position).getLongitude());
+        LatLng cenpt =  new LatLng(mList.get(select).getLatitude(),mList.get(select).getLongitude());
         //定义地图状态
         MapStatus mMapStatus = new MapStatus.Builder()
                 //要移动的点

@@ -8,6 +8,7 @@ import android.telephony.TelephonyManager;
 
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.model.RukuListModel;
 import com.vise.xsnow.cache.SpCache;
 
 import java.util.ArrayList;
@@ -32,6 +33,17 @@ public class SpUtils {
     public static String PRO_LOGIN_INFO = "pro_login_info";
     public static String PRO_LOGIN_JIZHU = "pro_login_jizhu";
     public static String PRO_PWD = "propwd";
+    public static String PRO_RUKU_CACHE = "prorukucache";
+
+    public static void setRukuCache(Context context, Map<String, RukuListModel> map){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_RUKU_CACHE, map);
+    }
+
+    public static Map<String, RukuListModel> getRukuCache(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return (Map<String, RukuListModel>) spCache.get(PRO_RUKU_CACHE);
+    }
 
     public static void setProPwd(Context context, String pwd){
         spCache = new SpCache(context, "pro_info");

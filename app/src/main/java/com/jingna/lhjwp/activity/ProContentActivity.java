@@ -4,6 +4,8 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -22,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -43,6 +46,7 @@ import com.jingna.lhjwp.utils.FileUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.vise.xsnow.http.ViseHttp;
 import com.vise.xsnow.http.callback.ACallback;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -51,6 +55,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -105,10 +111,13 @@ public class ProContentActivity extends BaseActivity {
     private String S_SJ = "";
     private String S_TAB = "";
     private String type = "";
+    private String cankao = "";
 
     private static final int REQUEST_CODE = 0x00000011;
 
     private Dialog dialog;
+
+    private boolean isCode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +128,7 @@ public class ProContentActivity extends BaseActivity {
         S_SJ = getIntent().getStringExtra("S_SJ");
         S_TAB = getIntent().getStringExtra("S_TAB");
         type = getIntent().getStringExtra("type");
+        cankao = getIntent().getStringExtra("cankao");
         username = SpUtils.getUsername(context);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProContentActivity.this);
@@ -262,30 +272,65 @@ public class ProContentActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        isCode = true;
         if (requestCode == REQUEST_CODE && data != null) {
             //获取选择器返回的数据
             ArrayList<String> images = data.getStringArrayListExtra(ImageSelectorUtils.SELECT_RESULT);
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-            File dir = new File(path+"/lhjwp/");
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
-            ArrayList<ProPicInfo> list = map.get(uuid);
-            if(list == null){
-                list = new ArrayList<>();
-            }
-            for (int i = 0; i<images.size(); i++){
-                String newPath = path+"/lhjwp/"+System.currentTimeMillis()+i+".jpg";
-                boolean isSuccess = FileUtils.copyFile(images.get(i), newPath);
-                if(isSuccess){
-                    list.add(new ProPicInfo(newPath, DateUtils.stampToDateSecond(System.currentTimeMillis()+""), latitude, longitude, address, false));
+//            for (int a = 0; a<images.size(); a++){
+////                FileInputStream fis = null;
+////                try {
+////                    fis = new FileInputStream(images.get(a));
+////                } catch (FileNotFoundException e) {
+////                    e.printStackTrace();
+////                }
+////                Bitmap bitmap  = BitmapFactory.decodeStream(fis);
+//                CodeUtils.analyzeBitmap(images.get(a), new CodeUtils.AnalyzeCallback() {
+//                    @Override
+//                    public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+//                        Log.e("123123", result);
+////                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
+//                        if(!result.contains(";")){
+//                            isCode = false;
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onAnalyzeFailed() {
+//                        Log.e("123123", "解析二维码失败");
+//                        isCode = false;
+////                        Toast.makeText(context, "解析二维码失败", Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//
+////                if (bitmap != null) {
+////                    bitmap.recycle();
+////                }
+//            }
+            if(isCode){
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                File dir = new File(path+"/lhjwp/");
+                if (!dir.exists()) {
+                    dir.mkdirs();
                 }
+                Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                ArrayList<ProPicInfo> list = map.get(uuid);
+                if(list == null){
+                    list = new ArrayList<>();
+                }
+                for (int i = 0; i<images.size(); i++){
+                    String newPath = path+"/lhjwp/"+System.currentTimeMillis()+i+".jpg";
+                    boolean isSuccess = FileUtils.copyFile(images.get(i), newPath);
+                    if(isSuccess){
+                        list.add(new ProPicInfo(newPath, DateUtils.stampToDateSecond(System.currentTimeMillis()+""), latitude, longitude, address, false));
+                    }
+                }
+                map.put(uuid, list);
+                SpUtils.setProPicInfo(context, map);
+                mLocationClient.stop();
+                initData();
+            }else {
+                ToastUtil.showShort(context, "有不存在二维码的照片，请重新选择");
             }
-            map.put(uuid, list);
-            SpUtils.setProPicInfo(context, map);
-            mLocationClient.stop();
-            initData();
         }
     }
 
@@ -489,6 +534,7 @@ public class ProContentActivity extends BaseActivity {
                     intent.putExtra("uuid", uuid);
                     intent.putExtra("title", title);
                     intent.putExtra("type", type);
+                    intent.putExtra("cankao", cankao);
                     intent.setClass(context, ProPicLocationActivity.class);
                     startActivity(intent);
                 }else {

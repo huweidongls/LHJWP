@@ -72,6 +72,7 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
                 intent.putExtra("S_TAB", mFilterList.get(position).getS_TAB());
                 intent.putExtra("title", mFilterList.get(position).getS_XMMC());
                 intent.putExtra("uuid", mFilterList.get(position).getS_CORP_UUID());
+                intent.putExtra("cankao", mFilterList.get(position).getS_COORDINATE_CK());
                 context.startActivity(intent);
             }
         });

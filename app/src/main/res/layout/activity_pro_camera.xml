@@ -11,10 +11,10 @@
         style="@style/rl_top_bar">
 
         <TextView
-            android:singleLine="true"
-            android:ellipsize="middle"
             android:id="@+id/activity_camera_tv_top"
-            style="@style/tv_top_title" />
+            style="@style/tv_top_title"
+            android:ellipsize="middle"
+            android:singleLine="true" />
 
         <RelativeLayout
             android:id="@+id/activity_camera_rl_back"
@@ -32,77 +32,78 @@
     </RelativeLayout>
 
     <io.fotoapparat.view.CameraView
-        android:layout_above="@+id/activity_camera_rl_bottom"
-        android:layout_below="@+id/activity_camera_rl_top"
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/activity_camera_rl_bottom"
+        android:layout_below="@+id/activity_camera_rl_top" />
 
     <LinearLayout
         android:id="@+id/ll_info"
-        android:background="#91ffffff"
-        android:layout_marginBottom="20px"
-        android:layout_marginLeft="20px"
-        android:layout_above="@+id/activity_camera_rl_bottom"
-        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_camera_rl_top"
+        android:layout_marginLeft="20px"
+        android:layout_marginTop="20px"
+        android:background="#91ffffff"
+        android:orientation="vertical"
+        android:rotation="90">
 
         <TextView
             android:id="@+id/tv_time"
-            android:layout_marginTop="20px"
-            android:textColor="@color/black_333333"
-            android:textSize="28px"
-            android:text="时间："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="20px"
+            android:text="时间："
+            android:textColor="@color/black_333333"
+            android:textSize="28px" />
 
         <TextView
             android:id="@+id/tv_long"
-            android:layout_marginTop="12px"
-            android:textColor="@color/black_333333"
-            android:textSize="28px"
-            android:text="经度："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="12px"
+            android:text="经度："
+            android:textColor="@color/black_333333"
+            android:textSize="28px" />
 
         <TextView
             android:id="@+id/tv_lat"
-            android:layout_marginTop="12px"
-            android:textColor="@color/black_333333"
-            android:textSize="28px"
-            android:text="纬度："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="12px"
+            android:text="纬度："
+            android:textColor="@color/black_333333"
+            android:textSize="28px" />
 
         <TextView
             android:id="@+id/tv_address"
-            android:layout_marginTop="12px"
-            android:textColor="@color/black_333333"
-            android:textSize="28px"
-            android:text="地址："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="12px"
+            android:text="地址："
+            android:textColor="@color/black_333333"
+            android:textSize="28px" />
 
         <TextView
-            android:layout_marginBottom="20px"
             android:id="@+id/tv_imei"
-            android:layout_marginTop="12px"
-            android:textColor="@color/black_333333"
-            android:textSize="28px"
-            android:text="IMEI："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20px"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="12px"
+            android:text="IMEI："
+            android:textColor="@color/black_333333"
+            android:textSize="28px" />
 
     </LinearLayout>
 
@@ -127,16 +128,16 @@
 
         <RelativeLayout
             android:id="@+id/rl_more"
-            android:layout_marginRight="40px"
+            android:layout_width="86px"
+            android:layout_height="86px"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_width="86px"
-            android:layout_height="86px">
+            android:layout_marginRight="40px">
 
             <ImageView
-                android:layout_centerVertical="true"
                 android:layout_width="86px"
                 android:layout_height="20px"
+                android:layout_centerVertical="true"
                 android:src="@drawable/more" />
 
         </RelativeLayout>

@@ -235,4 +235,24 @@ public class BitmapUtils {
         return bitmap;
     }
 
+    /**
+     * 给二维码图片加背景
+     *
+     */
+    public static Bitmap addBackground(Bitmap foreground,Bitmap background){
+        int bgWidth = background.getWidth();
+        int bgHeight = background.getHeight();
+        int fgWidth = foreground.getWidth();
+        int fgHeight = foreground.getHeight();
+        Bitmap newmap = Bitmap
+                .createBitmap(bgWidth, bgHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(newmap);
+        canvas.drawBitmap(background, 0, 0, null);
+        canvas.drawBitmap(foreground, (bgWidth - fgWidth) / 2,
+                (bgHeight - fgHeight) / 3, null);
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
+        return newmap;
+    }
+
 }

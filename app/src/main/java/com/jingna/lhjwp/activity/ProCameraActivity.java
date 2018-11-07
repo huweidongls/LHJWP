@@ -31,6 +31,7 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.NetUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -104,6 +105,10 @@ public class ProCameraActivity extends BaseActivity {
     private boolean isTime = true;
     private boolean isImei = true;
 
+    private boolean isNet = true;
+
+    private boolean isMove = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +119,22 @@ public class ProCameraActivity extends BaseActivity {
         ButterKnife.bind(ProCameraActivity.this);
         init();
 
+    }
+
+    @Override
+    public void onNetChange(int netMobile) {
+        // TODO Auto-generated method stub
+        //在这个判断，根据需要做处理
+        if (netMobile == 1) {
+            Log.e("2222", "inspectNet:连接wifi");
+            isNet = true;
+        } else if (netMobile == 0) {
+            Log.e("2222", "inspectNet:连接移动数据");
+            isNet = true;
+        } else if (netMobile == -1) {
+            Log.e("2222", "inspectNet:当前没有网络");
+            isNet = false;
+        }
     }
 
     private void init() {
@@ -200,33 +221,33 @@ public class ProCameraActivity extends BaseActivity {
             Glide.with(context).load(R.drawable.off).into(ivImei);
         }
 
-        ivText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isText){
-                    Glide.with(context).load(R.drawable.off).into(ivText);
-                    isText = false;
-                    llInfo.setVisibility(View.GONE);
-                }else {
-                    Glide.with(context).load(R.drawable.on).into(ivText);
-                    isText = true;
-                    llInfo.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        ivCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isCode){
-                    Glide.with(context).load(R.drawable.off).into(ivCode);
-                    isCode = false;
-                }else {
-                    Glide.with(context).load(R.drawable.on).into(ivCode);
-                    isCode = true;
-                }
-            }
-        });
+//        ivText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(isText){
+//                    Glide.with(context).load(R.drawable.off).into(ivText);
+//                    isText = false;
+//                    llInfo.setVisibility(View.GONE);
+//                }else {
+//                    Glide.with(context).load(R.drawable.on).into(ivText);
+//                    isText = true;
+//                    llInfo.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
+//
+//        ivCode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(isCode){
+//                    Glide.with(context).load(R.drawable.off).into(ivCode);
+//                    isCode = false;
+//                }else {
+//                    Glide.with(context).load(R.drawable.on).into(ivCode);
+//                    isCode = true;
+//                }
+//            }
+//        });
 
         ivGps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -323,10 +344,15 @@ public class ProCameraActivity extends BaseActivity {
                     public void onResult(BitmapPhoto result) {
                         Bitmap mBitmap;
                         String textContent = latitude+";"+longitude+";"+ DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
+                        String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                         Log.e("123123", textContent);
-                        mBitmap = CodeUtils.createImage(textContent, 400, 400, null);
+                        if(NetUtil.isLocServiceEnable(context)){
+                            mBitmap = CodeUtils.createImage(textContent, 400, 400, null);
+                        }else {
+                            mBitmap = CodeUtils.createImage(textContent1, 400, 400, null);
+                        }
 
-                        Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees), BitmapUtils.getViewBitmap(llInfo));
+                        Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees-90), BitmapUtils.getViewBitmap(llInfo));
                         Bitmap bitmap1 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
                         FileOutputStream fos = null;
                         try {
@@ -412,10 +438,25 @@ public class ProCameraActivity extends BaseActivity {
             longitude = location.getLongitude();
             address = location.getAddrStr();
             tvTime.setText(DateUtils.stampToDateSecond1(System.currentTimeMillis()+""));
-            tvAddress.setText("地址: "+location.getAddrStr());
-            tvLong.setText("经度: "+longitude);
-            tvLat.setText("纬度: "+latitude);
+            if(NetUtil.isLocServiceEnable(context)){
+                tvAddress.setText("地址: "+location.getAddrStr());
+                tvLong.setText("经度: "+longitude);
+                tvLat.setText("纬度: "+latitude);
+            }else {
+                tvAddress.setText("地址: 未获取");
+                tvLong.setText("经度: 0.0");
+                tvLat.setText("纬度: 0.0");
+            }
             tvImei.setText("IMEI: "+SpUtils.getDeviceId(context));
+            if(!isMove){
+                int w = llInfo.getWidth();
+                int h = llInfo.getHeight();
+                int a = (h-w);
+                Log.e("123123", w+"--"+h+"--"+a);
+                llInfo.setTranslationX(-a);
+                llInfo.setTranslationY(a);
+                isMove = true;
+            }
         }
     }
 

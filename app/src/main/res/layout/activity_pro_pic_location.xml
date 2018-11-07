@@ -80,6 +80,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/rl_location"
         android:background="#ccffffff"
         android:layout_marginBottom="52px"

@@ -224,8 +224,8 @@ public class PublicContentActivity extends BaseActivity {
 //                    ShareUtils.startShare(0, "测试", fileList, context);
 //                    ToastUtil.showShort(context, "上传");
 //                    uploadPic();
-                    if(mList.size()<3||mList.size()>10){
-                        ToastUtil.showShort(context, "只能发送3~10张照片");
+                    if(mList.size()<3||mList.size()>9){
+                        ToastUtil.showShort(context, "只能发送3~9张照片");
                     }else {
                         showShare();
 //                        ToastUtil.showShort(context, "开始压缩");

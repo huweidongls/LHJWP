@@ -37,11 +37,12 @@
         android:layout_height="match_parent"/>
 
     <LinearLayout
+        android:rotation="90"
+        android:layout_below="@+id/activity_camera_rl_top"
         android:id="@+id/ll_info"
         android:background="#91ffffff"
+        android:layout_marginTop="20px"
         android:layout_marginLeft="20px"
-        android:layout_marginBottom="20px"
-        android:layout_above="@+id/activity_camera_rl_bottom"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

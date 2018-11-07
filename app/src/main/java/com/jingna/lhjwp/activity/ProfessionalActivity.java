@@ -15,6 +15,7 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.model.TaskListModel;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.SpUtils;
+import com.jingna.lhjwp.utils.ToastUtil;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.vise.xsnow.http.ViseHttp;
 import com.vise.xsnow.http.callback.ACallback;
@@ -53,6 +54,7 @@ public class ProfessionalActivity extends BaseActivity {
     TextView tvBgFdc;
 
     private Dialog dialog;
+    private boolean isNet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +75,21 @@ public class ProfessionalActivity extends BaseActivity {
         //在这个判断，根据需要做处理
         if (netMobile == 1) {
             Log.e("2222", "inspectNet:连接wifi");
+            isNet = true;
             String time = DateUtils.stampToDateSecond(System.currentTimeMillis()+"");
             tvLastTime.setText("采集任务最后更新时间: "+ time);
             SpUtils.setLastTime(context, time);
             initData();
         } else if (netMobile == 0) {
             Log.e("2222", "inspectNet:连接移动数据");
+            isNet = true;
             String time = DateUtils.stampToDateSecond(System.currentTimeMillis()+"");
             tvLastTime.setText("采集任务最后更新时间: "+ time);
             SpUtils.setLastTime(context, time);
             initData();
         } else if (netMobile == -1) {
             Log.e("2222", "inspectNet:当前没有网络");
+            isNet = false;
             tvLastTime.setText("网络连接不可用,上次更新时间为: "+ SpUtils.getLastTime(context));
         }
     }
@@ -101,15 +106,17 @@ public class ProfessionalActivity extends BaseActivity {
         String S_ORGAN = SpUtils.getS_ORGAN(context);
         String url = "/tzapp/phone/getTaskList.action?user_name="+name+"&S_ORGAN="+S_ORGAN;
         ViseHttp.GET(url)
-                .request(new ACallback<String>() {
+                .setLocalCache(true)//设置是否使用缓存，如果使用缓存必须设置为true
+                .cacheMode(CacheMode.FIRST_REMOTE) //配置缓存策略
+                .request(new ACallback<CacheResult<String>>() {
                     @Override
-                    public void onSuccess(String data) {
-                        Log.e("123123", data);
+                    public void onSuccess(CacheResult<String> data) {
+                        Log.e("123123", data.getCacheData());
                         try {
-                            JSONObject jsonObject = new JSONObject(data);
+                            JSONObject jsonObject = new JSONObject(data.getCacheData());
                             if(jsonObject.getString("result").equals("1")){
                                 Gson gson = new Gson();
-                                TaskListModel model = gson.fromJson(data, TaskListModel.class);
+                                TaskListModel model = gson.fromJson(data.getCacheData(), TaskListModel.class);
                                 //入库项目采集
                                 if(TextUtils.isEmpty(model.getXkgTask().getTzTime())){
                                     tvRkTz.setText("未发布");
@@ -175,6 +182,7 @@ public class ProfessionalActivity extends BaseActivity {
         switch (view.getId()){
             case R.id.ll1:
                 intent.setClass(context, RukuListActivity.class);
+                intent.putExtra("isnet", isNet);
                 intent.putExtra("type", "1");
                 startActivity(intent);
                 break;
@@ -184,22 +192,29 @@ public class ProfessionalActivity extends BaseActivity {
                 break;
             case R.id.ll2:
                 intent.setClass(context, RukuListActivity.class);
+                intent.putExtra("isnet", isNet);
                 intent.putExtra("type", "2");
                 startActivity(intent);
                 break;
             case R.id.ll3:
                 intent.setClass(context, RukuListActivity.class);
+                intent.putExtra("isnet", isNet);
                 intent.putExtra("type", "3");
                 startActivity(intent);
                 break;
             case R.id.ll4:
                 intent.setClass(context, RukuListActivity.class);
+                intent.putExtra("isnet", isNet);
                 intent.putExtra("type", "4");
                 startActivity(intent);
                 break;
             case R.id.rl_refresh:
-                dialog = WeiboDialogUtils.createLoadingDialog(context, "请等待...");
-                initData();
+                if(isNet){
+                    dialog = WeiboDialogUtils.createLoadingDialog(context, "请等待...");
+                    initData();
+                }else {
+                    ToastUtil.showShort(context, "网络连接不可用");
+                }
                 break;
         }
     }

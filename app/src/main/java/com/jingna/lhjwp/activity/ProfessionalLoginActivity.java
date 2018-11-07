@@ -149,6 +149,7 @@ public class ProfessionalLoginActivity extends BaseActivity {
                                 SpUtils.setMaxPic(context, jsonObject.getString("maxPic"));
                                 Intent intent = new Intent(context, ProfessionalActivity.class);
                                 startActivity(intent);
+                                finish();
                             }
                             WeiboDialogUtils.closeDialog(dialog);
                         } catch (JSONException e) {

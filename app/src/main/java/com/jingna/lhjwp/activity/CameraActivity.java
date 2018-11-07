@@ -33,6 +33,7 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.NetUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -109,6 +110,8 @@ public class CameraActivity extends BaseActivity {
     private boolean isGps = true;
     private boolean isTime = true;
     private boolean isImei = true;
+
+    private boolean isMove = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -332,7 +335,7 @@ public class CameraActivity extends BaseActivity {
                         Log.e("123123", textContent);
                         mBitmap = CodeUtils.createImage(textContent, 400, 400, null);
 
-                        Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees), BitmapUtils.getViewBitmap(llInfo));
+                        Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees-90), BitmapUtils.getViewBitmap(llInfo));
                         Bitmap bitmap1 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
                         FileOutputStream fos = null;
                         try {
@@ -413,10 +416,25 @@ public class CameraActivity extends BaseActivity {
             longitude = location.getLongitude();
             address = location.getAddrStr();
             tvTime.setText(DateUtils.stampToDateSecond1(System.currentTimeMillis()+""));
-            tvAddress.setText("地址: "+location.getAddrStr());
-            tvLong.setText("经度: "+longitude);
-            tvLat.setText("纬度: "+latitude);
+            if(NetUtil.isLocServiceEnable(context)){
+                tvAddress.setText("地址: "+location.getAddrStr());
+                tvLong.setText("经度: "+longitude);
+                tvLat.setText("纬度: "+latitude);
+            }else {
+                tvAddress.setText("地址: 未获取");
+                tvLong.setText("经度: 0.0");
+                tvLat.setText("纬度: 0.0");
+            }
             tvImei.setText("IMEI: "+SpUtils.getDeviceId(context));
+            if(!isMove){
+                int w = llInfo.getWidth();
+                int h = llInfo.getHeight();
+                int a = (h-w);
+                Log.e("123123", w+"--"+h+"--"+a);
+                llInfo.setTranslationX(-a);
+                llInfo.setTranslationY(a);
+                isMove = true;
+            }
         }
     }
 
