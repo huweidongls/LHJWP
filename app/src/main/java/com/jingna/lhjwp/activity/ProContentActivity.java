@@ -41,6 +41,7 @@ import com.jingna.lhjwp.imagepreview.Consts;
 import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.FileUtils;
 import com.jingna.lhjwp.utils.SpUtils;
@@ -57,6 +58,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -276,36 +278,36 @@ public class ProContentActivity extends BaseActivity {
         if (requestCode == REQUEST_CODE && data != null) {
             //获取选择器返回的数据
             ArrayList<String> images = data.getStringArrayListExtra(ImageSelectorUtils.SELECT_RESULT);
-//            for (int a = 0; a<images.size(); a++){
-////                FileInputStream fis = null;
-////                try {
-////                    fis = new FileInputStream(images.get(a));
-////                } catch (FileNotFoundException e) {
-////                    e.printStackTrace();
-////                }
-////                Bitmap bitmap  = BitmapFactory.decodeStream(fis);
-//                CodeUtils.analyzeBitmap(images.get(a), new CodeUtils.AnalyzeCallback() {
-//                    @Override
-//                    public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-//                        Log.e("123123", result);
-////                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
-//                        if(!result.contains(";")){
-//                            isCode = false;
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onAnalyzeFailed() {
-//                        Log.e("123123", "解析二维码失败");
-//                        isCode = false;
-////                        Toast.makeText(context, "解析二维码失败", Toast.LENGTH_LONG).show();
-//                    }
-//                });
-//
-////                if (bitmap != null) {
-////                    bitmap.recycle();
-////                }
-//            }
+            for (int a = 0; a<images.size(); a++){
+//                FileInputStream fis = null;
+//                try {
+//                    fis = new FileInputStream(images.get(a));
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                Bitmap bitmap  = BitmapFactory.decodeStream(fis);
+                CodeUtils.analyzeBitmap(images.get(a), new CodeUtils.AnalyzeCallback() {
+                    @Override
+                    public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+                        Log.e("123123", result);
+//                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                        if(!result.contains(";")){
+                            isCode = false;
+                        }
+                    }
+
+                    @Override
+                    public void onAnalyzeFailed() {
+                        Log.e("123123", "解析二维码失败");
+                        isCode = false;
+//                        Toast.makeText(context, "解析二维码失败", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+//                if (bitmap != null) {
+//                    bitmap.recycle();
+//                }
+            }
             if(isCode){
                 String path = Environment.getExternalStorageDirectory().getAbsolutePath();
                 File dir = new File(path+"/lhjwp/");
@@ -386,6 +388,8 @@ public class ProContentActivity extends BaseActivity {
                     if(mList.size()<minPic||mList.size()>maxPic){
                         ToastUtil.showShort(context, "只能上传"+minPic+"~"+maxPic+"张照片");
                     }else {
+                        ToastUtil.showShort(context, "开始上传");
+                        dialog = WeiboDialogUtils.createLoadingDialog(context, "请等待...");
                         uploadPic();
                     }
                 }
@@ -397,52 +401,70 @@ public class ProContentActivity extends BaseActivity {
      * 上传图片
      */
     private void uploadPic() {
-        dialog = WeiboDialogUtils.createLoadingDialog(context, "请等待");
         Observable<Map<String, File>> observable = Observable.create(new ObservableOnSubscribe<Map<String, File>>() {
             @Override
             public void subscribe(final ObservableEmitter<Map<String, File>> e) throws Exception {
-                final List<String> list = new ArrayList<>();
+
+                Map<String, File> fileMap = new LinkedHashMap<>();
+
+//                FileOutputStream fos = null;
                 for (int i = 0; i<mList.size(); i++){
-                    list.add(mList.get(i).getPicPath());
+//                    Bitmap bitmap = BitmapFactory.decodeFile(mList.get(i).getPicPath());
+//                    Bitmap bitmap1 = BitmapUtils.compressImage(bitmap);
+//                    fos = new FileOutputStream(mList.get(i).getPicPath());
+//                    if(bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, fos)){
+//                        Log.e("123123", i+"");
+                        fileMap.put("file"+i, new File(mList.get(i).getPicPath()));
+//                    }
                 }
-                final List<File> listFile = new ArrayList<>();
-                Luban.with(context)
-                        .load(list)
-                        .ignoreBy(500)
-                        .filter(new CompressionPredicate() {
-                            @Override
-                            public boolean apply(String path) {
-                                return !(TextUtils.isEmpty(path) || path.toLowerCase().endsWith(".gif"));
-                            }
-                        })
-                        .setCompressListener(new OnCompressListener() {
-                            @Override
-                            public void onStart() {
-                                // TODO 压缩开始前调用，可以在方法内启动 loading UI
-                            }
+//                fos.flush();
+//                fos.close();
+                Log.e("123123", "file数组长度"+fileMap.size());
+                e.onNext(fileMap);
+//                WeiboDialogUtils.closeDialog(dialog);
 
-                            @Override
-                            public void onSuccess(File file) {
-                                // TODO 压缩成功后调用，返回压缩后的图片文件
-
-                                listFile.add(file);
-
-                                Log.e("123123", file.getName());
-
-                                if (listFile.size() == list.size()) {
-                                    Map<String, File> fileMap = new LinkedHashMap<>();
-                                    for (int i = 0; i < listFile.size(); i++) {
-                                        fileMap.put("file"+i, listFile.get(i));
-                                    }
-                                    e.onNext(fileMap);
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                // TODO 当压缩过程出现问题时调用
-                            }
-                        }).launch();
+//                final List<String> list = new ArrayList<>();
+//                for (int i = 0; i<mList.size(); i++){
+//                    list.add(mList.get(i).getPicPath());
+//                }
+//                final List<File> listFile = new ArrayList<>();
+//                Luban.with(context)
+//                        .load(list)
+//                        .ignoreBy(500)
+//                        .filter(new CompressionPredicate() {
+//                            @Override
+//                            public boolean apply(String path) {
+//                                return !(TextUtils.isEmpty(path) || path.toLowerCase().endsWith(".gif"));
+//                            }
+//                        })
+//                        .setCompressListener(new OnCompressListener() {
+//                            @Override
+//                            public void onStart() {
+//                                // TODO 压缩开始前调用，可以在方法内启动 loading UI
+//                            }
+//
+//                            @Override
+//                            public void onSuccess(File file) {
+//                                // TODO 压缩成功后调用，返回压缩后的图片文件
+//
+//                                listFile.add(file);
+//
+//                                Log.e("123123", file.getName());
+//
+//                                if (listFile.size() == list.size()) {
+//                                    Map<String, File> fileMap = new LinkedHashMap<>();
+//                                    for (int i = 0; i < listFile.size(); i++) {
+//                                        fileMap.put("file"+i, listFile.get(i));
+//                                    }
+//                                    e.onNext(fileMap);
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onError(Throwable e) {
+//                                // TODO 当压缩过程出现问题时调用
+//                            }
+//                        }).launch();
             }
         });
         Observer<Map<String, File>> observer = new Observer<Map<String, File>>() {
@@ -507,7 +529,7 @@ public class ProContentActivity extends BaseActivity {
 
             }
         };
-        observable.observeOn(Schedulers.newThread())
+        observable.observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
 

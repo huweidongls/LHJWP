@@ -333,7 +333,7 @@ public class CameraActivity extends BaseActivity {
                         Bitmap mBitmap;
                         String textContent = latitude+";"+longitude+";"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                         Log.e("123123", textContent);
-                        mBitmap = CodeUtils.createImage(textContent, 400, 400, null);
+                        mBitmap = CodeUtils.createImage(textContent, 500, 500, null);
 
                         Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees-90), BitmapUtils.getViewBitmap(llInfo));
                         Bitmap bitmap1 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);

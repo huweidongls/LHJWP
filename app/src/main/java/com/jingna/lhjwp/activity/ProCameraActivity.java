@@ -347,13 +347,19 @@ public class ProCameraActivity extends BaseActivity {
                         String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                         Log.e("123123", textContent);
                         if(NetUtil.isLocServiceEnable(context)){
-                            mBitmap = CodeUtils.createImage(textContent, 400, 400, null);
+                            mBitmap = CodeUtils.createImage(textContent, 500, 500, null);
                         }else {
-                            mBitmap = CodeUtils.createImage(textContent1, 400, 400, null);
+                            mBitmap = CodeUtils.createImage(textContent1, 500, 500, null);
                         }
 
                         Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees-90), BitmapUtils.getViewBitmap(llInfo));
-                        Bitmap bitmap1 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
+                        Bitmap bitmap2 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
+                        Bitmap bitmap1 = null;
+                        try {
+                            bitmap1 = BitmapUtils.compressImage(bitmap2);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         FileOutputStream fos = null;
                         try {
                             fos = new FileOutputStream(someFile);
