@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,6 +34,7 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.LocalCodeUtils;
 import com.jingna.lhjwp.utils.NetUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
@@ -332,11 +334,22 @@ public class CameraActivity extends BaseActivity {
                     public void onResult(BitmapPhoto result) {
                         Bitmap mBitmap;
                         String textContent = latitude+";"+longitude+";"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
+                        String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                         Log.e("123123", textContent);
-                        mBitmap = CodeUtils.createImage(textContent, 500, 500, null);
+                        if(NetUtil.isLocServiceEnable(context)){
+                            mBitmap = CodeUtils.createImage(textContent, 500, 500, null);
+                        }else {
+                            mBitmap = LocalCodeUtils.createImage(textContent1, 500, 500, null);
+                        }
 
                         Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees-90), BitmapUtils.getViewBitmap(llInfo));
-                        Bitmap bitmap1 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
+                        Bitmap bitmap2 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
+                        Bitmap bitmap1 = null;
+                        try {
+                            bitmap1 = BitmapUtils.compressImage(bitmap2);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         FileOutputStream fos = null;
                         try {
                             fos = new FileOutputStream(someFile);
@@ -347,6 +360,10 @@ public class CameraActivity extends BaseActivity {
                             list.get(position).setTime(DateUtils.stampToDateSecond(System.currentTimeMillis()+""));
                             list.get(position).getPicList().add(new PublicInfo.PicInfo(someFile.getPath(), latitude, longitude, address, DateUtils.stampToDateSecond(System.currentTimeMillis()+"")));
                             SpUtils.setPublicInfo(context, list);
+                            Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            Uri uri = Uri.fromFile(someFile);
+                            intent1.setData(uri);
+                            context.sendBroadcast(intent1);
                             Intent intent = new Intent();
                             intent.putExtra("path", someFile.getPath());
                             intent.putExtra("position", position);

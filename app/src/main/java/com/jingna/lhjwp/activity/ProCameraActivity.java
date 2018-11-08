@@ -31,6 +31,7 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.LocalCodeUtils;
 import com.jingna.lhjwp.utils.NetUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
@@ -349,7 +350,7 @@ public class ProCameraActivity extends BaseActivity {
                         if(NetUtil.isLocServiceEnable(context)){
                             mBitmap = CodeUtils.createImage(textContent, 500, 500, null);
                         }else {
-                            mBitmap = CodeUtils.createImage(textContent1, 500, 500, null);
+                            mBitmap = LocalCodeUtils.createImage(textContent1, 500, 500, null);
                         }
 
                         Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees-90), BitmapUtils.getViewBitmap(llInfo));

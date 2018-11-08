@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,9 +91,11 @@ public class RukuListActivity extends BaseActivity {
 
     private int popPro = 0;
     private int popType = 0;
-    private int popSort = 0;
+    private int popSort = 2;
 
     private Dialog dialog;
+
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,19 +288,34 @@ public class RukuListActivity extends BaseActivity {
         TextView tv1 = view.findViewById(R.id.pop_tv1);
         TextView tv2 = view.findViewById(R.id.pop_tv2);
 
-        if(popSort == 0){
-            tv1.setTextColor(Color.parseColor("#007AFF"));
-            tv2.setTextColor(Color.parseColor("#404040"));
-        }else if(popSort == 1){
-            tv1.setTextColor(Color.parseColor("#404040"));
-            tv2.setTextColor(Color.parseColor("#007AFF"));
+        if(isFirst){
+            isFirst = false;
+        }else {
+            if(popSort == 0){
+                tv1.setTextColor(Color.parseColor("#007AFF"));
+                tv2.setTextColor(Color.parseColor("#404040"));
+            }else if(popSort == 1){
+                tv1.setTextColor(Color.parseColor("#404040"));
+                tv2.setTextColor(Color.parseColor("#007AFF"));
+            }
+
         }
 
         rl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(popSort != 0){
-                    Collections.reverse(mList);
+//                if(popSort != 0){
+//                    Collections.reverse(mList);
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o1.getB3139() - o2.getB3139(); // 投票按降序
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+//                }
+                for (int i = 0; i<mList.size(); i++){
+                    Log.e("123123", mList.get(i).getB3139()+"");
                 }
                 tvSort.setText("排序/正序");
                 popSort = 0;
@@ -309,8 +327,24 @@ public class RukuListActivity extends BaseActivity {
         rl2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(popSort != 1){
-                    Collections.reverse(mList);
+//                if(popSort != 1){
+//                    Collections.reverse(mList);
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o2.getB3139() - o1.getB3139(); // 投票按降序
+
+//                        if (result == 0) { // 票数相等，按年龄
+//                            return o1.age - o2.age; // 排序按升序
+//
+//                        } else {
+                            return result;
+//                        }
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+//                }
+                for (int i = 0; i<mList.size(); i++){
+                    Log.e("123123", mList.get(i).getB3139()+"");
                 }
                 tvSort.setText("排序/倒序");
                 popSort = 1;
@@ -396,8 +430,22 @@ public class RukuListActivity extends BaseActivity {
                         }
                     }
                 }
-                if(popSort == 1){
-                    Collections.reverse(mList);
+                if(popSort == 0){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o1.getB3139() - o2.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+                }else if(popSort == 1){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o2.getB3139() - o1.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -425,8 +473,22 @@ public class RukuListActivity extends BaseActivity {
                         }
                     }
                 }
-                if(popSort == 1){
-                    Collections.reverse(mList);
+                if(popSort == 0){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o1.getB3139() - o2.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+                }else if(popSort == 1){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o2.getB3139() - o1.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -454,8 +516,22 @@ public class RukuListActivity extends BaseActivity {
                         }
                     }
                 }
-                if(popSort == 1){
-                    Collections.reverse(mList);
+                if(popSort == 0){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o1.getB3139() - o2.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+                }else if(popSort == 1){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o2.getB3139() - o1.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -523,37 +599,37 @@ public class RukuListActivity extends BaseActivity {
                 popPro = 0;
                 popupWindow.dismiss();
                 mList.clear();
-                if(popType == 0&&popSort == 0){
+                if(popType == 0){
                     mList.addAll(mData);
-                }else if(popType == 1&&popSort == 0){
+                }else if(popType == 1){
                     for (int i = 0; i<mData.size(); i++){
                         if(mData.get(i).getS_UP_FLAG().equals("1")){
                             mList.add(mData.get(i));
                         }
                     }
-                }else if(popType == 2&&popSort == 0){
+                }else if(popType == 2){
                     for (int i = 0; i<mData.size(); i++){
                         if(mData.get(i).getS_UP_FLAG().equals("0")){
                             mList.add(mData.get(i));
                         }
                     }
-                }else if(popType == 0&&popSort == 1){
-                    mList.addAll(mData);
-                    Collections.reverse(mList);
-                }else if(popType == 1&&popSort == 1){
-                    for (int i = 0; i<mData.size(); i++){
-                        if(mData.get(i).getS_UP_FLAG().equals("1")){
-                            mList.add(mData.get(i));
+                }
+                if(popSort == 0){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o1.getB3139() - o2.getB3139();
+                            return result;
                         }
-                    }
-                    Collections.reverse(mList);
-                }else if(popType == 2&&popSort == 1){
-                    for (int i = 0; i<mData.size(); i++){
-                        if(mData.get(i).getS_UP_FLAG().equals("0")){
-                            mList.add(mData.get(i));
+                    };
+                    Collections.sort(mList, comparator);
+                }else if(popSort == 1){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o2.getB3139() - o1.getB3139();
+                            return result;
                         }
-                    }
-                    Collections.reverse(mList);
+                    };
+                    Collections.sort(mList, comparator);
                 }
                 adapter.notifyDataSetChanged();
             }
