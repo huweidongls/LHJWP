@@ -308,7 +308,7 @@ public class RukuListActivity extends BaseActivity {
 //                    Collections.reverse(mList);
                     Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
                         public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
-                            int result = o1.getB3139() - o2.getB3139(); // 投票按降序
+                            int result = o1.getB3139() - o2.getB3139();
                             return result;
                         }
                     };
@@ -331,14 +331,8 @@ public class RukuListActivity extends BaseActivity {
 //                    Collections.reverse(mList);
                     Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
                         public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
-                            int result = o2.getB3139() - o1.getB3139(); // 投票按降序
-
-//                        if (result == 0) { // 票数相等，按年龄
-//                            return o1.age - o2.age; // 排序按升序
-//
-//                        } else {
+                            int result = o2.getB3139() - o1.getB3139();
                             return result;
-//                        }
                         }
                     };
                     Collections.sort(mList, comparator);
@@ -657,8 +651,22 @@ public class RukuListActivity extends BaseActivity {
                         }
                     }
                 }
-                if(popSort == 1){
-                    Collections.reverse(mList);
+                if(popSort == 0){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o1.getB3139() - o2.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+                }else if(popSort == 1){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o2.getB3139() - o1.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -686,8 +694,22 @@ public class RukuListActivity extends BaseActivity {
                         }
                     }
                 }
-                if(popSort == 1){
-                    Collections.reverse(mList);
+                if(popSort == 0){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o1.getB3139() - o2.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+                }else if(popSort == 1){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o2.getB3139() - o1.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
                 }
                 adapter.notifyDataSetChanged();
             }
