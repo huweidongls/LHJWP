@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.ActivityProRukuListAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.model.RukuListModel;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
@@ -384,22 +385,32 @@ public class RukuListActivity extends BaseActivity {
         RelativeLayout rl1 = view.findViewById(R.id.pop_rl1);
         RelativeLayout rl2 = view.findViewById(R.id.pop_rl2);
         RelativeLayout rl3 = view.findViewById(R.id.pop_rl3);
+        RelativeLayout rl4 = view.findViewById(R.id.pop_rl4);
         TextView tv1 = view.findViewById(R.id.pop_tv1);
         TextView tv2 = view.findViewById(R.id.pop_tv2);
         TextView tv3 = view.findViewById(R.id.pop_tv3);
+        TextView tv4 = view.findViewById(R.id.pop_tv4);
 
         if(popType == 0){
             tv1.setTextColor(Color.parseColor("#007AFF"));
             tv2.setTextColor(Color.parseColor("#404040"));
             tv3.setTextColor(Color.parseColor("#404040"));
+            tv4.setTextColor(Color.parseColor("#404040"));
         }else if(popType == 1){
             tv1.setTextColor(Color.parseColor("#404040"));
             tv2.setTextColor(Color.parseColor("#007AFF"));
             tv3.setTextColor(Color.parseColor("#404040"));
+            tv4.setTextColor(Color.parseColor("#404040"));
         }else if(popType == 2){
             tv1.setTextColor(Color.parseColor("#404040"));
             tv2.setTextColor(Color.parseColor("#404040"));
             tv3.setTextColor(Color.parseColor("#007AFF"));
+            tv4.setTextColor(Color.parseColor("#404040"));
+        }else if(popType == 3){
+            tv1.setTextColor(Color.parseColor("#404040"));
+            tv2.setTextColor(Color.parseColor("#404040"));
+            tv3.setTextColor(Color.parseColor("#404040"));
+            tv4.setTextColor(Color.parseColor("#007AFF"));
         }
 
         rl1.setOnClickListener(new View.OnClickListener() {
@@ -448,21 +459,22 @@ public class RukuListActivity extends BaseActivity {
         rl2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvType.setText("状态/已上报");
+                Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                tvType.setText("状态/未采集");
                 popType = 1;
                 popupWindow.dismiss();
                 mList.clear();
                 for (int i = 0; i<mData.size(); i++){
                     if(popPro == 0){
-                        if(mData.get(i).getS_UP_FLAG().equals("1")){
+                        if((map.get(mData.get(i).getS_CORP_UUID()) == null||map.get(mData.get(i).getS_CORP_UUID()).size() == 0)){
                             mList.add(mData.get(i));
                         }
                     }else if(popPro == 1){
-                        if(mData.get(i).getS_UP_FLAG().equals("1")&&mData.get(i).getS_ZY().equals("1")){
+                        if((map.get(mData.get(i).getS_CORP_UUID()) == null||map.get(mData.get(i).getS_CORP_UUID()).size() == 0)&&mData.get(i).getS_ZY().equals("1")){
                             mList.add(mData.get(i));
                         }
                     }else if(popPro == 2){
-                        if(mData.get(i).getS_UP_FLAG().equals("1")&&mData.get(i).getS_ZY().equals("2")){
+                        if((map.get(mData.get(i).getS_CORP_UUID()) == null||map.get(mData.get(i).getS_CORP_UUID()).size() == 0)&&mData.get(i).getS_ZY().equals("2")){
                             mList.add(mData.get(i));
                         }
                     }
@@ -491,21 +503,65 @@ public class RukuListActivity extends BaseActivity {
         rl3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvType.setText("状态/未上报");
+                Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                tvType.setText("状态/已采集");
                 popType = 2;
                 popupWindow.dismiss();
                 mList.clear();
                 for (int i = 0; i<mData.size(); i++){
                     if(popPro == 0){
-                        if(mData.get(i).getS_UP_FLAG().equals("0")){
+                        if((map.get(mData.get(i).getS_CORP_UUID()) != null&&map.get(mData.get(i).getS_CORP_UUID()).size() > 0)){
                             mList.add(mData.get(i));
                         }
                     }else if(popPro == 1){
-                        if(mData.get(i).getS_UP_FLAG().equals("0")&&mData.get(i).getS_ZY().equals("1")){
+                        if((map.get(mData.get(i).getS_CORP_UUID()) != null&&map.get(mData.get(i).getS_CORP_UUID()).size() > 0)&&mData.get(i).getS_ZY().equals("1")){
                             mList.add(mData.get(i));
                         }
                     }else if(popPro == 2){
-                        if(mData.get(i).getS_UP_FLAG().equals("0")&&mData.get(i).getS_ZY().equals("2")){
+                        if((map.get(mData.get(i).getS_CORP_UUID()) != null&&map.get(mData.get(i).getS_CORP_UUID()).size() > 0)&&mData.get(i).getS_ZY().equals("2")){
+                            mList.add(mData.get(i));
+                        }
+                    }
+                }
+                if(popSort == 0){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o1.getB3139() - o2.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+                }else if(popSort == 1){
+                    Comparator<RukuListModel.XmListBean> comparator = new Comparator<RukuListModel.XmListBean>() {
+                        public int compare(RukuListModel.XmListBean o1, RukuListModel.XmListBean o2) {
+                            int result = o2.getB3139() - o1.getB3139();
+                            return result;
+                        }
+                    };
+                    Collections.sort(mList, comparator);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        rl4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvType.setText("状态/已上传");
+                popType = 3;
+                popupWindow.dismiss();
+                mList.clear();
+                for (int i = 0; i<mData.size(); i++){
+                    if(popPro == 0){
+                        if(mData.get(i).getS_UP_FLAG().equals("1")){
+                            mList.add(mData.get(i));
+                        }
+                    }else if(popPro == 1){
+                        if(mData.get(i).getS_UP_FLAG().equals("1")&&mData.get(i).getS_ZY().equals("1")){
+                            mList.add(mData.get(i));
+                        }
+                    }else if(popPro == 2){
+                        if(mData.get(i).getS_UP_FLAG().equals("1")&&mData.get(i).getS_ZY().equals("2")){
                             mList.add(mData.get(i));
                         }
                     }
@@ -589,6 +645,7 @@ public class RukuListActivity extends BaseActivity {
         rl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
                 tvPro.setText("专业/全部");
                 popPro = 0;
                 popupWindow.dismiss();
@@ -597,13 +654,19 @@ public class RukuListActivity extends BaseActivity {
                     mList.addAll(mData);
                 }else if(popType == 1){
                     for (int i = 0; i<mData.size(); i++){
-                        if(mData.get(i).getS_UP_FLAG().equals("1")){
+                        if((map.get(mData.get(i).getS_CORP_UUID()) == null||map.get(mData.get(i).getS_CORP_UUID()).size() == 0)){
                             mList.add(mData.get(i));
                         }
                     }
                 }else if(popType == 2){
                     for (int i = 0; i<mData.size(); i++){
-                        if(mData.get(i).getS_UP_FLAG().equals("0")){
+                        if((map.get(mData.get(i).getS_CORP_UUID()) != null&&map.get(mData.get(i).getS_CORP_UUID()).size() > 0)){
+                            mList.add(mData.get(i));
+                        }
+                    }
+                }else if(popType == 3){
+                    for (int i = 0; i<mData.size(); i++){
+                        if(mData.get(i).getS_UP_FLAG().equals("1")){
                             mList.add(mData.get(i));
                         }
                     }
@@ -632,6 +695,7 @@ public class RukuListActivity extends BaseActivity {
         rl2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
                 tvPro.setText("专业/投资");
                 popPro = 1;
                 popupWindow.dismiss();
@@ -642,11 +706,15 @@ public class RukuListActivity extends BaseActivity {
                             mList.add(mData.get(i));
                         }
                     }else if(popType == 1){
-                        if(mData.get(i).getS_ZY().equals("1")&&mData.get(i).getS_UP_FLAG().equals("1")){
+                        if(mData.get(i).getS_ZY().equals("1")&&(map.get(mData.get(i).getS_CORP_UUID()) == null||map.get(mData.get(i).getS_CORP_UUID()).size() == 0)){
                             mList.add(mData.get(i));
                         }
                     }else if(popType == 2){
-                        if(mData.get(i).getS_ZY().equals("1")&&mData.get(i).getS_UP_FLAG().equals("0")){
+                        if(mData.get(i).getS_ZY().equals("1")&&(map.get(mData.get(i).getS_CORP_UUID()) != null&&map.get(mData.get(i).getS_CORP_UUID()).size() > 0)){
+                            mList.add(mData.get(i));
+                        }
+                    }else if(popType == 3){
+                        if(mData.get(i).getS_ZY().equals("1")&&mData.get(i).getS_UP_FLAG().equals("1")){
                             mList.add(mData.get(i));
                         }
                     }
@@ -675,6 +743,7 @@ public class RukuListActivity extends BaseActivity {
         rl3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
                 tvPro.setText("专业/房地产");
                 popPro = 2;
                 popupWindow.dismiss();
@@ -685,11 +754,15 @@ public class RukuListActivity extends BaseActivity {
                             mList.add(mData.get(i));
                         }
                     }else if(popType == 1){
-                        if(mData.get(i).getS_ZY().equals("2")&&mData.get(i).getS_UP_FLAG().equals("1")){
+                        if(mData.get(i).getS_ZY().equals("2")&&(map.get(mData.get(i).getS_CORP_UUID()) == null||map.get(mData.get(i).getS_CORP_UUID()).size() == 0)){
                             mList.add(mData.get(i));
                         }
                     }else if(popType == 2){
-                        if(mData.get(i).getS_ZY().equals("2")&&mData.get(i).getS_UP_FLAG().equals("0")){
+                        if(mData.get(i).getS_ZY().equals("2")&&(map.get(mData.get(i).getS_CORP_UUID()) != null&&map.get(mData.get(i).getS_CORP_UUID()).size() > 0)){
+                            mList.add(mData.get(i));
+                        }
+                    }else if(popType == 3){
+                        if(mData.get(i).getS_ZY().equals("2")&&mData.get(i).getS_UP_FLAG().equals("1")){
                             mList.add(mData.get(i));
                         }
                     }

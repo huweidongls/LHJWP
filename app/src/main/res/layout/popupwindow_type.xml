@@ -45,7 +45,7 @@
             android:layout_centerVertical="true"
             android:textColor="#404040"
             android:textSize="28px"
-            android:text="已上报"
+            android:text="未采集"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -69,7 +69,31 @@
             android:layout_centerVertical="true"
             android:textColor="#404040"
             android:textSize="28px"
-            android:text="未上报"
+            android:text="已采集"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_marginRight="20px"
+        android:layout_marginLeft="20px"
+        android:background="#E6E6E6"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <RelativeLayout
+        android:id="@+id/pop_rl4"
+        android:layout_width="match_parent"
+        android:layout_height="88px">
+
+        <TextView
+            android:id="@+id/pop_tv4"
+            android:layout_marginLeft="52px"
+            android:layout_centerVertical="true"
+            android:textColor="#404040"
+            android:textSize="28px"
+            android:text="已上传"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
