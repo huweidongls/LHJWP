@@ -42,6 +42,7 @@ import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.BitmapUtils;
+import com.jingna.lhjwp.utils.Const;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.FileUtils;
 import com.jingna.lhjwp.utils.SpUtils;
@@ -355,36 +356,41 @@ public class ProContentActivity extends BaseActivity {
                 break;
             case R.id.activity_public_content_tv_bottom:
                 if(adapter.getEdit()){
-                    CustomDialog customDialog = new CustomDialog(context, "是否删除照片", new CustomDialog.OnSureListener() {
-                        @Override
-                        public void onSure() {
-                            Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
-                            ArrayList<ProPicInfo> list = map.get(uuid);
-                            List<Integer> editList = adapter.getEditList();
-                            Collections.sort(editList);
-                            Collections.reverse(editList);
+                    if(adapter.getEditList().size()>0){
+                        CustomDialog customDialog = new CustomDialog(context, "是否删除照片", new CustomDialog.OnSureListener() {
+                            @Override
+                            public void onSure() {
+                                Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                                ArrayList<ProPicInfo> list = map.get(uuid);
+                                List<Integer> editList = adapter.getEditList();
+                                Collections.sort(editList);
+                                Collections.reverse(editList);
 //                Log.e("121212", mList.size()+"--"+editList.size());
-                            for (int i = 0; i<editList.size(); i++){
-                                int num = editList.get(i);
-                                File file = new File(mList.get(num).getPicPath());
-                                file.delete();
-                                mList.remove(num);
-                                list.remove(num);
+                                for (int i = 0; i<editList.size(); i++){
+                                    int num = editList.get(i);
+                                    File file = new File(mList.get(num).getPicPath());
+                                    file.delete();
+                                    mList.remove(num);
+                                    list.remove(num);
+                                }
+                                adapter.setEdit(false);
+                                adapter.notifyDataSetChanged();
+                                map.put(uuid, list);
+                                SpUtils.setProPicInfo(context, map);
+                                ivBack.setVisibility(View.VISIBLE);
+                                tvCancel.setVisibility(View.GONE);
+                                tvBottom.setText("上传");
+                                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                             }
-                            adapter.setEdit(false);
-                            adapter.notifyDataSetChanged();
-                            map.put(uuid, list);
-                            SpUtils.setProPicInfo(context, map);
-                            ivBack.setVisibility(View.VISIBLE);
-                            tvCancel.setVisibility(View.GONE);
-                            tvBottom.setText("上传");
-                            tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
-                        }
-                    });
-                    customDialog.show();
+                        });
+                        customDialog.show();
+                    }else {
+                        ToastUtil.showShort(context, "请至少选择一张照片");
+                    }
                 }else {
-                    int maxPic = Integer.valueOf(SpUtils.getMaxPic(context));
-                    int minPic = Integer.valueOf(SpUtils.getMinPic(context));
+                    Log.e("123123", SpUtils.getMaxPic(context)+"~~"+SpUtils.getMinPic(context));
+                    int maxPic = Integer.parseInt(SpUtils.getMaxPic(context));
+                    int minPic = Integer.parseInt(SpUtils.getMinPic(context));
                     if(mList.size()<minPic||mList.size()>maxPic){
                         ToastUtil.showShort(context, "只能上传"+minPic+"~"+maxPic+"张照片");
                     }else {
@@ -475,6 +481,7 @@ public class ProContentActivity extends BaseActivity {
 
             @Override
             public void onNext(Map<String, File> value) {
+                ToastUtil.showShort(context, Const.BASE_URL+"/tzapp/phone/upPic.action");
                 ViseHttp.UPLOAD("/tzapp/phone/upPic.action")
                         .addParam("S_CORP_UUID", uuid)
                         .addParam("S_SJ", S_SJ)
@@ -487,6 +494,7 @@ public class ProContentActivity extends BaseActivity {
                             @Override
                             public void onSuccess(String data) {
                                 Log.e("123123", data+"返回的json");
+//                                ToastUtil.showShort(context, "返回的json--"+data);
                                 try {
                                     JSONObject jsonObject = new JSONObject(data);
                                     if(jsonObject.getString("result").equals("1")){

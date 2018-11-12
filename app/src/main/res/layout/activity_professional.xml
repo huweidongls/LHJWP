@@ -61,22 +61,22 @@
 
     <LinearLayout
         android:id="@+id/ll1"
-        android:background="@color/white_ffffff"
+        android:background="@drawable/selector_list_bg"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="226px">
 
         <ImageView
-            android:layout_marginLeft="56px"
+            android:layout_marginLeft="16px"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
             android:src="@drawable/ll1"
-            android:layout_width="120px"
-            android:layout_height="106px" />
+            android:layout_width="200px"
+            android:layout_height="186px" />
 
         <LinearLayout
             android:layout_marginTop="36px"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="10px"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -112,22 +112,22 @@
     <LinearLayout
         android:id="@+id/ll2"
         android:layout_marginTop="12px"
-        android:background="@color/white_ffffff"
+        android:background="@drawable/selector_list_bg"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="226px">
 
         <ImageView
-            android:layout_marginLeft="56px"
+            android:layout_marginLeft="16px"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
             android:src="@drawable/ll2"
-            android:layout_width="120px"
-            android:layout_height="106px" />
+            android:layout_width="200px"
+            android:layout_height="186px" />
 
         <LinearLayout
             android:layout_marginTop="36px"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="10px"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -163,22 +163,22 @@
     <LinearLayout
         android:id="@+id/ll3"
         android:layout_marginTop="12px"
-        android:background="@color/white_ffffff"
+        android:background="@drawable/selector_list_bg"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="226px">
 
         <ImageView
-            android:layout_marginLeft="56px"
+            android:layout_marginLeft="16px"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
             android:src="@drawable/ll3"
-            android:layout_width="120px"
-            android:layout_height="106px" />
+            android:layout_width="200px"
+            android:layout_height="186px" />
 
         <LinearLayout
             android:layout_marginTop="36px"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="10px"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -214,22 +214,22 @@
     <LinearLayout
         android:id="@+id/ll4"
         android:layout_marginTop="12px"
-        android:background="@color/white_ffffff"
+        android:background="@drawable/selector_list_bg"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="226px">
 
         <ImageView
-            android:layout_marginLeft="56px"
+            android:layout_marginLeft="16px"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
             android:src="@drawable/ll4"
-            android:layout_width="120px"
-            android:layout_height="106px" />
+            android:layout_width="200px"
+            android:layout_height="186px" />
 
         <LinearLayout
             android:layout_marginTop="36px"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="10px"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

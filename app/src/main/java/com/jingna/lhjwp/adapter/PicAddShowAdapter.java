@@ -37,6 +37,7 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
 
     private OnAddImgListener addListener;
     private ShowImgListener showImgListener;
+    private ViewHolder holder;
 
     public void setShowImgListener(ShowImgListener showImgListener) {
         this.showImgListener = showImgListener;
@@ -69,22 +70,26 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
         this.context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_add_show_pic, parent, false);
         ScreenAdapterTools.getInstance().loadView(view);
-        ViewHolder holder = new ViewHolder(view);
+        holder = new ViewHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        if (data.size() >= MAX_SIZE) {
-            //最多9张
-//            holder.rlAdd.setVisibility(View.GONE);
-        } else {
-            holder.rlImg.setVisibility(View.VISIBLE);
-            holder.rlAdd.setVisibility(View.VISIBLE);
-        }
-        if (getItemViewType(position) == TYPE_ADD) {
-            holder.rlImg.setVisibility(View.GONE);
+//        if (data.size() >= MAX_SIZE) {
+//            //最多9张
+////            holder.rlAdd.setVisibility(View.GONE);
+//        } else {
+//            holder.rlImg.setVisibility(View.VISIBLE);
 //            holder.rlAdd.setVisibility(View.VISIBLE);
+//        }
+        if (getItemViewType(position) == TYPE_ADD) {
+            if(isEdit){
+                holder.rlAdd.setVisibility(View.GONE);
+            }else {
+                holder.rlAdd.setVisibility(View.VISIBLE);
+            }
+            holder.rlImg.setVisibility(View.GONE);
         } else {
             if(isEdit){
                 holder.ivSure.setVisibility(View.VISIBLE);
@@ -103,27 +108,42 @@ public class PicAddShowAdapter extends RecyclerView.Adapter<PicAddShowAdapter.Vi
                 addListener.onAddImg();
             }
         });
-        holder.ivSure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean is = false;
-                for (int i = 0; i<editList.size(); i++){
-                    if(editList.get(i) == position){
-                        holder.ivSure.setImageResource(R.drawable.sure_kong);
-                        editList.remove(i);
-                        is = true;
-                    }
-                }
-                if(!is){
-                    holder.ivSure.setImageResource(R.drawable.sure);
-                    editList.add(position);
-                }
-            }
-        });
+//        holder.ivSure.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                boolean is = false;
+//                for (int i = 0; i<editList.size(); i++){
+//                    if(editList.get(i) == position){
+//                        holder.ivSure.setImageResource(R.drawable.sure_kong);
+//                        editList.remove(i);
+//                        is = true;
+//                    }
+//                }
+//                if(!is){
+//                    holder.ivSure.setImageResource(R.drawable.sure);
+//                    editList.add(position);
+//                }
+//            }
+//        });
         holder.iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showImgListener.showImg(position);
+                if(isEdit){
+                    boolean is = false;
+                    for (int i = 0; i<editList.size(); i++){
+                        if(editList.get(i) == position){
+                            holder.ivSure.setImageResource(R.drawable.sure_kong);
+                            editList.remove(i);
+                            is = true;
+                        }
+                    }
+                    if(!is){
+                        holder.ivSure.setImageResource(R.drawable.sure);
+                        editList.add(position);
+                    }
+                }else {
+                    showImgListener.showImg(position);
+                }
             }
         });
     }

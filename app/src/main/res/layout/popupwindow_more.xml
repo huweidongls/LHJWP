@@ -42,7 +42,7 @@
         android:layout_height="90px">
 
         <ImageView
-            android:src="@drawable/edit"
+            android:src="@drawable/delete"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="24px"
             android:layout_width="42px"
@@ -53,7 +53,7 @@
             android:layout_marginLeft="20px"
             android:textColor="@color/white_ffffff"
             android:textSize="32px"
-            android:text="编辑"
+            android:text="删除"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

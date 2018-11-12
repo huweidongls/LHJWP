@@ -22,13 +22,17 @@ public class AddDialog extends Dialog {
 
     private Context context;
     private RelativeLayout rlClose;
+    private TextView tvTitle;
     private EditText et;
     private TextView tvOk;
     private OnOkReturnListener listener;
 
-    public AddDialog(@NonNull Context context, OnOkReturnListener listener) {
+    private String title;
+
+    public AddDialog(@NonNull Context context, String title, OnOkReturnListener listener) {
         super(context);
         this.context = context;
+        this.title = title;
         this.listener = listener;
         initView();
     }
@@ -40,8 +44,11 @@ public class AddDialog extends Dialog {
         ScreenAdapterTools.getInstance().loadView(view);
 
         rlClose = view.findViewById(R.id.rl_close);
+        tvTitle = view.findViewById(R.id.tv_title);
         et = view.findViewById(R.id.et);
         tvOk = view.findViewById(R.id.tv_ok);
+
+        tvTitle.setText(title);
 
         rlClose.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -30,6 +30,11 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
     private ArrayList<PublicInfo> data;
     private boolean isEdit = false;
     private List<Integer> editList = new ArrayList<>();
+    private EditTitleListener editTitleListener;
+
+    public void setEditTitleListener(EditTitleListener editTitleListener) {
+        this.editTitleListener = editTitleListener;
+    }
 
     public ActivityPublicRvAdapter(Context context, ArrayList<PublicInfo> data) {
         this.context = context;
@@ -72,11 +77,13 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if(getItemViewType(position) == 0){
             holder.rlEdit.setVisibility(View.GONE);
+            holder.ivEditIcon.setVisibility(View.GONE);
             holder.ivRight.setVisibility(View.VISIBLE);
             holder.ivEdit.setImageResource(R.drawable.sure_kong);
             editList.clear();
         }else if(getItemViewType(position) == 1){
             holder.rlEdit.setVisibility(View.VISIBLE);
+            holder.ivEditIcon.setVisibility(View.VISIBLE);
             holder.ivRight.setVisibility(View.GONE);
             holder.ivEdit.setImageResource(R.drawable.sure_kong);
             editList.clear();
@@ -122,6 +129,9 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
                     intent.putExtra("title", data.get(position).getTitle());
                     intent.setClass(context, PublicContentActivity.class);
                     context.startActivity(intent);
+                }else if(getItemViewType(position) == 1){
+                    //修改相册名称
+                    editTitleListener.onEdit(position);
                 }
             }
         });
@@ -142,6 +152,7 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
         private ImageView ivRight;
         private RelativeLayout rlEdit;
         private RelativeLayout rl;
+        private ImageView ivEditIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -152,7 +163,12 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
             ivRight = itemView.findViewById(R.id.iv_right);
             rlEdit = itemView.findViewById(R.id.rl_edit);
             rl = itemView.findViewById(R.id.rl);
+            ivEditIcon = itemView.findViewById(R.id.iv_edit);
         }
+    }
+
+    public interface EditTitleListener{
+        void onEdit(int pos);
     }
 
 }

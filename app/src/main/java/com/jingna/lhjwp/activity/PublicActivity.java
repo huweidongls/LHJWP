@@ -17,6 +17,7 @@ import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.FormatCurrentData;
 import com.jingna.lhjwp.utils.SpUtils;
+import com.jingna.lhjwp.utils.ToastUtil;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.io.File;
@@ -64,6 +65,21 @@ public class PublicActivity extends BaseActivity {
         recyclerView.setLayoutManager(manager);
         adapter = new ActivityPublicRvAdapter(PublicActivity.this, mList);
         recyclerView.setAdapter(adapter);
+        adapter.setEditTitleListener(new ActivityPublicRvAdapter.EditTitleListener() {
+            @Override
+            public void onEdit(final int pos) {
+                AddDialog addDialog = new AddDialog(PublicActivity.this, "编辑相册名称", new AddDialog.OnOkReturnListener() {
+                    @Override
+                    public void onReturn(String title) {
+                        mList.get(pos).setTitle(title);
+                        adapter.notifyDataSetChanged();
+                        Log.e("123123", mList.toString());
+                        SpUtils.setPublicInfo(context, mList);
+                    }
+                });
+                addDialog.show();
+            }
+        });
     }
 
     private void initData() {
@@ -75,6 +91,21 @@ public class PublicActivity extends BaseActivity {
         recyclerView.setLayoutManager(manager);
         adapter = new ActivityPublicRvAdapter(PublicActivity.this, mList);
         recyclerView.setAdapter(adapter);
+        adapter.setEditTitleListener(new ActivityPublicRvAdapter.EditTitleListener() {
+            @Override
+            public void onEdit(final int pos) {
+                AddDialog addDialog = new AddDialog(PublicActivity.this, "编辑相册名称", new AddDialog.OnOkReturnListener() {
+                    @Override
+                    public void onReturn(String title) {
+                        mList.get(pos).setTitle(title);
+                        adapter.notifyDataSetChanged();
+                        Log.e("123123", mList.toString());
+                        SpUtils.setPublicInfo(context, mList);
+                    }
+                });
+                addDialog.show();
+            }
+        });
 
         checkList();
 
@@ -129,7 +160,7 @@ public class PublicActivity extends BaseActivity {
                 }
                 break;
             case R.id.activity_public_rl_add:
-                AddDialog addDialog = new AddDialog(PublicActivity.this, new AddDialog.OnOkReturnListener() {
+                AddDialog addDialog = new AddDialog(PublicActivity.this, "新建相册", new AddDialog.OnOkReturnListener() {
                     @Override
                     public void onReturn(String title) {
                         mList.add(0, new PublicInfo(title, "", DateUtils.stampToDateSecond1(System.currentTimeMillis()+""), 0, new ArrayList<PublicInfo.PicInfo>()));
@@ -141,33 +172,37 @@ public class PublicActivity extends BaseActivity {
                 addDialog.show();
                 break;
             case R.id.activity_public_tv_delete:
-                CustomDialog customDialog = new CustomDialog(context, "是否删除选中相册", new CustomDialog.OnSureListener() {
-                    @Override
-                    public void onSure() {
-                        List<Integer> editList = adapter.getEditList();
-                        Collections.sort(editList);
-                        Collections.reverse(editList);
-                        Log.e("123123", editList.toString());
-                        for (int i = 0; i<editList.size(); i++){
-                            int num = editList.get(i);
-                            if(mList.get(num).getPicList()!=null&&mList.size()>0){
-                                List<PublicInfo.PicInfo> list = mList.get(num).getPicList();
-                                for (int a = 0; a<list.size(); a++){
-                                    File file = new File(list.get(a).getPicPath());
-                                    file.delete();
+                if(adapter.getEditList().size()>0){
+                    CustomDialog customDialog = new CustomDialog(context, "是否删除选中相册", new CustomDialog.OnSureListener() {
+                        @Override
+                        public void onSure() {
+                            List<Integer> editList = adapter.getEditList();
+                            Collections.sort(editList);
+                            Collections.reverse(editList);
+                            Log.e("123123", editList.toString());
+                            for (int i = 0; i<editList.size(); i++){
+                                int num = editList.get(i);
+                                if(mList.get(num).getPicList()!=null&&mList.size()>0){
+                                    List<PublicInfo.PicInfo> list = mList.get(num).getPicList();
+                                    for (int a = 0; a<list.size(); a++){
+                                        File file = new File(list.get(a).getPicPath());
+                                        file.delete();
+                                    }
                                 }
+                                Log.e("123123", num+"");
+                                mList.remove(num);
                             }
-                            Log.e("123123", num+"");
-                            mList.remove(num);
+                            adapter.notifyDataSetChanged();
+                            adapter.setEdit(false);
+                            tvEdit.setText("编辑");
+                            tvDelete.setVisibility(View.GONE);
+                            SpUtils.setPublicInfo(context, mList);
                         }
-                        adapter.notifyDataSetChanged();
-                        adapter.setEdit(false);
-                        tvEdit.setText("编辑");
-                        tvDelete.setVisibility(View.GONE);
-                        SpUtils.setPublicInfo(context, mList);
-                    }
-                });
-                customDialog.show();
+                    });
+                    customDialog.show();
+                }else {
+                    ToastUtil.showShort(context, "请至少选择一个项册");
+                }
                 break;
         }
     }

@@ -119,45 +119,45 @@ public class ProfessionalActivity extends BaseActivity {
                                 TaskListModel model = gson.fromJson(data.getCacheData(), TaskListModel.class);
                                 //入库项目采集
                                 if(TextUtils.isEmpty(model.getXkgTask().getTzTime())){
-                                    tvRkTz.setText("未发布");
+                                    tvRkTz.setText("投    资: 未发布");
                                 }else {
                                     tvRkTz.setText("投    资: "+model.getXkgTask().getTzTime()+"  完成: "+model.getXkgTask().getTzFinish()+"/"+model.getXkgTask().getTzAllXm());
                                 }
                                 if(TextUtils.isEmpty(model.getXkgTask().getFdcTime())){
-                                    tvRkFdc.setText("未发布");
+                                    tvRkFdc.setText("房地产: 未发布");
                                 }else {
                                     tvRkFdc.setText("房地产: "+model.getXkgTask().getFdcTime()+"  完成: "+model.getXkgTask().getFdcFinish()+"/"+model.getXkgTask().getFdcAllXm());
                                 }
                                 //竣工项目采集
                                 if(TextUtils.isEmpty(model.getJgTask().getTzTime())){
-                                    tvJgTz.setText("未发布");
+                                    tvJgTz.setText("投    资: 未发布");
                                 }else {
                                     tvJgTz.setText("投    资: "+model.getJgTask().getTzTime()+"  完成: "+model.getJgTask().getTzFinish()+"/"+model.getJgTask().getTzAllXm());
                                 }
                                 if(TextUtils.isEmpty(model.getJgTask().getFdcTime())){
-                                    tvJgFdc.setText("未发布");
+                                    tvJgFdc.setText("房地产: 未发布");
                                 }else {
                                     tvJgFdc.setText("房地产: "+model.getJgTask().getFdcTime()+"  完成: "+model.getJgTask().getFdcFinish()+"/"+model.getJgTask().getFdcAllXm());
                                 }
                                 //进度项目采集
                                 if(TextUtils.isEmpty(model.getJdTask().getTzTime())){
-                                    tvJdTz.setText("未发布");
+                                    tvJdTz.setText("投    资: 未发布");
                                 }else {
                                     tvJdTz.setText("投    资: "+model.getJdTask().getTzTime()+"  完成: "+model.getJdTask().getTzFinish()+"/"+model.getJdTask().getTzAllXm());
                                 }
                                 if(TextUtils.isEmpty(model.getJdTask().getFdcTime())){
-                                    tvJdFdc.setText("未发布");
+                                    tvJdFdc.setText("房地产: 未发布");
                                 }else {
                                     tvJdFdc.setText("房地产: "+model.getJdTask().getFdcTime()+"  完成: "+model.getJdTask().getFdcFinish()+"/"+model.getJdTask().getFdcAllXm());
                                 }
                                 //变更项目采集
                                 if(TextUtils.isEmpty(model.getBgTask().getTzTime())){
-                                    tvBgTz.setText("未发布");
+                                    tvBgTz.setText("投    资: 未发布");
                                 }else {
                                     tvBgTz.setText("投    资: "+model.getBgTask().getTzTime()+"  完成: "+model.getBgTask().getTzFinish()+"/"+model.getBgTask().getTzAllXm());
                                 }
                                 if(TextUtils.isEmpty(model.getBgTask().getFdcTime())){
-                                    tvBgFdc.setText("未发布");
+                                    tvBgFdc.setText("房地产: 未发布");
                                 }else {
                                     tvBgFdc.setText("房地产: "+model.getBgTask().getFdcTime()+"  完成: "+model.getBgTask().getFdcFinish()+"/"+model.getBgTask().getFdcAllXm());
                                 }

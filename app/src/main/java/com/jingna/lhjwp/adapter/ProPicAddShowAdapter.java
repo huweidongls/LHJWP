@@ -77,16 +77,20 @@ public class ProPicAddShowAdapter extends RecyclerView.Adapter<ProPicAddShowAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        if (data.size() >= MAX_SIZE) {
-            //最多9张
-//            holder.rlAdd.setVisibility(View.GONE);
-        } else {
-            holder.rlImg.setVisibility(View.VISIBLE);
-            holder.rlAdd.setVisibility(View.VISIBLE);
-        }
+//        if (data.size() >= MAX_SIZE) {
+//            //最多9张
+////            holder.rlAdd.setVisibility(View.GONE);
+//        } else {
+//            holder.rlImg.setVisibility(View.VISIBLE);
+//            holder.rlAdd.setVisibility(View.VISIBLE);
+//        }
         if (getItemViewType(position) == TYPE_ADD) {
             holder.rlImg.setVisibility(View.GONE);
-//            holder.rlAdd.setVisibility(View.VISIBLE);
+            if(isEdit){
+                holder.rlAdd.setVisibility(View.GONE);
+            }else {
+                holder.rlAdd.setVisibility(View.VISIBLE);
+            }
         } else {
             if(isEdit){
                 holder.ivSure.setVisibility(View.VISIBLE);
@@ -115,27 +119,42 @@ public class ProPicAddShowAdapter extends RecyclerView.Adapter<ProPicAddShowAdap
                 addListener.onAddImg();
             }
         });
-        holder.ivSure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean is = false;
-                for (int i = 0; i<editList.size(); i++){
-                    if(editList.get(i) == position){
-                        holder.ivSure.setImageResource(R.drawable.sure_kong);
-                        editList.remove(i);
-                        is = true;
-                    }
-                }
-                if(!is){
-                    holder.ivSure.setImageResource(R.drawable.sure);
-                    editList.add(position);
-                }
-            }
-        });
+//        holder.ivSure.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                boolean is = false;
+//                for (int i = 0; i<editList.size(); i++){
+//                    if(editList.get(i) == position){
+//                        holder.ivSure.setImageResource(R.drawable.sure_kong);
+//                        editList.remove(i);
+//                        is = true;
+//                    }
+//                }
+//                if(!is){
+//                    holder.ivSure.setImageResource(R.drawable.sure);
+//                    editList.add(position);
+//                }
+//            }
+//        });
         holder.iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showImgListener.showImg(position);
+                if(isEdit){
+                    boolean is = false;
+                    for (int i = 0; i<editList.size(); i++){
+                        if(editList.get(i) == position){
+                            holder.ivSure.setImageResource(R.drawable.sure_kong);
+                            editList.remove(i);
+                            is = true;
+                        }
+                    }
+                    if(!is){
+                        holder.ivSure.setImageResource(R.drawable.sure);
+                        editList.add(position);
+                    }
+                }else {
+                    showImgListener.showImg(position);
+                }
             }
         });
     }

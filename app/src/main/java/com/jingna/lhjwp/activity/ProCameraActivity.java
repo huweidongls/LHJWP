@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -53,6 +54,13 @@ import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.view.CameraView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
@@ -250,54 +258,54 @@ public class ProCameraActivity extends BaseActivity {
 //            }
 //        });
 
-        ivGps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isGps){
-                    Glide.with(context).load(R.drawable.off).into(ivGps);
-                    isGps = false;
-                    tvAddress.setVisibility(View.GONE);
-                    tvLat.setVisibility(View.GONE);
-                    tvLong.setVisibility(View.GONE);
-                }else {
-                    Glide.with(context).load(R.drawable.on).into(ivGps);
-                    isGps = true;
-                    tvAddress.setVisibility(View.VISIBLE);
-                    tvLat.setVisibility(View.VISIBLE);
-                    tvLong.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        ivTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isTime){
-                    Glide.with(context).load(R.drawable.off).into(ivTime);
-                    isTime = false;
-                    tvTime.setVisibility(View.GONE);
-                }else {
-                    Glide.with(context).load(R.drawable.on).into(ivTime);
-                    isTime = true;
-                    tvTime.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        ivImei.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isImei){
-                    Glide.with(context).load(R.drawable.off).into(ivImei);
-                    isImei = false;
-                    tvImei.setVisibility(View.GONE);
-                }else {
-                    Glide.with(context).load(R.drawable.on).into(ivImei);
-                    isImei = true;
-                    tvImei.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+//        ivGps.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(isGps){
+//                    Glide.with(context).load(R.drawable.off).into(ivGps);
+//                    isGps = false;
+//                    tvAddress.setVisibility(View.GONE);
+//                    tvLat.setVisibility(View.GONE);
+//                    tvLong.setVisibility(View.GONE);
+//                }else {
+//                    Glide.with(context).load(R.drawable.on).into(ivGps);
+//                    isGps = true;
+//                    tvAddress.setVisibility(View.VISIBLE);
+//                    tvLat.setVisibility(View.VISIBLE);
+//                    tvLong.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
+//
+//        ivTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(isTime){
+//                    Glide.with(context).load(R.drawable.off).into(ivTime);
+//                    isTime = false;
+//                    tvTime.setVisibility(View.GONE);
+//                }else {
+//                    Glide.with(context).load(R.drawable.on).into(ivTime);
+//                    isTime = true;
+//                    tvTime.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
+//
+//        ivImei.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(isImei){
+//                    Glide.with(context).load(R.drawable.off).into(ivImei);
+//                    isImei = false;
+//                    tvImei.setVisibility(View.GONE);
+//                }else {
+//                    Glide.with(context).load(R.drawable.on).into(ivImei);
+//                    isImei = true;
+//                    tvImei.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
 
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
@@ -354,41 +362,75 @@ public class ProCameraActivity extends BaseActivity {
                         }
 
                         Bitmap bitmap = BitmapUtils.toConformBitmap(BitmapUtils.rotateBitmap(result.bitmap, -result.rotationDegrees-90), BitmapUtils.getViewBitmap(llInfo));
-                        Bitmap bitmap2 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
-                        Bitmap bitmap1 = null;
-                        try {
-                            bitmap1 = BitmapUtils.compressImage(bitmap2);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        FileOutputStream fos = null;
-                        try {
-                            fos = new FileOutputStream(someFile);
-                            bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                            fos.flush();
-                            fos.close();
+                        final Bitmap bitmap2 = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
+//                        Bitmap bitmap1 = null;
 
-                            Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
-                            ArrayList<ProPicInfo> list = map.get(uuid);
-                            if(list == null){
-                                list = new ArrayList<>();
+                        Observable<Bitmap> observable = Observable.create(new ObservableOnSubscribe<Bitmap>() {
+                            @Override
+                            public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
+                                try {
+                                    Bitmap bitmap1 = BitmapUtils.compressImage(bitmap2);
+                                    e.onNext(bitmap1);
+                                } catch (IOException ee) {
+                                    ee.printStackTrace();
+                                }
                             }
-                            list.add(new ProPicInfo(someFile.getPath(), DateUtils.stampToDateSecond(System.currentTimeMillis()+""), latitude, longitude, address, false));
-                            map.put(uuid, list);
-                            SpUtils.setProPicInfo(context, map);
-                            Intent intent = new Intent();
-                            intent.putExtra("path", someFile.getPath());
-                            intent.putExtra("uuid", uuid);
-                            intent.putExtra("title", title);
-                            intent.setClass(context, ProShowPicActivity.class);
-                            startActivity(intent);
-                            WeiboDialogUtils.closeDialog(dialog);
-                            finish();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        });
+                        Observer<Bitmap> observer = new Observer<Bitmap>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(Bitmap value) {
+                                FileOutputStream fos = null;
+                                try {
+                                    fos = new FileOutputStream(someFile);
+                                    value.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                                    fos.flush();
+                                    fos.close();
+
+                                    Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                                    ArrayList<ProPicInfo> list = map.get(uuid);
+                                    if(list == null){
+                                        list = new ArrayList<>();
+                                    }
+                                    list.add(new ProPicInfo(someFile.getPath(), DateUtils.stampToDateSecond(System.currentTimeMillis()+""), latitude, longitude, address, false));
+                                    map.put(uuid, list);
+                                    SpUtils.setProPicInfo(context, map);
+                                    Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                                    Uri uri = Uri.fromFile(someFile);
+                                    intent1.setData(uri);
+                                    context.sendBroadcast(intent1);
+                                    Intent intent = new Intent();
+                                    intent.putExtra("path", someFile.getPath());
+                                    intent.putExtra("uuid", uuid);
+                                    intent.putExtra("title", title);
+                                    intent.setClass(context, ProShowPicActivity.class);
+                                    startActivity(intent);
+                                    WeiboDialogUtils.closeDialog(dialog);
+                                    finish();
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        };
+                        observable.observeOn(Schedulers.io())
+                                .subscribeOn(AndroidSchedulers.mainThread())
+                                .subscribe(observer);
 
                     }
                 });

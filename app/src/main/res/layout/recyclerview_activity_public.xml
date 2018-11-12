@@ -19,6 +19,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:background="@drawable/selector_list_bg"
         android:id="@+id/rl"
         android:layout_toRightOf="@+id/rl_edit"
         android:layout_width="match_parent"
@@ -43,14 +44,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tv1"
+            <LinearLayout
                 android:layout_marginTop="28px"
-                android:textColor="#22283B"
-                android:textSize="36px"
-                android:text="某某小区"
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/tv1"
+                    android:textColor="#22283B"
+                    android:textSize="36px"
+                    android:text="某某小区"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/iv_edit"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10px"
+                    android:src="@drawable/edit_b"
+                    android:layout_width="32px"
+                    android:layout_height="30px" />
+                
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv2"

@@ -191,31 +191,35 @@ public class PublicContentActivity extends BaseActivity {
                 break;
             case R.id.activity_public_content_tv_bottom:
                 if (adapter.getEdit()) {
-                    CustomDialog customDialog = new CustomDialog(context, "是否删除照片", new CustomDialog.OnSureListener() {
-                        @Override
-                        public void onSure() {
-                            ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
-                            List<Integer> editList = adapter.getEditList();
-                            Collections.sort(editList);
-                            Collections.reverse(editList);
+                    if(adapter.getEditList().size()>0){
+                        CustomDialog customDialog = new CustomDialog(context, "是否删除照片", new CustomDialog.OnSureListener() {
+                            @Override
+                            public void onSure() {
+                                ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
+                                List<Integer> editList = adapter.getEditList();
+                                Collections.sort(editList);
+                                Collections.reverse(editList);
 //                Log.e("121212", mList.size()+"--"+editList.size());
-                            for (int i = 0; i < editList.size(); i++) {
-                                int num = editList.get(i);
-                                File file = new File(mList.get(num).getPicPath());
-                                file.delete();
-                                mList.remove(num);
-                                list.get(position).getPicList().remove(num);
+                                for (int i = 0; i < editList.size(); i++) {
+                                    int num = editList.get(i);
+                                    File file = new File(mList.get(num).getPicPath());
+                                    file.delete();
+                                    mList.remove(num);
+                                    list.get(position).getPicList().remove(num);
+                                }
+                                adapter.setEdit(false);
+                                adapter.notifyDataSetChanged();
+                                SpUtils.setPublicInfo(context, list);
+                                ivBack.setVisibility(View.VISIBLE);
+                                tvCancel.setVisibility(View.GONE);
+                                tvBottom.setText("分享");
+                                tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
                             }
-                            adapter.setEdit(false);
-                            adapter.notifyDataSetChanged();
-                            SpUtils.setPublicInfo(context, list);
-                            ivBack.setVisibility(View.VISIBLE);
-                            tvCancel.setVisibility(View.GONE);
-                            tvBottom.setText("分享");
-                            tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
-                        }
-                    });
-                    customDialog.show();
+                        });
+                        customDialog.show();
+                    }else {
+                        ToastUtil.showShort(context, "请至少选择一张照片");
+                    }
                 } else {
 //                    List<File> fileList = new ArrayList<>();
 //                    for (int i = 0; i<mList.size(); i++){
