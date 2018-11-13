@@ -145,24 +145,24 @@ public class PublicContentActivity extends BaseActivity {
                 tvBottom.setText("分享");
                 tvBottom.setBackgroundColor(Color.parseColor("#2276F6"));
 
-                Intent intent = new Intent();
-                intent.putExtra("title", title);
-                intent.putExtra("path", mList.get(pos).getPicPath());
-                intent.putExtra("position", position);
-                intent.setClass(context, PublicShowPicActivity.class);
-                startActivity(intent);
-
-//                List<String> urlList = new ArrayList<>();
-//                for (int i = 0; i<mList.size(); i++){
-//                    urlList.add("file://"+mList.get(i).getPicPath());
-//                }
-//                Intent intent = new Intent(context, ImagePreviewActivity.class);
-//                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
-//                intent.putExtra(Consts.START_ITEM_POSITION, pos);
-//                intent.putExtra(Consts.START_IAMGE_POSITION, pos);
-////                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
+//                Intent intent = new Intent();
+//                intent.putExtra("title", title);
+//                intent.putExtra("path", mList.get(pos).getPicPath());
+//                intent.putExtra("position", position);
+//                intent.setClass(context, PublicShowPicActivity.class);
 //                startActivity(intent);
-////                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
+
+                List<String> urlList = new ArrayList<>();
+                for (int i = 0; i<mList.size(); i++){
+                    urlList.add("file://"+mList.get(i).getPicPath());
+                }
+                Intent intent = new Intent(context, ImagePreviewActivity.class);
+                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
+                intent.putExtra(Consts.START_ITEM_POSITION, pos);
+                intent.putExtra(Consts.START_IAMGE_POSITION, pos);
+//                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
+                startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
             }
         });
 

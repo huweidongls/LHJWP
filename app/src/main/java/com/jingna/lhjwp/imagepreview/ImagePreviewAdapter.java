@@ -47,12 +47,18 @@ public class ImagePreviewAdapter extends PagerAdapter {
 
         Glide.with(context).load(imageList.get(position)).into(image);
 
-
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 image.setEnabled(false);
                 ((Activity)context).onBackPressed();
+            }
+        });
+
+        image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
             }
         });
         container.addView(image);
