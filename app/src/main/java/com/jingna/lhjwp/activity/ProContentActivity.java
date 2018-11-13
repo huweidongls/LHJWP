@@ -212,7 +212,7 @@ public class ProContentActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra("uuid", uuid);
                 intent.putExtra("title", title);
-                intent.setClass(context, ProCameraActivity.class);
+                intent.setClass(context, ProCamera1Activity.class);
                 startActivity(intent);
                 popupWindow.dismiss();
             }

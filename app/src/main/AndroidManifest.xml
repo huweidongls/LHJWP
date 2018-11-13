@@ -71,32 +71,33 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <!--<meta-data-->
-            <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-            <!--android:resource="@xml/file_paths" />-->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
+        <!-- android:resource="@xml/file_paths" /> -->
 
-        <!--<provider-->
-            <!--android:name="android.support.v4.content.FileProvider"-->
-            <!--android:authorities="com.jingna.lhjwp"-->
-            <!--android:exported="false"-->
-            <!--android:grantUriPermissions="true">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                <!--android:resource="@xml/file_paths" />-->
-        <!--</provider>-->
+
+        <!-- <provider -->
+        <!-- android:name="android.support.v4.content.FileProvider" -->
+        <!-- android:authorities="com.jingna.lhjwp" -->
+        <!-- android:exported="false" -->
+        <!-- android:grantUriPermissions="true"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
+        <!-- android:resource="@xml/file_paths" /> -->
+        <!-- </provider> -->
 
         <meta-data
             android:name="IFLYTEK_APPKEY"
-            android:value="5bdbc71f"/>
+            android:value="5bdbc71f" />
 
-        <activity android:name="com.donkingliang.imageselector.ImageSelectorActivity"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:configChanges="orientation|keyboardHidden|screenSize"/>
-
-        <activity android:name="com.donkingliang.imageselector.PreviewActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-
+        <activity
+            android:name="com.donkingliang.imageselector.ImageSelectorActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.donkingliang.imageselector.PreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name="com.donkingliang.imageselector.ClipImageActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -122,7 +123,9 @@
         <activity android:name=".activity.ProCameraActivity" />
         <activity android:name=".activity.ProShowPicActivity" />
         <activity android:name=".activity.ProPicLocationActivity" />
-        <activity android:name=".activity.VoiceActivity"/>
+        <activity android:name=".activity.VoiceActivity" />
+        <activity android:name=".activity.ProCamera1Activity" />
+        <activity android:name=".activity.Camera1Activity"></activity>
     </application>
 
 </manifest>

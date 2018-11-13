@@ -132,7 +132,7 @@ public class PublicContentActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra("position", position);
                 intent.putExtra("title", title);
-                intent.setClass(PublicContentActivity.this, CameraActivity.class);
+                intent.setClass(PublicContentActivity.this, Camera1Activity.class);
                 startActivity(intent);
             }
         });

@@ -140,7 +140,7 @@
             android:layout_marginRight="25px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/off"
+            android:src="@drawable/on"
             android:layout_width="66px"
             android:layout_height="40px" />
 
