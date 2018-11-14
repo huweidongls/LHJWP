@@ -45,6 +45,7 @@ import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.Const;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.FileUtils;
+import com.jingna.lhjwp.utils.LocalCodeUtils;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
@@ -287,14 +288,32 @@ public class ProContentActivity extends BaseActivity {
 //                    e.printStackTrace();
 //                }
 //                Bitmap bitmap  = BitmapFactory.decodeStream(fis);
-                CodeUtils.analyzeBitmap(images.get(a), new CodeUtils.AnalyzeCallback() {
+//                CodeUtils.analyzeBitmap(images.get(a), new CodeUtils.AnalyzeCallback() {
+//                    @Override
+//                    public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+//                        Log.e("123123", result);
+////                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
+//                        if(!result.contains(";")){
+//                            isCode = false;
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onAnalyzeFailed() {
+//                        Log.e("123123", "解析二维码失败");
+//                        isCode = false;
+////                        Toast.makeText(context, "解析二维码失败", Toast.LENGTH_LONG).show();
+//                    }
+//                });
+
+                LocalCodeUtils.analyzeBitmap(images.get(a), new LocalCodeUtils.AnalyzeCallback() {
                     @Override
                     public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
                         Log.e("123123", result);
 //                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
-                        if(!result.contains(";")){
-                            isCode = false;
-                        }
+//                        if(!result.contains(";")){
+//                            isCode = false;
+//                        }
                     }
 
                     @Override

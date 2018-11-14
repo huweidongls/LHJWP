@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -62,7 +63,8 @@ public class LocalCodeUtils {
         if (sampleSize <= 0)
             sampleSize = 1;
         options.inSampleSize = sampleSize;
-        mBitmap = BitmapFactory.decodeFile(path, options);
+        mBitmap = BitmapFactory.decodeFile(path);
+        mBitmap = Bitmap.createBitmap(mBitmap, mBitmap.getWidth()-200, 0, 200, 200);
 
         MultiFormatReader multiFormatReader = new MultiFormatReader();
 

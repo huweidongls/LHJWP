@@ -133,6 +133,9 @@
             android:name=".imagepreview.ImagePreviewActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".imagepreview.PublicImagePreviewActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.ProfessionalLoginActivity"
             android:screenOrientation="portrait" />
         <activity

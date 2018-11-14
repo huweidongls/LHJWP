@@ -29,6 +29,7 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.dialog.CustomDialog;
 import com.jingna.lhjwp.imagepreview.Consts;
 import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
+import com.jingna.lhjwp.imagepreview.PublicImagePreviewActivity;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.FileUtils;
 import com.jingna.lhjwp.utils.ShareUtils;
@@ -156,7 +157,7 @@ public class PublicContentActivity extends BaseActivity {
                 for (int i = 0; i<mList.size(); i++){
                     urlList.add("file://"+mList.get(i).getPicPath());
                 }
-                Intent intent = new Intent(context, ImagePreviewActivity.class);
+                Intent intent = new Intent(context, PublicImagePreviewActivity.class);
                 intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
                 intent.putExtra(Consts.START_ITEM_POSITION, pos);
                 intent.putExtra(Consts.START_IAMGE_POSITION, pos);
