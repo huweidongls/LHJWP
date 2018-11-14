@@ -189,6 +189,7 @@ public class ProfessionalActivity extends BaseActivity {
             case R.id.rl_person:
                 intent.setClass(context, PersonActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.person_enter, R.anim.person_enter1);
                 break;
             case R.id.ll2:
                 intent.setClass(context, RukuListActivity.class);

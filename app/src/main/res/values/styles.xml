@@ -54,4 +54,17 @@
         <!-- 指定消失的动画xml -->
     </style>
 
+    <!-- personactivity 显示消失动画-->
+    <style name="FeelyouWindowAnimTheme" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/person_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/person_enter1</item>
+        <item name="android:activityCloseEnterAnimation">@anim/person_exit</item>
+        <item name="android:activityCloseExitAnimation">@anim/person_exit1</item>
+    </style>
+
+    <!-- 显示消失动画-->
+    <style name="personStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
+    </style>
+
 </resources>

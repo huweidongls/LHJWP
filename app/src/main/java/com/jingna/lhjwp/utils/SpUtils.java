@@ -34,6 +34,17 @@ public class SpUtils {
     public static String PRO_LOGIN_JIZHU = "pro_login_jizhu";
     public static String PRO_PWD = "propwd";
     public static String PRO_RUKU_CACHE = "prorukucache";
+    public static String PRO_REALNAME = "pro_realname";
+
+    public static void setRealName(Context context, String name){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_REALNAME, name);
+    }
+
+    public static String getRealName(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(PRO_REALNAME, "");
+    }
 
     public static void setRukuCache(Context context, Map<String, RukuListModel> map){
         spCache = new SpCache(context, "pro_info");

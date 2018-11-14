@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.activity.PublicContentActivity;
 import com.jingna.lhjwp.info.PublicInfo;
@@ -88,18 +89,32 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
             holder.ivEdit.setImageResource(R.drawable.sure_kong);
             editList.clear();
         }
-        if(data.get(position).getCollect() == 0){
-            holder.tvTitle.setTextColor(Color.parseColor("#ff0000"));
-        }else if(data.get(position).getCollect() == 1&&!data.get(position).getIsShare()){
-            holder.tvTitle.setTextColor(Color.parseColor("#FF7800"));
-        }else if(data.get(position).getCollect() == 1&&data.get(position).getIsShare()){
-            holder.tvTitle.setTextColor(Color.parseColor("#00ff00"));
+//        if(data.get(position).getCollect() == 0){
+//            holder.tvTitle.setTextColor(Color.parseColor("#ff0000"));
+//        }else if(data.get(position).getCollect() == 1&&!data.get(position).getIsShare()){
+//            holder.tvTitle.setTextColor(Color.parseColor("#FF7800"));
+//        }else if(data.get(position).getCollect() == 1&&data.get(position).getIsShare()){
+//            holder.tvTitle.setTextColor(Color.parseColor("#00ff00"));
+//        }
+
+        if(data.get(position).getPicList()==null||data.get(position).getPicList().size()==0){
+            Glide.with(context).load(R.drawable.wutu).into(holder.ivTitle);
+        }else {
+            Glide.with(context).load(R.drawable.youtu).into(holder.ivTitle);
         }
+
         holder.tvTitle.setText(data.get(position).getTitle());
         if(TextUtils.isEmpty(data.get(position).getTime())){
             holder.tvTime.setText("采集时间: 未采集项目信息");
         }else {
             holder.tvTime.setText("采集时间: "+data.get(position).getTime());
+        }
+        if(data.get(position).getPicList()==null||data.get(position).getPicList().size()==0){
+            holder.rlNum.setBackgroundResource(R.drawable.bg_shape_yellow);
+            holder.tvNum.setText("0");
+        }else {
+            holder.rlNum.setBackgroundResource(R.drawable.bg_shape_blue);
+            holder.tvNum.setText(data.get(position).getPicList().size()+"");
         }
 
         holder.rlEdit.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +168,8 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
         private RelativeLayout rlEdit;
         private RelativeLayout rl;
         private ImageView ivEditIcon;
+        private TextView tvNum;
+        private RelativeLayout rlNum;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -164,6 +181,8 @@ public class ActivityPublicRvAdapter extends RecyclerView.Adapter<ActivityPublic
             rlEdit = itemView.findViewById(R.id.rl_edit);
             rl = itemView.findViewById(R.id.rl);
             ivEditIcon = itemView.findViewById(R.id.iv_edit);
+            tvNum = itemView.findViewById(R.id.tv_num);
+            rlNum = itemView.findViewById(R.id.rl_num);
         }
     }
 

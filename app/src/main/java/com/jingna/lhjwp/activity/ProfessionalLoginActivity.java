@@ -147,6 +147,7 @@ public class ProfessionalLoginActivity extends BaseActivity {
                                 SpUtils.setS_ORGAN(context, jsonObject.getString("S_ORGAN"));
                                 SpUtils.setMinPic(context, jsonObject.getString("minPic"));
                                 SpUtils.setMaxPic(context, jsonObject.getString("maxPic"));
+                                SpUtils.setRealName(context, jsonObject.getString("name"));
                                 Intent intent = new Intent(context, ProfessionalActivity.class);
                                 startActivity(intent);
                                 finish();

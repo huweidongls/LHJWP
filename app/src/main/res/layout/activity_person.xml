@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F5F6"
+    android:background="#F2F3F7"
     tools:context="com.jingna.lhjwp.activity.PersonActivity">
 
     <ImageView
@@ -30,7 +30,8 @@
     
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_avatar"
-        android:layout_marginTop="135px"
+        android:src="@drawable/tx"
+        android:layout_marginTop="108px"
         android:layout_centerHorizontal="true"
         android:layout_width="118px"
         android:layout_height="118px" />
@@ -47,6 +48,7 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:background="@drawable/selector_list_bg"
         android:id="@+id/ll_version"
         android:layout_below="@+id/iv_top"
         android:layout_width="match_parent"
@@ -54,24 +56,24 @@
 
         <ImageView
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="40px"
+            android:layout_marginLeft="30px"
             android:src="@drawable/version"
-            android:layout_width="52px"
-            android:layout_height="52px" />
+            android:layout_width="41px"
+            android:layout_height="41px" />
 
         <TextView
-            android:textStyle="bold"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="40px"
-            android:textColor="@color/black_333333"
+            android:layout_marginLeft="20px"
+            android:textColor="#2B2B2B"
             android:textSize="36px"
             android:text="当前版本"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
+    
     <LinearLayout
+        android:background="@drawable/selector_list_bg"
         android:id="@+id/ll_about"
         android:layout_below="@+id/ll_version"
         android:layout_width="match_parent"
@@ -79,16 +81,15 @@
 
         <ImageView
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="40px"
+            android:layout_marginLeft="30px"
             android:src="@drawable/about"
-            android:layout_width="52px"
-            android:layout_height="52px" />
+            android:layout_width="42px"
+            android:layout_height="41px" />
 
         <TextView
-            android:textStyle="bold"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="40px"
-            android:textColor="@color/black_333333"
+            android:layout_marginLeft="20px"
+            android:textColor="#2B2B2B"
             android:textSize="36px"
             android:text="关于我们"
             android:layout_width="wrap_content"
@@ -96,9 +97,25 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_below="@+id/iv_top"
+        android:background="#f2f2f2"
+        android:layout_width="match_parent"
+        android:layout_height="2px"/>
+
+    <View
+        android:layout_marginLeft="30px"
+        android:layout_below="@+id/ll_version"
+        android:background="#f2f2f2"
+        android:layout_width="match_parent"
+        android:layout_height="2px"/>
+
     <TextView
+        android:layout_marginLeft="18px"
+        android:layout_marginRight="18px"
+        android:layout_marginBottom="18px"
         android:id="@+id/tv_exit"
-        android:background="#2276F6"
+        android:background="@drawable/bg_exit"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:textSize="36px"

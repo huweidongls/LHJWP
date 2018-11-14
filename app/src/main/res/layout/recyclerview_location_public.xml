@@ -15,11 +15,32 @@
             android:layout_width="130px"
             android:layout_height="130px" />
 
-        <ImageView
-            android:scaleType="centerCrop"
-            android:id="@+id/iv1"
-            android:layout_width="140px"
-            android:layout_height="140px" />
+        <RelativeLayout
+            android:padding="2px"
+            android:background="#1071E3"
+            android:visibility="gone"
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:id="@+id/iv1"
+                android:layout_width="140px"
+                android:layout_height="140px" />
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/iv2"
+                android:src="@drawable/loc"
+                android:layout_marginBottom="3px"
+                android:layout_marginRight="3px"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="26px"
+                android:layout_height="26px" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

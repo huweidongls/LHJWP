@@ -32,7 +32,7 @@ public class PersonActivity extends BaseActivity {
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(PersonActivity.this);
 
-        tvName.setText(SpUtils.getUsername(context));
+        tvName.setText(SpUtils.getRealName(context));
 
     }
 
@@ -42,6 +42,7 @@ public class PersonActivity extends BaseActivity {
         switch (view.getId()){
             case R.id.activity_person_rl_back:
                 finish();
+                overridePendingTransition(R.anim.person_exit1, R.anim.person_exit);
                 break;
             case R.id.ll_version:
                 intent.setClass(context, VersionActivity.class);
@@ -67,4 +68,9 @@ public class PersonActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.person_exit1, R.anim.person_exit);
+    }
 }

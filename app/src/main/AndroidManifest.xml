@@ -33,7 +33,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.WelcomeActivity">
+        <activity
+            android:name=".activity.WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,13 +56,27 @@
             android:name="unit"
             android:value="px" />
 
-        <activity android:name=".activity.TypeActivity" />
-        <activity android:name=".activity.ProfessionalActivity" />
-        <activity android:name=".activity.PublicActivity" />
-        <activity android:name=".activity.PublicContentActivity" />
-        <activity android:name=".activity.CameraActivity" />
-        <activity android:name=".activity.PublicPicLocationActivity" />
-        <activity android:name=".activity.PublicShowPicActivity" />
+        <activity
+            android:name=".activity.TypeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProfessionalActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PublicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PublicContentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CameraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PublicPicLocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PublicShowPicActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -113,19 +129,45 @@
                 android:resource="@xml/file_path" />
         </provider>
 
-        <activity android:name=".imagepreview.ImagePreviewActivity" />
-        <activity android:name=".activity.ProfessionalLoginActivity" />
-        <activity android:name=".activity.RukuListActivity" />
-        <activity android:name=".activity.ProContentActivity" />
-        <activity android:name=".activity.PersonActivity" />
-        <activity android:name=".activity.VersionActivity" />
-        <activity android:name=".activity.AboutActivity" />
-        <activity android:name=".activity.ProCameraActivity" />
-        <activity android:name=".activity.ProShowPicActivity" />
-        <activity android:name=".activity.ProPicLocationActivity" />
-        <activity android:name=".activity.VoiceActivity" />
-        <activity android:name=".activity.ProCamera1Activity" />
-        <activity android:name=".activity.Camera1Activity"></activity>
+        <activity
+            android:name=".imagepreview.ImagePreviewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProfessionalLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.RukuListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProContentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PersonActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.VersionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProCameraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProShowPicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProPicLocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.VoiceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProCamera1Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.Camera1Activity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

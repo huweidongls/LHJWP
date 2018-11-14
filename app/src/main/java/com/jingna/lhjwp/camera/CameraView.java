@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -607,15 +608,21 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
         int diff = newRotation - oldRotation;
         if (diff > 180) {
             diff = diff - 360;
+            int h = llInfo.getHeight()/2;
+            RotateAnimation rotate = new RotateAnimation(-oldRotation, -oldRotation - diff, h, h);
+            rotate.setDuration(200);
+            rotate.setFillAfter(true);
+//        mSwitchView.startAnimation(rotate);
+            llInfo.startAnimation(rotate);
         } else if (diff < -180) {
             diff = diff + 360;
-        }
-        int h = llInfo.getHeight()/2;
-        RotateAnimation rotate = new RotateAnimation(-oldRotation, -oldRotation - diff, h, h);
-        rotate.setDuration(200);
-        rotate.setFillAfter(true);
+            int h = llInfo.getHeight()/2;
+            RotateAnimation rotate = new RotateAnimation(-oldRotation, -oldRotation - diff, h, h);
+            rotate.setDuration(200);
+            rotate.setFillAfter(true);
 //        mSwitchView.startAnimation(rotate);
-        llInfo.startAnimation(rotate);
+            llInfo.startAnimation(rotate);
+        }
     }
 
     /**

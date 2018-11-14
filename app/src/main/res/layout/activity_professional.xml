@@ -60,39 +60,56 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
         android:id="@+id/ll1"
         android:background="@drawable/selector_list_bg"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="226px">
-
-        <ImageView
-            android:layout_marginLeft="16px"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/ll1"
-            android:layout_width="200px"
-            android:layout_height="186px" />
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_marginTop="36px"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="27px"
+            android:layout_marginTop="34px"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/pro1"
+                android:layout_width="44px"
+                android:layout_height="44px" />
+
+            <TextView
+                android:layout_marginLeft="16px"
+                android:layout_gravity="center_vertical"
+                android:textColor="#202020"
+                android:textSize="38px"
+                android:text="入库项目采集"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:scaleType="fitXY"
+            android:src="@drawable/pro_line"
+            android:layout_width="match_parent"
+            android:layout_height="36px" />
+
+        <LinearLayout
+            android:layout_marginBottom="20px"
+            android:layout_marginRight="27px"
+            android:layout_marginLeft="27px"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:textStyle="bold"
-                android:textColor="#545658"
-                android:textSize="36px"
-                android:text="入库项目采集"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
                 android:id="@+id/tv_rk_tz"
                 android:layout_marginTop="12px"
-                android:textColor="#7D7C7C"
+                android:textColor="#545658"
                 android:textSize="28px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -100,7 +117,7 @@
             <TextView
                 android:id="@+id/tv_rk_fdc"
                 android:layout_marginTop="12px"
-                android:textColor="#7D7C7C"
+                android:textColor="#545658"
                 android:textSize="28px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -110,40 +127,57 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
         android:id="@+id/ll2"
         android:layout_marginTop="12px"
         android:background="@drawable/selector_list_bg"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="226px">
-
-        <ImageView
-            android:layout_marginLeft="16px"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/ll2"
-            android:layout_width="200px"
-            android:layout_height="186px" />
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_marginTop="36px"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="27px"
+            android:layout_marginTop="34px"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/pro2"
+                android:layout_width="44px"
+                android:layout_height="44px" />
+
+            <TextView
+                android:layout_marginLeft="16px"
+                android:layout_gravity="center_vertical"
+                android:textColor="#202020"
+                android:textSize="38px"
+                android:text="进度项目采集"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:scaleType="fitXY"
+            android:src="@drawable/pro_line"
+            android:layout_width="match_parent"
+            android:layout_height="36px" />
+
+        <LinearLayout
+            android:layout_marginBottom="20px"
+            android:layout_marginRight="27px"
+            android:layout_marginLeft="27px"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:textStyle="bold"
-                android:textColor="#545658"
-                android:textSize="36px"
-                android:text="进度项目采集"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
                 android:id="@+id/tv_jd_tz"
                 android:layout_marginTop="12px"
-                android:textColor="#7D7C7C"
+                android:textColor="#545658"
                 android:textSize="28px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -151,7 +185,7 @@
             <TextView
                 android:id="@+id/tv_jd_fdc"
                 android:layout_marginTop="12px"
-                android:textColor="#7D7C7C"
+                android:textColor="#545658"
                 android:textSize="28px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -161,40 +195,57 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
         android:id="@+id/ll3"
         android:layout_marginTop="12px"
         android:background="@drawable/selector_list_bg"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="226px">
-
-        <ImageView
-            android:layout_marginLeft="16px"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/ll3"
-            android:layout_width="200px"
-            android:layout_height="186px" />
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_marginTop="36px"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="27px"
+            android:layout_marginTop="34px"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/pro3"
+                android:layout_width="44px"
+                android:layout_height="44px" />
+
+            <TextView
+                android:layout_marginLeft="16px"
+                android:layout_gravity="center_vertical"
+                android:textColor="#202020"
+                android:textSize="38px"
+                android:text="变更项目采集"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:scaleType="fitXY"
+            android:src="@drawable/pro_line"
+            android:layout_width="match_parent"
+            android:layout_height="36px" />
+
+        <LinearLayout
+            android:layout_marginBottom="20px"
+            android:layout_marginRight="27px"
+            android:layout_marginLeft="27px"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:textStyle="bold"
-                android:textColor="#545658"
-                android:textSize="36px"
-                android:text="变更项目采集"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
                 android:id="@+id/tv_bg_tz"
                 android:layout_marginTop="12px"
-                android:textColor="#7D7C7C"
+                android:textColor="#545658"
                 android:textSize="28px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -202,7 +253,7 @@
             <TextView
                 android:id="@+id/tv_bg_fdc"
                 android:layout_marginTop="12px"
-                android:textColor="#7D7C7C"
+                android:textColor="#545658"
                 android:textSize="28px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -212,40 +263,57 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
         android:id="@+id/ll4"
         android:layout_marginTop="12px"
         android:background="@drawable/selector_list_bg"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="226px">
-
-        <ImageView
-            android:layout_marginLeft="16px"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/ll4"
-            android:layout_width="200px"
-            android:layout_height="186px" />
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_marginTop="36px"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="27px"
+            android:layout_marginTop="34px"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/pro4"
+                android:layout_width="44px"
+                android:layout_height="44px" />
+
+            <TextView
+                android:layout_marginLeft="16px"
+                android:layout_gravity="center_vertical"
+                android:textColor="#202020"
+                android:textSize="38px"
+                android:text="竣工项目采集"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:scaleType="fitXY"
+            android:src="@drawable/pro_line"
+            android:layout_width="match_parent"
+            android:layout_height="36px" />
+
+        <LinearLayout
+            android:layout_marginBottom="20px"
+            android:layout_marginRight="27px"
+            android:layout_marginLeft="27px"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:textStyle="bold"
-                android:textColor="#545658"
-                android:textSize="36px"
-                android:text="竣工项目采集"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
                 android:id="@+id/tv_jg_tz"
                 android:layout_marginTop="12px"
-                android:textColor="#7D7C7C"
+                android:textColor="#545658"
                 android:textSize="28px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -253,7 +321,7 @@
             <TextView
                 android:id="@+id/tv_jg_fdc"
                 android:layout_marginTop="12px"
-                android:textColor="#7D7C7C"
+                android:textColor="#545658"
                 android:textSize="28px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

@@ -1,19 +1,16 @@
 package com.jingna.lhjwp.activity;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,8 +31,6 @@ import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.vise.xsnow.http.ViseHttp;
 import com.vise.xsnow.http.callback.ACallback;
-import com.vise.xsnow.http.mode.CacheMode;
-import com.vise.xsnow.http.mode.CacheResult;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import org.json.JSONException;

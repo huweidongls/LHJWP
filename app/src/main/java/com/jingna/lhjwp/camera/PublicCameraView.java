@@ -34,6 +34,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
@@ -85,6 +86,11 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
     private String address = "";
     private PopupWindow popupWindow;
     private View infoFrame;
+    private boolean isText = true;
+    private boolean isCode = true;
+    private boolean isGps = true;
+    private boolean isTime = true;
+    private boolean isImei = true;
 
     public interface CameraListener {
         void onCapture(Bitmap bitmap, double latitude, double longitude, String address);
@@ -224,6 +230,7 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
                         @Override
                         public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
                             Bitmap mBitmap;
+                            Bitmap bmp;
                             String textContent = latitude+";"+longitude+";"+ DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                             String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                             Log.e("123123", textContent);
@@ -232,9 +239,19 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
                             }else {
                                 mBitmap = LocalCodeUtils.createImage(textContent1, 150, 150, null);
                             }
-                            Bitmap bitmap1 = BitmapUtils.toConformBitmap(bitmap, BitmapUtils.getViewBitmap(llInfo));
-                            Bitmap bitmap2 = BitmapUtils.toConformBitmap1(bitmap1, mBitmap);
-                            e.onNext(bitmap2);
+                            if(isText&&isCode){
+                                bmp = BitmapUtils.toConformBitmap(bitmap, BitmapUtils.getViewBitmap(llInfo));
+                                bmp = BitmapUtils.toConformBitmap1(bmp, mBitmap);
+                                e.onNext(bmp);
+                            } else if(isText&&!isCode){
+                                bmp = BitmapUtils.toConformBitmap(bitmap, BitmapUtils.getViewBitmap(llInfo));
+                                e.onNext(bmp);
+                            } else if(!isText&&isCode){
+                                bmp = BitmapUtils.toConformBitmap1(bitmap, mBitmap);
+                                e.onNext(bmp);
+                            } else if(!isText&&!isCode){
+                                e.onNext(bitmap);
+                            }
                         }
                     });
                     Observer<Bitmap> observer = new Observer<Bitmap>() {
@@ -324,108 +341,108 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
         final ImageView ivTime = view.findViewById(R.id.iv_time);
         final ImageView ivImei = view.findViewById(R.id.iv_imei);
 
-//        if(isText){
-//            Glide.with(context).load(R.drawable.on).into(ivText);
-//        }else {
-//            Glide.with(context).load(R.drawable.off).into(ivText);
-//        }
-//        if(isCode){
-//            Glide.with(context).load(R.drawable.on).into(ivCode);
-//        }else {
-//            Glide.with(context).load(R.drawable.off).into(ivCode);
-//        }
-//        if(isGps){
-//            Glide.with(context).load(R.drawable.on).into(ivGps);
-//        }else {
-//            Glide.with(context).load(R.drawable.off).into(ivGps);
-//        }
-//        if(isTime){
-//            Glide.with(context).load(R.drawable.on).into(ivTime);
-//        }else {
-//            Glide.with(context).load(R.drawable.off).into(ivTime);
-//        }
-//        if(isImei){
-//            Glide.with(context).load(R.drawable.on).into(ivImei);
-//        }else {
-//            Glide.with(context).load(R.drawable.off).into(ivImei);
-//        }
+        if(isText){
+            Glide.with(getContext()).load(R.drawable.on).into(ivText);
+        }else {
+            Glide.with(getContext()).load(R.drawable.off).into(ivText);
+        }
+        if(isCode){
+            Glide.with(getContext()).load(R.drawable.on).into(ivCode);
+        }else {
+            Glide.with(getContext()).load(R.drawable.off).into(ivCode);
+        }
+        if(isGps){
+            Glide.with(getContext()).load(R.drawable.on).into(ivGps);
+        }else {
+            Glide.with(getContext()).load(R.drawable.off).into(ivGps);
+        }
+        if(isTime){
+            Glide.with(getContext()).load(R.drawable.on).into(ivTime);
+        }else {
+            Glide.with(getContext()).load(R.drawable.off).into(ivTime);
+        }
+        if(isImei){
+            Glide.with(getContext()).load(R.drawable.on).into(ivImei);
+        }else {
+            Glide.with(getContext()).load(R.drawable.off).into(ivImei);
+        }
 
-//        ivText.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(isText){
-//                    Glide.with(context).load(R.drawable.off).into(ivText);
-//                    isText = false;
-//                    llInfo.setVisibility(View.GONE);
-//                }else {
-//                    Glide.with(context).load(R.drawable.on).into(ivText);
-//                    isText = true;
-//                    llInfo.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-//
-//        ivCode.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(isCode){
-//                    Glide.with(context).load(R.drawable.off).into(ivCode);
-//                    isCode = false;
-//                }else {
-//                    Glide.with(context).load(R.drawable.on).into(ivCode);
-//                    isCode = true;
-//                }
-//            }
-//        });
+        ivText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isText){
+                    Glide.with(getContext()).load(R.drawable.off).into(ivText);
+                    isText = false;
+                    llInfo.setVisibility(View.GONE);
+                }else {
+                    Glide.with(getContext()).load(R.drawable.on).into(ivText);
+                    isText = true;
+                    llInfo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
-//        ivGps.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(isGps){
-//                    Glide.with(context).load(R.drawable.off).into(ivGps);
-//                    isGps = false;
-//                    tvAddress.setVisibility(View.GONE);
-//                    tvLat.setVisibility(View.GONE);
-//                    tvLong.setVisibility(View.GONE);
-//                }else {
-//                    Glide.with(context).load(R.drawable.on).into(ivGps);
-//                    isGps = true;
-//                    tvAddress.setVisibility(View.VISIBLE);
-//                    tvLat.setVisibility(View.VISIBLE);
-//                    tvLong.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-//
-//        ivTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(isTime){
-//                    Glide.with(context).load(R.drawable.off).into(ivTime);
-//                    isTime = false;
-//                    tvTime.setVisibility(View.GONE);
-//                }else {
-//                    Glide.with(context).load(R.drawable.on).into(ivTime);
-//                    isTime = true;
-//                    tvTime.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-//
-//        ivImei.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(isImei){
-//                    Glide.with(context).load(R.drawable.off).into(ivImei);
-//                    isImei = false;
-//                    tvImei.setVisibility(View.GONE);
-//                }else {
-//                    Glide.with(context).load(R.drawable.on).into(ivImei);
-//                    isImei = true;
-//                    tvImei.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
+        ivCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isCode){
+                    Glide.with(getContext()).load(R.drawable.off).into(ivCode);
+                    isCode = false;
+                }else {
+                    Glide.with(getContext()).load(R.drawable.on).into(ivCode);
+                    isCode = true;
+                }
+            }
+        });
+
+        ivGps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isGps){
+                    Glide.with(getContext()).load(R.drawable.off).into(ivGps);
+                    isGps = false;
+                    tvAddress.setVisibility(View.GONE);
+                    tvLat.setVisibility(View.GONE);
+                    tvLong.setVisibility(View.GONE);
+                }else {
+                    Glide.with(getContext()).load(R.drawable.on).into(ivGps);
+                    isGps = true;
+                    tvAddress.setVisibility(View.VISIBLE);
+                    tvLat.setVisibility(View.VISIBLE);
+                    tvLong.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ivTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isTime){
+                    Glide.with(getContext()).load(R.drawable.off).into(ivTime);
+                    isTime = false;
+                    tvTime.setVisibility(View.GONE);
+                }else {
+                    Glide.with(getContext()).load(R.drawable.on).into(ivTime);
+                    isTime = true;
+                    tvTime.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ivImei.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isImei){
+                    Glide.with(getContext()).load(R.drawable.off).into(ivImei);
+                    isImei = false;
+                    tvImei.setVisibility(View.GONE);
+                }else {
+                    Glide.with(getContext()).load(R.drawable.on).into(ivImei);
+                    isImei = true;
+                    tvImei.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
@@ -604,15 +621,21 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
         int diff = newRotation - oldRotation;
         if (diff > 180) {
             diff = diff - 360;
+            int h = llInfo.getHeight()/2;
+            RotateAnimation rotate = new RotateAnimation(-oldRotation, -oldRotation - diff, h, h);
+            rotate.setDuration(200);
+            rotate.setFillAfter(true);
+//        mSwitchView.startAnimation(rotate);
+            llInfo.startAnimation(rotate);
         } else if (diff < -180) {
             diff = diff + 360;
-        }
-        int h = llInfo.getHeight()/2;
-        RotateAnimation rotate = new RotateAnimation(-oldRotation, -oldRotation - diff, h, h);
-        rotate.setDuration(200);
-        rotate.setFillAfter(true);
+            int h = llInfo.getHeight()/2;
+            RotateAnimation rotate = new RotateAnimation(-oldRotation, -oldRotation - diff, h, h);
+            rotate.setDuration(200);
+            rotate.setFillAfter(true);
 //        mSwitchView.startAnimation(rotate);
-        llInfo.startAnimation(rotate);
+            llInfo.startAnimation(rotate);
+        }
     }
 
     /**
