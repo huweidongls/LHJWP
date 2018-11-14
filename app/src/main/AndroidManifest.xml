@@ -102,9 +102,9 @@
         <!-- android:resource="@xml/file_paths" /> -->
         <!-- </provider> -->
 
-        <meta-data
-            android:name="IFLYTEK_APPKEY"
-            android:value="5bdbc71f" />
+        <!--<meta-data-->
+            <!--android:name="IFLYTEK_APPKEY"-->
+            <!--android:value="5bdbc71f" />-->
 
         <activity
             android:name="com.donkingliang.imageselector.ImageSelectorActivity"

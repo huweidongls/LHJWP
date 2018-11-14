@@ -16,11 +16,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.activity.ProContentActivity;
+import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.model.RukuListModel;
+import com.jingna.lhjwp.utils.SpUtils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/10/31.
@@ -31,6 +34,7 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
     private Context context;
     private List<RukuListModel.XmListBean> data;
     private List<RukuListModel.XmListBean> mFilterList = new ArrayList<>();
+    private Map<String, ArrayList<ProPicInfo>> map;
 
     public ActivityProRukuListAdapter(Context context, List<RukuListModel.XmListBean> data) {
         this.context = context;
@@ -41,6 +45,7 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         this.context = parent.getContext();
+        map = SpUtils.getProPicInfo(context);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_ruku_list, parent, false);
         ScreenAdapterTools.getInstance().loadView(view);
         ViewHolder holder = new ViewHolder(view);
@@ -57,12 +62,21 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
         holder.tvTitle.setText(mFilterList.get(position).getS_XMMC());
         holder.tvAddress.setText(mFilterList.get(position).getS_ADDRESS());
         if(mFilterList.get(position).getS_UP_FLAG().equals("1")){
-            holder.tvType.setTextColor(Color.parseColor("#007AFF"));
+            holder.tvType.setTextColor(Color.parseColor("#009EFF"));
             holder.tvType.setText("已上传");
         }else {
-            holder.tvType.setTextColor(Color.parseColor("#FF7800"));
+            holder.tvType.setTextColor(Color.parseColor("#FF0000"));
             holder.tvType.setText("未上传");
         }
+
+        if(map.get(mFilterList.get(position).getS_CORP_UUID())==null||map.get(mFilterList.get(position).getS_CORP_UUID()).size()==0){
+            holder.rlNum.setBackgroundResource(R.drawable.bg_shape_red);
+            holder.tvNum.setText("0");
+        }else {
+            holder.rlNum.setBackgroundResource(R.drawable.bg_shape_blue);
+            holder.tvNum.setText(map.get(mFilterList.get(position).getS_CORP_UUID()).size()+"");
+        }
+
         holder.rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +139,8 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
         private TextView tvType;
         private TextView tvAddress;
         private RelativeLayout rl;
+        private RelativeLayout rlNum;
+        private TextView tvNum;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -133,6 +149,8 @@ public class ActivityProRukuListAdapter extends RecyclerView.Adapter<ActivityPro
             tvType = itemView.findViewById(R.id.tv_type);
             tvAddress = itemView.findViewById(R.id.tv_address);
             rl = itemView.findViewById(R.id.rl);
+            rlNum = itemView.findViewById(R.id.rl_num);
+            tvNum = itemView.findViewById(R.id.tv_num);
         }
     }
 

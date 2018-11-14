@@ -47,7 +47,7 @@ public class TypeActivity extends BaseActivity {
 //                DialogUtil.showTips(mContext, getString(R.string.permission_control),
 //                        getString(R.string.permission_noAsk) + "\n" + permissionName);
                     }
-                }, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                }, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE);
 
     }
