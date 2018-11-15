@@ -34,7 +34,7 @@ public class PublicImagePreviewAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return imageList==null?0:imageList.size();
+        return imageList.get(pos).getPicList()==null?0:imageList.get(pos).getPicList().size();
     }
 
     @Override

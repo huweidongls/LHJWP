@@ -35,6 +35,17 @@ public class SpUtils {
     public static String PRO_PWD = "propwd";
     public static String PRO_RUKU_CACHE = "prorukucache";
     public static String PRO_REALNAME = "pro_realname";
+    public static String PUBLIC_CAERMA_SET = "public_camera_set";
+
+    public static void setCameraSet(Context context, Map<String, Boolean> map){
+        spCache = new SpCache(context, "public_info");
+        spCache.put(PUBLIC_CAERMA_SET, map);
+    }
+
+    public static Map<String, Boolean> getCameraSet(Context context){
+        spCache = new SpCache(context, "public_info");
+        return (Map<String, Boolean>) spCache.get(PUBLIC_CAERMA_SET);
+    }
 
     public static void setRealName(Context context, String name){
         spCache = new SpCache(context, "pro_info");

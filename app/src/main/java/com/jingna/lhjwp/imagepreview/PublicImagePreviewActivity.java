@@ -7,25 +7,29 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.SpUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PublicImagePreviewActivity extends AppCompatActivity {
 
     private int itemPosition;
-    private List<String> imageList;
+    private ArrayList<PublicInfo> imageList;
     private CustomViewPager viewPager;
     private LinearLayout main_linear;
     private boolean mIsReturning;
     private int mStartPosition;
     private int mCurrentPosition;
-    private ImagePreviewAdapter adapter;
+    private PublicImagePreviewAdapter adapter;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
-
+        imageList = SpUtils.getPublicInfo(PublicImagePreviewActivity.this);
         StatusBarUtils.setStatusBarTransparent(PublicImagePreviewActivity.this);
 //        initShareElement();
         getIntentData();
@@ -67,7 +71,7 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
     }
 
     private void hideAllIndicator(int position) {
-        for (int i = 0; i < imageList.size(); i++) {
+        for (int i = 0; i < imageList.get(position).getPicList().size(); i++) {
             if (i != position) {
                 main_linear.getChildAt(i).setEnabled(false);
             }
@@ -81,12 +85,12 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
 
     private void renderView() {
         if (imageList == null) return;
-        if (imageList.size() == 1) {
+        if (imageList.get(position).getPicList().size() == 1) {
             main_linear.setVisibility(View.GONE);
         } else {
             main_linear.setVisibility(View.VISIBLE);
         }
-        adapter = new ImagePreviewAdapter(this, imageList, itemPosition);
+        adapter = new PublicImagePreviewAdapter(this, position, itemPosition);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(mCurrentPosition);
     }
@@ -96,7 +100,7 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
             mStartPosition = getIntent().getIntExtra(Consts.START_IAMGE_POSITION, 0);
             mCurrentPosition = mStartPosition;
             itemPosition = getIntent().getIntExtra(Consts.START_ITEM_POSITION, 0);
-            imageList = getIntent().getStringArrayListExtra("imageList");
+            position = getIntent().getIntExtra("imageList", 0);
         }
     }
 
@@ -112,8 +116,7 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
     private void getData() {
 
         View view;
-        for (String pic : imageList) {
-
+        for (int i = 0; i<imageList.get(position).getPicList().size(); i++){
             //创建底部指示器(小圆点)
             view = new View(PublicImagePreviewActivity.this);
             view.setBackgroundResource(R.drawable.indicator);
@@ -127,6 +130,21 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
             //添加到LinearLayout
             main_linear.addView(view, layoutParams);
         }
+//        for (String pic : imageList) {
+//
+//            //创建底部指示器(小圆点)
+//            view = new View(PublicImagePreviewActivity.this);
+//            view.setBackgroundResource(R.drawable.indicator);
+//            view.setEnabled(false);
+//            //设置宽高
+//            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(20, 20);
+//            //设置间隔
+////            if (!pic.equals(imageList.get(0))) {
+//            layoutParams.rightMargin = 20;
+////            }
+//            //添加到LinearLayout
+//            main_linear.addView(view, layoutParams);
+//        }
     }
 
 

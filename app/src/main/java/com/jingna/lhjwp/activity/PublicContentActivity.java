@@ -158,7 +158,7 @@ public class PublicContentActivity extends BaseActivity {
                     urlList.add("file://"+mList.get(i).getPicPath());
                 }
                 Intent intent = new Intent(context, PublicImagePreviewActivity.class);
-                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
+                intent.putExtra("imageList", position);
                 intent.putExtra(Consts.START_ITEM_POSITION, pos);
                 intent.putExtra(Consts.START_IAMGE_POSITION, pos);
 //                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());

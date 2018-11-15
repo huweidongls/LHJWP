@@ -44,6 +44,9 @@ import com.jingna.lhjwp.utils.SpUtils;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -132,6 +135,28 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
         tvImei = findViewById(R.id.tv_imei);
         infoFrame = findViewById(R.id.info_frame);
         startLocate();
+        Map<String, Boolean> map = SpUtils.getCameraSet(getContext());
+        if(map != null){
+            isText = map.get("isText");
+            isCode = map.get("isCode");
+            isGps = map.get("isGps");
+            isTime = map.get("isTime");
+            isImei = map.get("isImei");
+        }
+        if(!isText){
+            llInfo.setVisibility(View.GONE);
+        }
+        if(!isGps){
+            tvAddress.setVisibility(View.GONE);
+            tvLat.setVisibility(View.GONE);
+            tvLong.setVisibility(View.GONE);
+        }
+        if(!isTime){
+            tvTime.setVisibility(View.GONE);
+        }
+        if(!isImei){
+            tvImei.setVisibility(View.GONE);
+        }
 
         CameraManager.getInstance().init(getContext());
 
@@ -466,6 +491,13 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
 //                WindowManager.LayoutParams params = getWindow().getAttributes();
 //                params.alpha = 1f;
 //                getWindow().setAttributes(params);
+                Map<String, Boolean> map = new LinkedHashMap<>();
+                map.put("isText", isText);
+                map.put("isCode", isCode);
+                map.put("isGps", isGps);
+                map.put("isTime", isTime);
+                map.put("isImei", isImei);
+                SpUtils.setCameraSet(getContext(), map);
             }
         });
 

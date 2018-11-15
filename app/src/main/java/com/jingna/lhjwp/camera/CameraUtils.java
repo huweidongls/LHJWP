@@ -71,9 +71,18 @@ public class CameraUtils {
         final float surfaceRatio = (float) surfaceWidth / surfaceHeight;
         List<Camera.Size> bestRatioList = null;
         float ratioDiff = Float.MAX_VALUE;
+//        for (List<Camera.Size> ratioList : ratioListList) {
+//            float ratio = (float) ratioList.get(0).width / ratioList.get(0).height;
+//            float newRatioDiff = Math.abs(ratio - surfaceRatio);
+//            if (newRatioDiff < ratioDiff) {
+//                bestRatioList = ratioList;
+//                ratioDiff = newRatioDiff;
+//            }
+//        }
+        //调整为宽度最接近1600px的分辨率
         for (List<Camera.Size> ratioList : ratioListList) {
-            float ratio = (float) ratioList.get(0).width / ratioList.get(0).height;
-            float newRatioDiff = Math.abs(ratio - surfaceRatio);
+            float ratio = (float) ratioList.get(0).width - 1600;
+            float newRatioDiff = Math.abs(ratio);
             if (newRatioDiff < ratioDiff) {
                 bestRatioList = ratioList;
                 ratioDiff = newRatioDiff;
