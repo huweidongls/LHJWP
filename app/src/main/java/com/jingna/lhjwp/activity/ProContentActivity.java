@@ -311,9 +311,9 @@ public class ProContentActivity extends BaseActivity {
                     public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
                         Log.e("123123", result);
 //                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
-//                        if(!result.contains(";")){
-//                            isCode = false;
-//                        }
+                        if(!result.contains(";")){
+                            isCode = false;
+                        }
                     }
 
                     @Override
