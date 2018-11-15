@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,14 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.imagepreview.Consts;
+import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.widget.LocateCenterHorizontalView;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,6 +68,23 @@ public class ActivityProLocationAdapter extends RecyclerView.Adapter<ActivityPro
                 select = position;
                 notifyDataSetChanged();
                 selectListener.onSelect(position);
+            }
+        });
+        holder.rl.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                List<String> urlList = new ArrayList<>();
+                for (int i = 0; i<data.size(); i++){
+                    urlList.add("file://"+data.get(i).getPicPath());
+                }
+                Intent intent = new Intent(context, ImagePreviewActivity.class);
+                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
+                intent.putExtra(Consts.START_ITEM_POSITION, position);
+                intent.putExtra(Consts.START_IAMGE_POSITION, position);
+//                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
+                context.startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
+                return true;
             }
         });
     }

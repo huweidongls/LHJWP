@@ -90,7 +90,12 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
         } else {
             main_linear.setVisibility(View.VISIBLE);
         }
-        adapter = new PublicImagePreviewAdapter(this, position, itemPosition);
+        adapter = new PublicImagePreviewAdapter(this, position, itemPosition, new PublicImagePreviewAdapter.DeleteListener() {
+            @Override
+            public void onDelete(int pos) {
+
+            }
+        });
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(mCurrentPosition);
     }

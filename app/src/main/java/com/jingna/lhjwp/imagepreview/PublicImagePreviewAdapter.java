@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.jingna.lhjwp.dialog.CustomDialog;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
 
@@ -25,10 +26,12 @@ public class PublicImagePreviewAdapter extends PagerAdapter {
     private int itemPosition;
     private PhotoView photoView;
     private int pos;
-    public PublicImagePreviewAdapter(Context context, int position, int itemPosition) {
+    private DeleteListener deleteListener;
+    public PublicImagePreviewAdapter(Context context, int position, int itemPosition, DeleteListener deleteListener) {
         this.context = context;
         this.pos = position;
         this.itemPosition = itemPosition;
+        this.deleteListener = deleteListener;
         imageList = SpUtils.getPublicInfo(context);
     }
 
@@ -63,6 +66,13 @@ public class PublicImagePreviewAdapter extends PagerAdapter {
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+//                CustomDialog customDialog = new CustomDialog(context, "是否删除当前照片", new CustomDialog.OnSureListener() {
+//                    @Override
+//                    public void onSure() {
+                        deleteListener.onDelete(position);
+//                    }
+//                });
+//                customDialog.show();
                 return true;
             }
         });
@@ -87,6 +97,10 @@ public class PublicImagePreviewAdapter extends PagerAdapter {
 
     public PhotoView getPhotoView() {
         return photoView;
+    }
+
+    public interface DeleteListener{
+        void onDelete(int pos);
     }
 
 }
