@@ -43,9 +43,9 @@ public class MyApp extends Application {
         ScreenAdapterTools.init(this);
         ZXingLibrary.initDisplayOpinion(this);
         ViseHttp.init(this);
-        ViseHttp.CONFIG()
-                //配置请求主机地址
-                .baseUrl(Const.BASE_URL);
+//        ViseHttp.CONFIG()
+//                //配置请求主机地址
+//                .baseUrl(Const.BASE_URL);
 //        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5bdbc71f");
     }
 

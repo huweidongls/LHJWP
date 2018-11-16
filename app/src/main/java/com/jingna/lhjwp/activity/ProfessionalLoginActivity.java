@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -13,7 +14,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.dialog.SetIpDialog;
 import com.jingna.lhjwp.imagepreview.StatusBarUtils;
+import com.jingna.lhjwp.utils.Const;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
@@ -88,7 +91,7 @@ public class ProfessionalLoginActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.btn_login, R.id.iv_is_kejian, R.id.ll_jizhu})
+    @OnClick({R.id.btn_login, R.id.iv_is_kejian, R.id.ll_jizhu, R.id.iv_set_ip})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -120,6 +123,29 @@ public class ProfessionalLoginActivity extends BaseActivity {
                     isJizhu = true;
                 }
                 break;
+            case R.id.iv_set_ip:
+                SetIpDialog setIpDialog = new SetIpDialog(context, new SetIpDialog.OnOkReturnListener() {
+                    @Override
+                    public void onReturn(String title) {
+                        ViseHttp.CONFIG()
+                                .baseUrl("http://"+title+"/");
+                        SpUtils.setIp(context, "http://"+title+"/");
+                    }
+
+                    @Override
+                    public void onReset() {
+                        String ip = SpUtils.getResetIp(context);
+                        if(TextUtils.isEmpty(ip)){
+                            ToastUtil.showShort(context, "当前不存在登录成功的ip地址");
+                        }else {
+                            ViseHttp.CONFIG()
+                                    .baseUrl(ip);
+                            SpUtils.setIp(context, ip);
+                        }
+                    }
+                });
+                setIpDialog.show();
+                break;
         }
     }
 
@@ -137,6 +163,8 @@ public class ProfessionalLoginActivity extends BaseActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(data);
                             if (jsonObject.getString("result").equals("1")) {
+                                String ip = SpUtils.getIp(context);
+                                SpUtils.setResetIp(context, ip);
                                 if (isJizhu) {
                                     SpUtils.setJizhu(context, true);
                                 } else {
@@ -166,6 +194,7 @@ public class ProfessionalLoginActivity extends BaseActivity {
                     @Override
                     public void onFail(int errCode, String errMsg) {
                         WeiboDialogUtils.closeDialog(dialog);
+                        ToastUtil.showShort(context, "登录失败，请检查网络或ip地址是否正确");
                     }
                 });
 

@@ -36,6 +36,28 @@ public class SpUtils {
     public static String PRO_RUKU_CACHE = "prorukucache";
     public static String PRO_REALNAME = "pro_realname";
     public static String PUBLIC_CAERMA_SET = "public_camera_set";
+    public static String PRO_IP = "pro_ip";
+    public static String PRO_RESET_IP = "pro_reset_ip";
+
+    public static void setResetIp(Context context, String resetip){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_RESET_IP, resetip);
+    }
+
+    public static String getResetIp(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(PRO_RESET_IP, "");
+    }
+
+    public static void setIp(Context context, String ip){
+        spCache = new SpCache(context, "pro_info");
+        spCache.put(PRO_IP, ip);
+    }
+
+    public static String getIp(Context context){
+        spCache = new SpCache(context, "pro_info");
+        return spCache.get(PRO_IP, "");
+    }
 
     public static void setCameraSet(Context context, Map<String, Boolean> map){
         spCache = new SpCache(context, "public_info");

@@ -13,6 +13,15 @@
         android:layout_height="match_parent" />
 
     <ImageView
+        android:id="@+id/iv_set_ip"
+        android:layout_marginTop="65px"
+        android:layout_marginRight="30px"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/set"
+        android:layout_width="50px"
+        android:layout_height="50px" />
+
+    <ImageView
         android:id="@+id/iv_y"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="170px"

@@ -63,7 +63,7 @@ public class ProfessionalActivity extends BaseActivity {
 
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProfessionalActivity.this);
-
+        Log.e("123123", SpUtils.getIp(context));
         dialog = WeiboDialogUtils.createLoadingDialog(context, "请等待...");
         initData();
 

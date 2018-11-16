@@ -61,12 +61,13 @@ public class TypeActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.btn2:
-                if(SpUtils.getUsername(context).equals("0")){
+                if(SpUtils.getUsername(context).equals("0")||!SpUtils.getIp(context).equals(SpUtils.getResetIp(context))){
                     intent.setClass(TypeActivity.this, ProfessionalLoginActivity.class);
+                    startActivity(intent);
                 }else {
                     intent.setClass(context, ProfessionalActivity.class);
+                    startActivity(intent);
                 }
-                startActivity(intent);
                 break;
         }
     }
