@@ -72,17 +72,7 @@ public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<Activity
         holder.rl.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                List<String> urlList = new ArrayList<>();
-                for (int i = 0; i<data.size(); i++){
-                    urlList.add("file://"+data.get(i).getPicPath());
-                }
-                Intent intent = new Intent(context, ImagePreviewActivity.class);
-                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
-                intent.putExtra(Consts.START_ITEM_POSITION, position);
-                intent.putExtra(Consts.START_IAMGE_POSITION, position);
-//                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
-                context.startActivity(intent);
-//                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
+                selectListener.onLongClick(position);
                 return true;
             }
         });
@@ -122,6 +112,8 @@ public class ActivityPublicLocationAdapter extends RecyclerView.Adapter<Activity
 
     public interface OnSelectListener{
         void onSelect(int pos);
+
+        void onLongClick(int pos);
     }
 
 }

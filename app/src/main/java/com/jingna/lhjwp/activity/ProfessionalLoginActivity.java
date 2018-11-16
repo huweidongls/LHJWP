@@ -15,6 +15,7 @@ import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.imagepreview.StatusBarUtils;
 import com.jingna.lhjwp.utils.SpUtils;
+import com.jingna.lhjwp.utils.ToastUtil;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
 import com.vise.xsnow.http.ViseHttp;
 import com.vise.xsnow.http.callback.ACallback;
@@ -151,6 +152,10 @@ public class ProfessionalLoginActivity extends BaseActivity {
                                 Intent intent = new Intent(context, ProfessionalActivity.class);
                                 startActivity(intent);
                                 finish();
+                            } else if(jsonObject.getString("result").equals("0")){
+                                ToastUtil.showShort(context, "密码错误");
+                            } else if(jsonObject.getString("result").equals("-1")){
+                                ToastUtil.showShort(context, "用户名不存在");
                             }
                             WeiboDialogUtils.closeDialog(dialog);
                         } catch (JSONException e) {

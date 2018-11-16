@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,8 @@ import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.ActivityProLocationAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.imagepreview.Consts;
+import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.widget.LocateCenterHorizontalView;
@@ -82,8 +85,14 @@ public class ProPicLocationActivity extends BaseActivity {
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProPicLocationActivity.this);
         mBaiduMap = mMapView.getMap();
-        initData();
+//        initData();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initData();
     }
 
     private void initData() {
@@ -109,8 +118,19 @@ public class ProPicLocationActivity extends BaseActivity {
                 select = pos;
                 onMap();
             }
-        });
 
+            @Override
+            public void onLongClick(int pos) {
+                Intent intent = new Intent(context, ImagePreviewActivity.class);
+                intent.putExtra("imageList", uuid);
+                intent.putExtra(Consts.START_ITEM_POSITION, pos);
+                intent.putExtra(Consts.START_IAMGE_POSITION, pos);
+//                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
+                context.startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
+            }
+        });
+        select = 0;
         onMap();
 
     }
@@ -171,18 +191,20 @@ public class ProPicLocationActivity extends BaseActivity {
 
         //定位到规定路线起点
         //设定中心点坐标
-        LatLng cenpt =  new LatLng(mList.get(select).getLatitude(),mList.get(select).getLongitude());
-        //定义地图状态
-        MapStatus mMapStatus = new MapStatus.Builder()
-                //要移动的点
-                .target(cenpt)
-                //放大地图到20倍
-                .zoom(19)
-                .build();
-        //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
-        MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
-        //改变地图状态
-        mBaiduMap.setMapStatus(mMapStatusUpdate);
+        if(mList.size()>0){
+            LatLng cenpt =  new LatLng(mList.get(select).getLatitude(),mList.get(select).getLongitude());
+            //定义地图状态
+            MapStatus mMapStatus = new MapStatus.Builder()
+                    //要移动的点
+                    .target(cenpt)
+                    //放大地图到20倍
+                    .zoom(19)
+                    .build();
+            //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
+            MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+            //改变地图状态
+            mBaiduMap.setMapStatus(mMapStatusUpdate);
+        }
     }
 
     @Override

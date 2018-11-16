@@ -22,22 +22,21 @@ import java.util.List;
 
 public class PublicImagePreviewAdapter extends PagerAdapter {
     private Context context;
-    private ArrayList<PublicInfo> imageList;
+    private List<PublicInfo.PicInfo> imageList;
     private int itemPosition;
     private PhotoView photoView;
     private int pos;
     private DeleteListener deleteListener;
-    public PublicImagePreviewAdapter(Context context, int position, int itemPosition, DeleteListener deleteListener) {
+    public PublicImagePreviewAdapter(Context context, List<PublicInfo.PicInfo> imageList, int itemPosition, DeleteListener deleteListener) {
         this.context = context;
-        this.pos = position;
+        this.imageList = imageList;
         this.itemPosition = itemPosition;
         this.deleteListener = deleteListener;
-        imageList = SpUtils.getPublicInfo(context);
     }
 
     @Override
     public int getCount() {
-        return imageList.get(pos).getPicList()==null?0:imageList.get(pos).getPicList().size();
+        return imageList==null?0:imageList.size();
     }
 
     @Override
@@ -53,7 +52,7 @@ public class PublicImagePreviewAdapter extends PagerAdapter {
         image.setMaximumScale(2.0F);
         image.setMinimumScale(0.8F);
 
-        Glide.with(context).load("file://"+imageList.get(pos).getPicList().get(position).getPicPath()).into(image);
+        Glide.with(context).load("file://"+imageList.get(position).getPicPath()).into(image);
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,13 +65,13 @@ public class PublicImagePreviewAdapter extends PagerAdapter {
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-//                CustomDialog customDialog = new CustomDialog(context, "是否删除当前照片", new CustomDialog.OnSureListener() {
-//                    @Override
-//                    public void onSure() {
+                CustomDialog customDialog = new CustomDialog(context, "是否删除当前照片", new CustomDialog.OnSureListener() {
+                    @Override
+                    public void onSure() {
                         deleteListener.onDelete(position);
-//                    }
-//                });
-//                customDialog.show();
+                    }
+                });
+                customDialog.show();
                 return true;
             }
         });
@@ -94,6 +93,11 @@ public class PublicImagePreviewAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    //解决ViewPager数据源改变时,刷新无效的解决办法
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
 
     public PhotoView getPhotoView() {
         return photoView;

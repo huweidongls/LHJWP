@@ -1,6 +1,7 @@
 package com.jingna.lhjwp.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,9 @@ import com.baidu.mapapi.model.LatLng;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.ActivityPublicLocationAdapter;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.imagepreview.Consts;
+import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
+import com.jingna.lhjwp.imagepreview.PublicImagePreviewActivity;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.widget.LocateCenterHorizontalView;
@@ -60,14 +64,20 @@ public class PublicPicLocationActivity extends BaseActivity {
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(PublicPicLocationActivity.this);
         mBaiduMap = mMapView.getMap();
-        initData();
+//        initData();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initData();
     }
 
     private void initData() {
 
         tvTop.setText(title);
-
+        mList.clear();
         mList.addAll(SpUtils.getPublicInfo(context).get(position).getPicList());
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -78,6 +88,21 @@ public class PublicPicLocationActivity extends BaseActivity {
             @Override
             public void onSelect(int pos) {
                 onMap(pos);
+            }
+
+            @Override
+            public void onLongClick(int pos) {
+//                List<String> urlList = new ArrayList<>();
+//                for (int i = 0; i<data.size(); i++){
+//                    urlList.add("file://"+data.get(i).getPicPath());
+//                }
+                Intent intent = new Intent(context, PublicImagePreviewActivity.class);
+                intent.putExtra("imageList", position);
+                intent.putExtra(Consts.START_ITEM_POSITION, pos);
+                intent.putExtra(Consts.START_IAMGE_POSITION, pos);
+//                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
+                context.startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.photoview_open, 0);
             }
         });
 
@@ -115,18 +140,20 @@ public class PublicPicLocationActivity extends BaseActivity {
 
         //定位到规定路线起点
         //设定中心点坐标
-        LatLng cenpt =  new LatLng(mList.get(position).getPicLatitude(),mList.get(position).getPicLongitude());
-        //定义地图状态
-        MapStatus mMapStatus = new MapStatus.Builder()
-                //要移动的点
-                .target(cenpt)
-                //放大地图到20倍
-                .zoom(19)
-                .build();
-        //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
-        MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
-        //改变地图状态
-        mBaiduMap.setMapStatus(mMapStatusUpdate);
+        if(mList.size()>0){
+            LatLng cenpt =  new LatLng(mList.get(position).getPicLatitude(),mList.get(position).getPicLongitude());
+            //定义地图状态
+            MapStatus mMapStatus = new MapStatus.Builder()
+                    //要移动的点
+                    .target(cenpt)
+                    //放大地图到20倍
+                    .zoom(19)
+                    .build();
+            //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
+            MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+            //改变地图状态
+            mBaiduMap.setMapStatus(mMapStatusUpdate);
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.jingna.lhjwp.imagepreview;
 
+import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,19 +8,26 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.info.ProPicInfo;
+import com.jingna.lhjwp.utils.SpUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ImagePreviewActivity extends AppCompatActivity {
 
+    private Context context = ImagePreviewActivity.this;
     private int itemPosition;
-    private List<String> imageList;
+    private ArrayList<ProPicInfo> imageList;
     private CustomViewPager viewPager;
     private LinearLayout main_linear;
     private boolean mIsReturning;
     private int mStartPosition;
     private int mCurrentPosition;
     private ImagePreviewAdapter adapter;
+    private String uuid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +36,15 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
         StatusBarUtils.setStatusBarTransparent(ImagePreviewActivity.this);
 //        initShareElement();
-        getIntentData();
+        if (getIntent() != null) {
+            mStartPosition = getIntent().getIntExtra(Consts.START_IAMGE_POSITION, 0);
+            mCurrentPosition = mStartPosition;
+            itemPosition = getIntent().getIntExtra(Consts.START_ITEM_POSITION, 0);
+            uuid = getIntent().getStringExtra("imageList");
+        }
+        Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+        imageList = map.get(uuid);
+//        getIntentData();
         initView();
         renderView();
         getData();
@@ -86,7 +102,33 @@ public class ImagePreviewActivity extends AppCompatActivity {
         } else {
             main_linear.setVisibility(View.VISIBLE);
         }
-        adapter = new ImagePreviewAdapter(this, imageList, itemPosition);
+        adapter = new ImagePreviewAdapter(this, imageList, itemPosition, new ImagePreviewAdapter.DeleteListener() {
+            @Override
+            public void onDelete(int pos) {
+                Map<String, ArrayList<ProPicInfo>> map = SpUtils.getProPicInfo(context);
+                File file = new File(imageList.get(pos).getPicPath());
+                if(file.delete()){
+                    imageList.remove(pos);
+                    map.put(uuid, imageList);
+                    SpUtils.setProPicInfo(context, map);
+                }
+                adapter.notifyDataSetChanged();
+                if(imageList.size() == 0){
+                    onBackPressed();
+                }else {
+                    getData();
+                    hideAllIndicator(viewPager.getCurrentItem());
+                    main_linear.getChildAt(viewPager.getCurrentItem()).setEnabled(true);
+                    mCurrentPosition = viewPager.getCurrentItem();
+                    if (imageList == null) return;
+                    if (imageList.size() == 1) {
+                        main_linear.setVisibility(View.GONE);
+                    } else {
+                        main_linear.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(mCurrentPosition);
     }
@@ -96,7 +138,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
             mStartPosition = getIntent().getIntExtra(Consts.START_IAMGE_POSITION, 0);
             mCurrentPosition = mStartPosition;
             itemPosition = getIntent().getIntExtra(Consts.START_ITEM_POSITION, 0);
-            imageList = getIntent().getStringArrayListExtra("imageList");
+            uuid = getIntent().getStringExtra("imageList");
         }
     }
 
@@ -112,8 +154,8 @@ public class ImagePreviewActivity extends AppCompatActivity {
     private void getData() {
 
         View view;
-        for (String pic : imageList) {
-
+        main_linear.removeAllViews();
+        for (int i = 0; i<imageList.size(); i++){
             //创建底部指示器(小圆点)
             view = new View(ImagePreviewActivity.this);
             view.setBackgroundResource(R.drawable.indicator);
@@ -127,6 +169,21 @@ public class ImagePreviewActivity extends AppCompatActivity {
             //添加到LinearLayout
             main_linear.addView(view, layoutParams);
         }
+//        for (String pic : imageList) {
+//
+//            //创建底部指示器(小圆点)
+//            view = new View(ImagePreviewActivity.this);
+//            view.setBackgroundResource(R.drawable.indicator);
+//            view.setEnabled(false);
+//            //设置宽高
+//            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(20, 20);
+//            //设置间隔
+////            if (!pic.equals(imageList.get(0))) {
+//            layoutParams.rightMargin = 20;
+////            }
+//            //添加到LinearLayout
+//            main_linear.addView(view, layoutParams);
+//        }
     }
 
 

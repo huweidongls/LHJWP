@@ -178,12 +178,8 @@ public class ProContentActivity extends BaseActivity {
 //                intent.setClass(context, ProShowPicActivity.class);
 //                startActivity(intent);
 
-                List<String> urlList = new ArrayList<>();
-                for (int i = 0; i<mList.size(); i++){
-                    urlList.add("file://"+mList.get(i).getPicPath());
-                }
                 Intent intent = new Intent(context, ImagePreviewActivity.class);
-                intent.putStringArrayListExtra("imageList", (ArrayList<String>) urlList);
+                intent.putExtra("imageList", uuid);
                 intent.putExtra(Consts.START_ITEM_POSITION, pos);
                 intent.putExtra(Consts.START_IAMGE_POSITION, pos);
 //                ActivityOptions compat = ActivityOptions.makeSceneTransitionAnimation(getActivity(), imageView, imageView.getTransitionName());
@@ -595,11 +591,15 @@ public class ProContentActivity extends BaseActivity {
         ll2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.setEdit(true);
-                ivBack.setVisibility(View.GONE);
-                tvCancel.setVisibility(View.VISIBLE);
-                tvBottom.setText("删除");
-                tvBottom.setBackgroundColor(Color.parseColor("#FF3A30"));
+                if(mList.size()>0){
+                    adapter.setEdit(true);
+                    ivBack.setVisibility(View.GONE);
+                    tvCancel.setVisibility(View.VISIBLE);
+                    tvBottom.setText("删除");
+                    tvBottom.setBackgroundColor(Color.parseColor("#FF3A30"));
+                }else {
+                    ToastUtil.showShort(context, "暂无图片，无法删除");
+                }
                 popupWindow.dismiss();
             }
         });

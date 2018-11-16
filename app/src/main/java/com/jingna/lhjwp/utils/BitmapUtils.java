@@ -3,8 +3,10 @@ package com.jingna.lhjwp.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 
@@ -46,22 +48,36 @@ public class BitmapUtils {
     }
 
     //把布局变成Bitmap
-    public static Bitmap getViewBitmap(View addViewContent) {
+    public static Bitmap getViewBitmap(View v) {
 
-        addViewContent.setDrawingCacheEnabled(true);
+//        addViewContent.setDrawingCacheEnabled(true);
+//
+//        addViewContent.measure(
+//                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//        addViewContent.layout(0, 0,
+//                addViewContent.getMeasuredWidth(),
+//                addViewContent.getMeasuredHeight());
+//
+//        addViewContent.buildDrawingCache();
+//        Bitmap cacheBitmap = addViewContent.getDrawingCache();
+//        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
+//
+//        return bitmap;
 
-        addViewContent.measure(
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        addViewContent.layout(0, 0,
-                addViewContent.getMeasuredWidth(),
-                addViewContent.getMeasuredHeight());
+        Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        v.layout(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+        // Draw background
+        Drawable bgDrawable = v.getBackground();
+        if (bgDrawable != null)
+            bgDrawable.draw(c);
+        else
+            c.drawColor(Color.WHITE);
+        // Draw view to canvas
+        v.draw(c);
+        return b;
 
-        addViewContent.buildDrawingCache();
-        Bitmap cacheBitmap = addViewContent.getDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
-
-        return bitmap;
     }
 
     /**

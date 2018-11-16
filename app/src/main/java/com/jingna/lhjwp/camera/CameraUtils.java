@@ -52,7 +52,7 @@ public class CameraUtils {
     /**
      * 找出最合适的尺寸，规则如下：
      * 1.将尺寸按比例分组，找出比例最接近屏幕比例的尺寸组
-     * 2.在比例最接近的尺寸组中找出最接近屏幕尺寸且大于屏幕尺寸的尺寸
+     * 2.在比例最接近的尺寸组中找出最接近屏幕尺寸且符合当前需求的尺寸
      * 3.如果没有找到，则忽略2中第二个条件再找一遍，应该是最合适的尺寸了
      */
     private static Camera.Size findProperSize(Point surfaceSize, List<Camera.Size> sizeList) {
@@ -60,6 +60,7 @@ public class CameraUtils {
             return null;
         }
 
+        //屏幕尺寸
         int surfaceWidth = surfaceSize.x;
         int surfaceHeight = surfaceSize.y;
 
@@ -68,26 +69,29 @@ public class CameraUtils {
             addRatioList(ratioListList, size);
         }
 
-        final float surfaceRatio = (float) surfaceWidth / surfaceHeight;
+//        final float surfaceRatio = (float) surfaceWidth / surfaceHeight;
+        final float surfaceRatio = (float) 1920 / 1080;
         List<Camera.Size> bestRatioList = null;
         float ratioDiff = Float.MAX_VALUE;
-//        for (List<Camera.Size> ratioList : ratioListList) {
-//            float ratio = (float) ratioList.get(0).width / ratioList.get(0).height;
-//            float newRatioDiff = Math.abs(ratio - surfaceRatio);
-//            if (newRatioDiff < ratioDiff) {
-//                bestRatioList = ratioList;
-//                ratioDiff = newRatioDiff;
-//            }
-//        }
-        //调整为宽度最接近1600px的分辨率
         for (List<Camera.Size> ratioList : ratioListList) {
-            float ratio = (float) ratioList.get(0).width - 1600;
-            float newRatioDiff = Math.abs(ratio);
+            Log.e("123123", ratioList.get(0).width+"--"+ratioList.get(0).height);
+            float ratio = (float) ratioList.get(0).width / ratioList.get(0).height;
+            float newRatioDiff = Math.abs(ratio - surfaceRatio);
             if (newRatioDiff < ratioDiff) {
                 bestRatioList = ratioList;
                 ratioDiff = newRatioDiff;
             }
         }
+        //调整为宽度最接近1600px的分辨率
+//        for (List<Camera.Size> ratioList : ratioListList) {
+//            Log.e("123123", ratioList.get(0).width+"--"+ratioList.get(0).height);
+//            float ratio = (float) ratioList.get(0).width - 1920;
+//            float newRatioDiff = Math.abs(ratio);
+//            if (newRatioDiff < ratioDiff) {
+//                bestRatioList = ratioList;
+//                ratioDiff = newRatioDiff;
+//            }
+//        }
 
         Camera.Size bestSize = null;
         int diff = Integer.MAX_VALUE;

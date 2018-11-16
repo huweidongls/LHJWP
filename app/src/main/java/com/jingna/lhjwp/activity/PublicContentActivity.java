@@ -184,11 +184,11 @@ public class PublicContentActivity extends BaseActivity {
                 }
                 break;
             case R.id.activity_public_content_rl_more:
-                if(mList.size() == 0){
-                    ToastUtil.showShort(context, "当前没有照片，无法查看地图");
-                }else {
+//                if(mList.size() == 0){
+//                    ToastUtil.showShort(context, "当前没有照片，无法查看地图");
+//                }else {
                     initMorePop();
-                }
+//                }
                 break;
             case R.id.activity_public_content_tv_bottom:
                 if (adapter.getEdit()) {
@@ -438,11 +438,15 @@ public class PublicContentActivity extends BaseActivity {
         ll2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.setEdit(true);
-                ivBack.setVisibility(View.GONE);
-                tvCancel.setVisibility(View.VISIBLE);
-                tvBottom.setText("删除");
-                tvBottom.setBackgroundColor(Color.parseColor("#FF3A30"));
+                if(mList.size()>0){
+                    adapter.setEdit(true);
+                    ivBack.setVisibility(View.GONE);
+                    tvCancel.setVisibility(View.VISIBLE);
+                    tvBottom.setText("删除");
+                    tvBottom.setBackgroundColor(Color.parseColor("#FF3A30"));
+                }else {
+                    ToastUtil.showShort(context, "暂无图片，无法删除");
+                }
                 popupWindow.dismiss();
             }
         });

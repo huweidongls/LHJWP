@@ -10,13 +10,14 @@ import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.SpUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PublicImagePreviewActivity extends AppCompatActivity {
 
     private int itemPosition;
-    private ArrayList<PublicInfo> imageList;
+    private List<PublicInfo.PicInfo> imageList = new ArrayList<>();
     private CustomViewPager viewPager;
     private LinearLayout main_linear;
     private boolean mIsReturning;
@@ -29,10 +30,15 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
-        imageList = SpUtils.getPublicInfo(PublicImagePreviewActivity.this);
         StatusBarUtils.setStatusBarTransparent(PublicImagePreviewActivity.this);
 //        initShareElement();
-        getIntentData();
+        if (getIntent() != null) {
+            mStartPosition = getIntent().getIntExtra(Consts.START_IAMGE_POSITION, 0);
+            mCurrentPosition = mStartPosition;
+            itemPosition = getIntent().getIntExtra(Consts.START_ITEM_POSITION, 0);
+            position = getIntent().getIntExtra("imageList", 0);
+        }
+//        getIntentData();
         initView();
         renderView();
         getData();
@@ -71,7 +77,7 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
     }
 
     private void hideAllIndicator(int position) {
-        for (int i = 0; i < imageList.get(position).getPicList().size(); i++) {
+        for (int i = 0; i < imageList.size(); i++) {
             if (i != position) {
                 main_linear.getChildAt(i).setEnabled(false);
             }
@@ -79,21 +85,44 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        imageList.clear();
+        imageList.addAll(SpUtils.getPublicInfo(PublicImagePreviewActivity.this).get(position).getPicList());
         viewPager = (CustomViewPager) findViewById(R.id.imageBrowseViewPager);
         main_linear = (LinearLayout) findViewById(R.id.main_linear);
     }
 
     private void renderView() {
         if (imageList == null) return;
-        if (imageList.get(position).getPicList().size() == 1) {
+        if (imageList.size() == 1) {
             main_linear.setVisibility(View.GONE);
         } else {
             main_linear.setVisibility(View.VISIBLE);
         }
-        adapter = new PublicImagePreviewAdapter(this, position, itemPosition, new PublicImagePreviewAdapter.DeleteListener() {
+        adapter = new PublicImagePreviewAdapter(this, imageList, itemPosition, new PublicImagePreviewAdapter.DeleteListener() {
             @Override
             public void onDelete(int pos) {
-
+                ArrayList<PublicInfo> list = SpUtils.getPublicInfo(PublicImagePreviewActivity.this);
+                File file = new File(imageList.get(pos).getPicPath());
+                if(file.delete()){
+                    list.get(position).getPicList().remove(pos);
+                    SpUtils.setPublicInfo(PublicImagePreviewActivity.this, list);
+                }
+                imageList.remove(pos);
+                adapter.notifyDataSetChanged();
+                if(imageList.size() == 0){
+                    onBackPressed();
+                }else {
+                    getData();
+                    hideAllIndicator(viewPager.getCurrentItem());
+                    main_linear.getChildAt(viewPager.getCurrentItem()).setEnabled(true);
+                    mCurrentPosition = viewPager.getCurrentItem();
+                    if (imageList == null) return;
+                    if (imageList.size() == 1) {
+                        main_linear.setVisibility(View.GONE);
+                    } else {
+                        main_linear.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
         viewPager.setAdapter(adapter);
@@ -120,8 +149,9 @@ public class PublicImagePreviewActivity extends AppCompatActivity {
      */
     private void getData() {
 
+        main_linear.removeAllViews();
         View view;
-        for (int i = 0; i<imageList.get(position).getPicList().size(); i++){
+        for (int i = 0; i<imageList.size(); i++){
             //创建底部指示器(小圆点)
             view = new View(PublicImagePreviewActivity.this);
             view.setBackgroundResource(R.drawable.indicator);
