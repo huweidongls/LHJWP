@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
@@ -46,6 +47,10 @@ public class SetIpDialog extends Dialog {
         et = view.findViewById(R.id.et);
         tvOk = view.findViewById(R.id.tv_ok);
         tvReset = view.findViewById(R.id.tv_huifu);
+
+        String ip = SpUtils.getIp(context);
+        String newIp = ip.substring(7, ip.length()-1);
+        et.setText(newIp);
 
         rlClose.setOnClickListener(new View.OnClickListener() {
             @Override

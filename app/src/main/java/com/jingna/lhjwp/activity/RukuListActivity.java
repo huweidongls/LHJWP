@@ -102,8 +102,14 @@ public class RukuListActivity extends BaseActivity {
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(RukuListActivity.this);
 
-        initData();
+//        initData();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initData();
     }
 
     private void initData() {
@@ -141,6 +147,8 @@ public class RukuListActivity extends BaseActivity {
                                     LinearLayoutManager manager = new LinearLayoutManager(context);
                                     manager.setOrientation(LinearLayoutManager.VERTICAL);
                                     recyclerView.setLayoutManager(manager);
+                                    mList.clear();
+                                    mData.clear();
                                     mList.addAll(model.getXmList());
                                     mData.addAll(model.getXmList());
                                     Log.e("123123", mData.size()+"");
@@ -180,6 +188,8 @@ public class RukuListActivity extends BaseActivity {
                 LinearLayoutManager manager = new LinearLayoutManager(context);
                 manager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(manager);
+                mList.clear();
+                mData.clear();
                 mList.addAll(listModel.getXmList());
                 mData.addAll(listModel.getXmList());
                 Log.e("123123", mData.size()+"");

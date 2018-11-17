@@ -306,8 +306,8 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
 
                         }
                     };
-                    observable.observeOn(AndroidSchedulers.mainThread())
-                            .subscribeOn(Schedulers.newThread())
+                    observable.subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(observer);
                 } else {
                     // 不知道什么原因拍照失败，重新预览
