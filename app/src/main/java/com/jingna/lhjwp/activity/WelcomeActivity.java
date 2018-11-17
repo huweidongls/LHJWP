@@ -37,6 +37,7 @@ public class WelcomeActivity extends BaseActivity {
         if(TextUtils.isEmpty(ip)){
             ViseHttp.CONFIG()
                     .baseUrl(Const.BASE_URL);
+            SpUtils.setIp(context, Const.BASE_URL);
         }else {
             ViseHttp.CONFIG()
                     .baseUrl(ip);
