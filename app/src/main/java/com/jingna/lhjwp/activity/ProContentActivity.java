@@ -496,7 +496,7 @@ public class ProContentActivity extends BaseActivity {
 
             @Override
             public void onNext(Map<String, File> value) {
-                ToastUtil.showShort(context, Const.BASE_URL+"/tzapp/phone/upPic.action");
+//                ToastUtil.showShort(context, Const.BASE_URL+"/tzapp/phone/upPic.action");
                 ViseHttp.UPLOAD("/tzapp/phone/upPic.action")
                         .addParam("S_CORP_UUID", uuid)
                         .addParam("S_SJ", S_SJ)
@@ -552,8 +552,8 @@ public class ProContentActivity extends BaseActivity {
 
             }
         };
-        observable.observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
 
     }
