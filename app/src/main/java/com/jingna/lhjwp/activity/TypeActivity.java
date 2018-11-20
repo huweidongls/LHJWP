@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.jingna.lhjwp.R;
@@ -34,18 +35,21 @@ public class TypeActivity extends BaseActivity {
                     public void onRequestAllow(String permissionName) {
 //                DialogUtil.showTips(mContext, getString(R.string.permission_control),
 //                        getString(R.string.permission_allow) + "\n" + permissionName);
+                        Log.e("123123", "1"+permissionName);
                     }
 
                     @Override
                     public void onRequestRefuse(String permissionName) {
 //                DialogUtil.showTips(mContext, getString(R.string.permission_control),
 //                        getString(R.string.permission_refuse) + "\n" + permissionName);
+                        Log.e("123123", "2"+permissionName);
                     }
 
                     @Override
                     public void onRequestNoAsk(String permissionName) {
 //                DialogUtil.showTips(mContext, getString(R.string.permission_control),
 //                        getString(R.string.permission_noAsk) + "\n" + permissionName);
+                        Log.e("123123", "3");
                     }
                 }, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE);
