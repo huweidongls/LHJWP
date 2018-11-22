@@ -116,6 +116,7 @@ public class ProContentActivity extends BaseActivity {
     private String S_TAB = "";
     private String type = "";
     private String cankao = "";
+    private String S_TASK_ID = "";
 
     private static final int REQUEST_CODE = 0x00000011;
 
@@ -133,6 +134,7 @@ public class ProContentActivity extends BaseActivity {
         S_TAB = getIntent().getStringExtra("S_TAB");
         type = getIntent().getStringExtra("type");
         cankao = getIntent().getStringExtra("cankao");
+        S_TASK_ID = getIntent().getStringExtra("S_TASK_ID");
         username = SpUtils.getUsername(context);
         ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
         ButterKnife.bind(ProContentActivity.this);
@@ -501,7 +503,7 @@ public class ProContentActivity extends BaseActivity {
                         .addParam("S_CORP_UUID", uuid)
                         .addParam("S_SJ", S_SJ)
                         .addParam("S_TAB", S_TAB)
-                        .addParam("S_TASK_ID", "")
+                        .addParam("S_TASK_ID", S_TASK_ID)
                         .addParam("type", type)
                         .addParam("user_name", username)
                         .addFiles(value)
