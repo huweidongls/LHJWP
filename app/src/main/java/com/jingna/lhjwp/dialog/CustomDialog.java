@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.jingna.lhjwp.R;
@@ -35,6 +36,7 @@ public class CustomDialog extends Dialog {
 
     private void initView() {
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null);
         setContentView(view);
         ScreenAdapterTools.getInstance().loadView(view);
