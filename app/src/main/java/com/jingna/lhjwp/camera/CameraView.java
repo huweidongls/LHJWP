@@ -132,7 +132,7 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
 //        tvImei = findViewById(R.id.tv_imei);
         tvName = findViewById(R.id.tv_name);
         infoFrame = findViewById(R.id.info_frame);
-        tvName.setText("项目名称: "+ MyApp.proName);
+        tvName.setText(MyApp.proName);
         startLocate();
 
         CameraManager.getInstance().init(getContext());

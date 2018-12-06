@@ -57,21 +57,19 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="25dp"
-            android:background="#91ffffff"
+            android:background="#66ffffff"
             android:orientation="vertical">
 
             <TextView
-                android:ellipsize="middle"
-                android:singleLine="true"
                 android:id="@+id/tv_name"
-                android:layout_width="260dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:text="项目名称："
                 android:textColor="@color/black_333333"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -79,10 +77,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="3dp"
                 android:text="时间："
                 android:textColor="@color/black_333333"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tv_long"
@@ -90,10 +87,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="3dp"
                 android:text="经度："
                 android:textColor="@color/black_333333"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tv_lat"
@@ -101,10 +97,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="3dp"
                 android:text="纬度："
                 android:textColor="@color/black_333333"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tv_address"
@@ -112,11 +107,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="2dp"
                 android:text="地址："
                 android:textColor="@color/black_333333"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <!--<TextView-->
                 <!--android:id="@+id/tv_imei"-->

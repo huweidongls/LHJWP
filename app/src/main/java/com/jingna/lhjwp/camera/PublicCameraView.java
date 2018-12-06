@@ -137,7 +137,7 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
 //        tvImei = findViewById(R.id.tv_imei);
         tvName = findViewById(R.id.tv_name);
         infoFrame = findViewById(R.id.info_frame);
-        tvName.setText("项目名称: "+ MyApp.pubName);
+        tvName.setText(MyApp.pubName);
         startLocate();
         Map<String, Boolean> map = SpUtils.getCameraSet(getContext());
         if(map != null){
