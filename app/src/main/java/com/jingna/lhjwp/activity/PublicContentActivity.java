@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
+import com.jingna.lhjwp.app.MyApp;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.dialog.CustomDialog;
 import com.jingna.lhjwp.imagepreview.Consts;
@@ -134,6 +135,7 @@ public class PublicContentActivity extends BaseActivity {
                 intent.putExtra("position", position);
                 intent.putExtra("title", title);
                 intent.setClass(PublicContentActivity.this, Camera1Activity.class);
+                MyApp.pubName = title;
                 startActivity(intent);
             }
         });

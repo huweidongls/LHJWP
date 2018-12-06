@@ -36,6 +36,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
+import com.jingna.lhjwp.app.MyApp;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.LocalCodeUtils;
@@ -82,6 +83,7 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
     private TextView tvLat;
     private TextView tvTime;
     private TextView tvImei;
+    private TextView tvName;
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private double latitude;
@@ -132,8 +134,10 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
         tvLong = findViewById(R.id.tv_long);
         tvLat = findViewById(R.id.tv_lat);
         tvAddress = findViewById(R.id.tv_address);
-        tvImei = findViewById(R.id.tv_imei);
+//        tvImei = findViewById(R.id.tv_imei);
+        tvName = findViewById(R.id.tv_name);
         infoFrame = findViewById(R.id.info_frame);
+        tvName.setText("项目名称: "+ MyApp.pubName);
         startLocate();
         Map<String, Boolean> map = SpUtils.getCameraSet(getContext());
         if(map != null){
@@ -155,7 +159,7 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
             tvTime.setVisibility(View.GONE);
         }
         if(!isImei){
-            tvImei.setVisibility(View.GONE);
+//            tvImei.setVisibility(View.GONE);
         }
 
         CameraManager.getInstance().init(getContext());
@@ -260,9 +264,9 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
                             String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                             Log.e("123123", textContent);
                             if(NetUtil.isLocServiceEnable(getContext())){
-                                mBitmap = CodeUtils.createImage(textContent, 150, 150, null);
+                                mBitmap = LocalCodeUtils.createImage(textContent, 150, 150, null);
                             }else {
-                                mBitmap = LocalCodeUtils.createImage(textContent1, 150, 150, null);
+                                mBitmap = LocalCodeUtils.createRedImage(textContent1, 150, 150, null);
                             }
                             if(isText&&isCode){
                                 bmp = BitmapUtils.toConformBitmap(bitmap, BitmapUtils.getViewBitmap(llInfo));
@@ -460,11 +464,11 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
                 if(isImei){
                     Glide.with(getContext()).load(R.drawable.off).into(ivImei);
                     isImei = false;
-                    tvImei.setVisibility(View.GONE);
+//                    tvImei.setVisibility(View.GONE);
                 }else {
                     Glide.with(getContext()).load(R.drawable.on).into(ivImei);
                     isImei = true;
-                    tvImei.setVisibility(View.VISIBLE);
+//                    tvImei.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -712,7 +716,7 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
                 tvLong.setText("经度: 0.0");
                 tvLat.setText("纬度: 0.0");
             }
-            tvImei.setText("IMEI: "+ SpUtils.getDeviceId(getContext()));
+//            tvImei.setText("IMEI: "+ SpUtils.getDeviceId(getContext()));
 //            if(!isMove){
 //                int w = llInfo.getWidth();
 //                int h = llInfo.getHeight();

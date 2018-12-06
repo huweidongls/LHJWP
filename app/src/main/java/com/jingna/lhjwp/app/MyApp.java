@@ -22,6 +22,9 @@ public class MyApp extends Application {
     private static MyApp instance;
     private List<Activity> mList = new LinkedList<Activity>();
 
+    public static String pubName = "";
+    public static String proName = "";
+
     public MyApp() {
     }
 

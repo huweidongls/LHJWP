@@ -35,6 +35,7 @@ import com.donkingliang.imageselector.utils.ImageSelectorUtils;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.adapter.PicAddShowAdapter;
 import com.jingna.lhjwp.adapter.ProPicAddShowAdapter;
+import com.jingna.lhjwp.app.MyApp;
 import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.dialog.CustomDialog;
 import com.jingna.lhjwp.imagepreview.Consts;
@@ -212,6 +213,7 @@ public class ProContentActivity extends BaseActivity {
                 intent.putExtra("uuid", uuid);
                 intent.putExtra("title", title);
                 intent.setClass(context, ProCamera1Activity.class);
+                MyApp.proName = title;
                 startActivity(intent);
                 popupWindow.dismiss();
             }
