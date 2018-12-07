@@ -42,6 +42,7 @@ import com.jingna.lhjwp.imagepreview.Consts;
 import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.info.PublicInfo;
+import com.jingna.lhjwp.utils.Base64Utils;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.Const;
 import com.jingna.lhjwp.utils.DateUtils;
@@ -309,6 +310,7 @@ public class ProContentActivity extends BaseActivity {
                 LocalCodeUtils.analyzeBitmap(images.get(a), new LocalCodeUtils.AnalyzeCallback() {
                     @Override
                     public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+                        result = Base64Utils.setDecrypt(result);
                         Log.e("123123", result);
 //                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
                         if(!result.contains(";")){

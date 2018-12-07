@@ -40,6 +40,7 @@ import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.activity.ProCameraActivity;
 import com.jingna.lhjwp.app.MyApp;
+import com.jingna.lhjwp.utils.Base64Utils;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.LocalCodeUtils;
@@ -234,6 +235,8 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
                             Bitmap mBitmap;
                             String textContent = latitude+";"+longitude+";"+ DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                             String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
+                            textContent = Base64Utils.setEncryption(textContent);
+                            textContent1 = Base64Utils.setEncryption(textContent1);
                             Log.e("123123", textContent);
                             if(NetUtil.isLocServiceEnable(getContext())){
                                 mBitmap = LocalCodeUtils.createImage(textContent, 150, 150, null);

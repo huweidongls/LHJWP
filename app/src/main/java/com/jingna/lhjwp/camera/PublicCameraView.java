@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -37,12 +38,12 @@ import com.baidu.location.LocationClientOption;
 import com.bumptech.glide.Glide;
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.app.MyApp;
+import com.jingna.lhjwp.utils.Base64Utils;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.LocalCodeUtils;
 import com.jingna.lhjwp.utils.NetUtil;
 import com.jingna.lhjwp.utils.SpUtils;
-import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.LinkedHashMap;
@@ -262,6 +263,8 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
                             Bitmap bmp;
                             String textContent = latitude+";"+longitude+";"+ DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
                             String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
+                            textContent = Base64Utils.setEncryption(textContent);
+                            textContent1 = Base64Utils.setEncryption(textContent1);
                             Log.e("123123", textContent);
                             if(NetUtil.isLocServiceEnable(getContext())){
                                 mBitmap = LocalCodeUtils.createImage(textContent, 150, 150, null);
