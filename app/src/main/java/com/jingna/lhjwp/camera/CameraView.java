@@ -43,8 +43,10 @@ import com.jingna.lhjwp.app.MyApp;
 import com.jingna.lhjwp.utils.Base64Utils;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.Gps;
 import com.jingna.lhjwp.utils.LocalCodeUtils;
 import com.jingna.lhjwp.utils.NetUtil;
+import com.jingna.lhjwp.utils.PositionUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -87,6 +89,7 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
     private TextView tvName;
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
+    private Gps gps;
     private double latitude;
     private double longitude;
     private String address = "";
@@ -661,12 +664,16 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            gps = PositionUtil.gcj_To_Gps84(location.getLatitude(), location.getLongitude());
+            latitude = gps.getWgLat();
+            longitude = gps.getWgLon();
             address = location.getAddrStr();
+            if(address.substring(0, 2).equals("中国")){
+                address = address.substring(2);
+            }
             tvTime.setText(DateUtils.stampToDateSecond1(System.currentTimeMillis()+""));
             if(NetUtil.isLocServiceEnable(getContext())){
-                tvAddress.setText("地址: "+location.getAddrStr());
+                tvAddress.setText("地址: "+address);
                 tvLong.setText("经度: "+longitude);
                 tvLat.setText("纬度: "+latitude);
             }else {

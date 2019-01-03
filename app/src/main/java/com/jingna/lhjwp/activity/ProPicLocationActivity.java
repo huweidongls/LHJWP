@@ -29,6 +29,8 @@ import com.jingna.lhjwp.base.BaseActivity;
 import com.jingna.lhjwp.imagepreview.Consts;
 import com.jingna.lhjwp.imagepreview.ImagePreviewActivity;
 import com.jingna.lhjwp.info.ProPicInfo;
+import com.jingna.lhjwp.utils.Gps;
+import com.jingna.lhjwp.utils.PositionUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.widget.LocateCenterHorizontalView;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -73,6 +75,8 @@ public class ProPicLocationActivity extends BaseActivity {
     private boolean isShow = true;
 
     private int select = 0;
+
+    private Gps gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,7 +185,8 @@ public class ProPicLocationActivity extends BaseActivity {
                 String[] s = cankao.split("\\+");
                 for (int i = 0; i<s.length; i++){
                     String[] ss = s[i].split(",");
-                    options.add(new MarkerOptions().position(new LatLng(Double.valueOf(ss[0]), Double.valueOf(ss[1]))).icon(bitmap2));
+                    gps = PositionUtil.gps84_To_Gcj02(Double.valueOf(ss[0]), Double.valueOf(ss[1]));
+                    options.add(new MarkerOptions().position(new LatLng(gps.getWgLat(), gps.getWgLon())).icon(bitmap2));
                 }
 
             }

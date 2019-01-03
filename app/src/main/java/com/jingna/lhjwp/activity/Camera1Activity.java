@@ -13,6 +13,8 @@ import com.jingna.lhjwp.camera.PublicCameraView;
 import com.jingna.lhjwp.imagepreview.StatusBarUtils;
 import com.jingna.lhjwp.info.PublicInfo;
 import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.Gps;
+import com.jingna.lhjwp.utils.PositionUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 
 import java.io.File;
@@ -67,7 +69,8 @@ public class Camera1Activity extends BaseActivity implements PublicCameraView.Ca
             fos.close();
             ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
             list.get(position).setTime(DateUtils.stampToDateSecond(System.currentTimeMillis()+""));
-            list.get(position).getPicList().add(new PublicInfo.PicInfo(someFile.getPath(), latitude, longitude, address, DateUtils.stampToDateSecond(System.currentTimeMillis()+"")));
+            Gps gps = PositionUtil.gps84_To_Gcj02(latitude, longitude);
+            list.get(position).getPicList().add(new PublicInfo.PicInfo(someFile.getPath(), gps.getWgLat(), gps.getWgLon(), address, DateUtils.stampToDateSecond(System.currentTimeMillis()+"")));
             SpUtils.setPublicInfo(context, list);
             Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             Uri uri = Uri.fromFile(someFile);

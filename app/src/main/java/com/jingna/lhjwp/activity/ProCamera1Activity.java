@@ -13,6 +13,8 @@ import com.jingna.lhjwp.camera.CameraView;
 import com.jingna.lhjwp.imagepreview.StatusBarUtils;
 import com.jingna.lhjwp.info.ProPicInfo;
 import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.Gps;
+import com.jingna.lhjwp.utils.PositionUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
 
@@ -74,7 +76,8 @@ public class ProCamera1Activity extends BaseActivity implements CameraView.Camer
             if(list == null){
                 list = new ArrayList<>();
             }
-            list.add(new ProPicInfo(someFile.getPath(), DateUtils.stampToDateSecond(System.currentTimeMillis()+""), latitude, longitude, address, false));
+            Gps gps = PositionUtil.gps84_To_Gcj02(latitude, longitude);
+            list.add(new ProPicInfo(someFile.getPath(), DateUtils.stampToDateSecond(System.currentTimeMillis()+""), gps.getWgLat(), gps.getWgLon(), address, false));
             map.put(uuid, list);
             SpUtils.setProPicInfo(context, map);
             Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
