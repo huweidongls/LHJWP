@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
+import com.jingna.lhjwp.utils.Const;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import butterknife.BindView;
@@ -58,7 +59,7 @@ public class AboutActivity extends BaseActivity {
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
         }
-        String url = "http://218.10.232.43:7010/tzapp/page/phone/aboutUs.jsp";
+        String url = Const.BASE_URL+"tzapp/page/phone/aboutUs.jsp";
         webView.loadUrl(url);
     }
 
