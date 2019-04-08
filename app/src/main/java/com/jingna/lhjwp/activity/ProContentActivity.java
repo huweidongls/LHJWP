@@ -48,7 +48,9 @@ import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.Const;
 import com.jingna.lhjwp.utils.DateUtils;
 import com.jingna.lhjwp.utils.FileUtils;
+import com.jingna.lhjwp.utils.Gps;
 import com.jingna.lhjwp.utils.LocalCodeUtils;
+import com.jingna.lhjwp.utils.PositionUtil;
 import com.jingna.lhjwp.utils.SpUtils;
 import com.jingna.lhjwp.utils.ToastUtil;
 import com.jingna.lhjwp.utils.WeiboDialogUtils;
@@ -106,7 +108,7 @@ public class ProContentActivity extends BaseActivity {
     private double latitude;
     private double longitude;
     private String address = "";
-    private List<GpsResult> gpsList;
+    private List<Gps> gpsList;
 
     private ProPicAddShowAdapter adapter;
     private ArrayList<ProPicInfo> mList = new ArrayList<>();
@@ -319,7 +321,8 @@ public class ProContentActivity extends BaseActivity {
                     public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
                         result = Base64Utils.setDecrypt(result);
                         String[] list = result.split(";");
-                        gpsList.add(new GpsResult(list[0], list[1]));
+                        Gps gps = PositionUtil.gps84_To_Gcj02(Double.valueOf(list[0]), Double.valueOf(list[1]));
+                        gpsList.add(gps);
                         Log.e("123123", result);
 //                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
                         if(!result.contains(";")){
@@ -354,7 +357,7 @@ public class ProContentActivity extends BaseActivity {
                     String newPath = path+"/lhjwp/"+System.currentTimeMillis()+i+".jpg";
                     boolean isSuccess = FileUtils.copyFile(images.get(i), newPath);
                     if(isSuccess){
-                        list.add(new ProPicInfo(newPath, DateUtils.stampToDateSecond(System.currentTimeMillis()+""), Double.valueOf(gpsList.get(i).getLatitude()), Double.valueOf(gpsList.get(i).getLongitude()), address, false));
+                        list.add(new ProPicInfo(newPath, DateUtils.stampToDateSecond(System.currentTimeMillis()+""), Double.valueOf(gpsList.get(i).getWgLat()), Double.valueOf(gpsList.get(i).getWgLon()), address, false));
                     }
                 }
                 map.put(uuid, list);
