@@ -106,7 +106,7 @@ public class TypeActivity extends BaseActivity {
                                             progressDialog.show();
                                             String downloadUrl = model.getDownurl();
                                             String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-                                            ViseHttp.DOWNLOAD("/tzapp/resource/LHjwp.apk")
+                                            ViseHttp.DOWNLOAD(downloadUrl)
                                                     .setRootName(path)
                                                     .setDirName("lhjwp")
                                                     .setFileName("LHjwp.apk")
