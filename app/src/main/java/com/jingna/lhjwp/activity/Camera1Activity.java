@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 
 import com.jingna.lhjwp.R;
 import com.jingna.lhjwp.base.BaseActivity;
@@ -70,7 +71,11 @@ public class Camera1Activity extends BaseActivity implements PublicCameraView.Ca
             ArrayList<PublicInfo> list = SpUtils.getPublicInfo(context);
             list.get(position).setTime(DateUtils.stampToDateSecond(System.currentTimeMillis()+""));
             Gps gps = PositionUtil.gps84_To_Gcj02(latitude, longitude);
-            list.get(position).getPicList().add(new PublicInfo.PicInfo(someFile.getPath(), gps.getWgLat(), gps.getWgLon(), address, DateUtils.stampToDateSecond(System.currentTimeMillis()+"")));
+            if(gps!=null){
+                list.get(position).getPicList().add(new PublicInfo.PicInfo(someFile.getPath(), gps.getWgLat(), gps.getWgLon(), address, DateUtils.stampToDateSecond(System.currentTimeMillis()+"")));
+            }else {
+                list.get(position).getPicList().add(new PublicInfo.PicInfo(someFile.getPath(), 0.0, 0.0, address, DateUtils.stampToDateSecond(System.currentTimeMillis()+"")));
+            }
             SpUtils.setPublicInfo(context, list);
             Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             Uri uri = Uri.fromFile(someFile);

@@ -77,7 +77,11 @@ public class ProCamera1Activity extends BaseActivity implements CameraView.Camer
                 list = new ArrayList<>();
             }
             Gps gps = PositionUtil.gps84_To_Gcj02(latitude, longitude);
-            list.add(new ProPicInfo(someFile.getPath(), DateUtils.stampToDateSecond(System.currentTimeMillis()+""), gps.getWgLat(), gps.getWgLon(), address, false));
+            if(gps!=null){
+                list.add(new ProPicInfo(someFile.getPath(), DateUtils.stampToDateSecond(System.currentTimeMillis()+""), gps.getWgLat(), gps.getWgLon(), address, false));
+            }else {
+                list.add(new ProPicInfo(someFile.getPath(), DateUtils.stampToDateSecond(System.currentTimeMillis()+""), 0.0, 0.0, address, false));
+            }
             map.put(uuid, list);
             SpUtils.setProPicInfo(context, map);
             Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);

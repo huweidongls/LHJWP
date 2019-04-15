@@ -12,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.util.Log;
@@ -709,17 +710,17 @@ public class PublicCameraView extends FrameLayout implements SurfaceHolder.Callb
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            gps = PositionUtil.gcj_To_Gps84(location.getLatitude(), location.getLongitude());
-            latitude = gps.getWgLat();
-            longitude = gps.getWgLon();
 //            latitude = location.getLatitude();
 //            longitude = location.getLongitude();
             address = location.getAddrStr();
-            if(address.substring(0, 2).equals("中国")){
+            if(!TextUtils.isEmpty(address)&&address.substring(0, 2).equals("中国")){
                 address = address.substring(2);
             }
             tvTime.setText(DateUtils.stampToDateSecond1(System.currentTimeMillis()+""));
             if(NetUtil.isLocServiceEnable(getContext())){
+                gps = PositionUtil.gcj_To_Gps84(location.getLatitude(), location.getLongitude());
+                latitude = gps.getWgLat();
+                longitude = gps.getWgLon();
                 tvAddress.setText("地址: "+address);
                 tvLong.setText("经度: "+longitude);
                 tvLat.setText("纬度: "+latitude);

@@ -321,7 +321,12 @@ public class ProContentActivity extends BaseActivity {
                     public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
                         result = Base64Utils.setDecrypt(result);
                         String[] list = result.split(";");
-                        Gps gps = PositionUtil.gps84_To_Gcj02(Double.valueOf(list[0]), Double.valueOf(list[1]));
+                        Gps gps;
+                        if(TextUtils.isEmpty(list[0])||TextUtils.isEmpty(list[1])){
+                            gps = new Gps(0.0, 0.0);
+                        }else {
+                            gps = PositionUtil.gps84_To_Gcj02(Double.valueOf(list[0]), Double.valueOf(list[1]));
+                        }
                         gpsList.add(gps);
                         Log.e("123123", result);
 //                        Toast.makeText(context, "解析结果:" + result, Toast.LENGTH_LONG).show();
