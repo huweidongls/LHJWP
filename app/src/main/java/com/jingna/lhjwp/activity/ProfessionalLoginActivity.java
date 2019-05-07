@@ -29,6 +29,9 @@ import com.yatoooon.screenadaptation.ScreenAdapterTools;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -151,52 +154,61 @@ public class ProfessionalLoginActivity extends BaseActivity {
 
     private void login() {
 
-        final String name = etName.getText().toString();
-        final String pwd = etPwd.getText().toString();
-        String deviceId = SpUtils.getDeviceId(context);
-        String url = "/tzapp/phone/userlogin.action?user_name=" + name + "&password=" + pwd + "&device_id=" + deviceId + "&device_type=1";
-        ViseHttp.GET(url)
-                .request(new ACallback<String>() {
-                    @Override
-                    public void onSuccess(String data) {
-                        Log.e("123123", data);
-                        try {
-                            JSONObject jsonObject = new JSONObject(data);
-                            if (jsonObject.getString("result").equals("1")) {
-                                String ip = SpUtils.getIp(context);
-                                SpUtils.setResetIp(context, ip);
-                                if (isJizhu) {
-                                    SpUtils.setJizhu(context, true);
-                                } else {
-                                    SpUtils.setJizhu(context, false);
+        try {
+            final String name = URLEncoder.encode(etName.getText().toString(), "UTF-8");
+            final String pwd = URLEncoder.encode(etPwd.getText().toString(), "UTF-8");
+            String deviceId = SpUtils.getDeviceId(context);
+//        String url = "/tzapp/phone/userlogin.action?user_name=" + name + "&password=" + pwd + "&device_id=" + deviceId + "&device_type=1";
+            String url = "/tzapp/phone/userlogin.action";
+            ViseHttp.GET(url)
+                    .addParam("user_name", name)
+                    .addParam("password", pwd)
+                    .addParam("device_id", deviceId)
+                    .addParam("device_type", "1")
+                    .request(new ACallback<String>() {
+                        @Override
+                        public void onSuccess(String data) {
+                            Log.e("123123", data);
+                            try {
+                                JSONObject jsonObject = new JSONObject(data);
+                                if (jsonObject.getString("result").equals("1")) {
+                                    String ip = SpUtils.getIp(context);
+                                    SpUtils.setResetIp(context, ip);
+                                    if (isJizhu) {
+                                        SpUtils.setJizhu(context, true);
+                                    } else {
+                                        SpUtils.setJizhu(context, false);
+                                    }
+                                    SpUtils.setLoginInfo(context, data);
+                                    SpUtils.setUsername(context, etName.getText().toString());
+                                    SpUtils.setProPwd(context, etPwd.getText().toString());
+                                    SpUtils.setS_ORGAN(context, jsonObject.getString("S_ORGAN"));
+                                    SpUtils.setMinPic(context, jsonObject.getString("minPic"));
+                                    SpUtils.setMaxPic(context, jsonObject.getString("maxPic"));
+                                    SpUtils.setRealName(context, jsonObject.getString("name"));
+                                    Intent intent = new Intent(context, ProfessionalActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else if(jsonObject.getString("result").equals("0")){
+                                    ToastUtil.showShort(context, "密码错误");
+                                } else if(jsonObject.getString("result").equals("-1")){
+                                    ToastUtil.showShort(context, "用户名不存在");
                                 }
-                                SpUtils.setLoginInfo(context, data);
-                                SpUtils.setUsername(context, name);
-                                SpUtils.setProPwd(context, pwd);
-                                SpUtils.setS_ORGAN(context, jsonObject.getString("S_ORGAN"));
-                                SpUtils.setMinPic(context, jsonObject.getString("minPic"));
-                                SpUtils.setMaxPic(context, jsonObject.getString("maxPic"));
-                                SpUtils.setRealName(context, jsonObject.getString("name"));
-                                Intent intent = new Intent(context, ProfessionalActivity.class);
-                                startActivity(intent);
-                                finish();
-                            } else if(jsonObject.getString("result").equals("0")){
-                                ToastUtil.showShort(context, "密码错误");
-                            } else if(jsonObject.getString("result").equals("-1")){
-                                ToastUtil.showShort(context, "用户名不存在");
+                                WeiboDialogUtils.closeDialog(dialog);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            WeiboDialogUtils.closeDialog(dialog);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
 
-                    @Override
-                    public void onFail(int errCode, String errMsg) {
-                        WeiboDialogUtils.closeDialog(dialog);
-                        ToastUtil.showShort(context, "登录失败，请检查网络或ip地址是否正确");
-                    }
-                });
+                        @Override
+                        public void onFail(int errCode, String errMsg) {
+                            WeiboDialogUtils.closeDialog(dialog);
+                            ToastUtil.showShort(context, "登录失败，请检查网络或ip地址是否正确");
+                        }
+                    });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
     }
 
