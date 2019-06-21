@@ -64,8 +64,8 @@ public class AddDialog extends Dialog {
             public void onClick(View v) {
                 if(TextUtils.isEmpty(et.getText().toString())){
                     ToastUtil.showShort(context, "相册名称不能为空");
-                }else if(et.getText().toString().length()>10||et.getText().toString().length()<4){
-                    ToastUtil.showShort(context, "请输入4-10个字符");
+                }else if(et.getText().toString().length()>20||et.getText().toString().length()<4){
+                    ToastUtil.showShort(context, "请输入4-20个字符");
                 }else {
                     listener.onReturn(et.getText().toString());
                     dismiss();

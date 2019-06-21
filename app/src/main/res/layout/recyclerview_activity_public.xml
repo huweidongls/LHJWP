@@ -51,6 +51,8 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:ellipsize="end"
+                    android:lines="1"
                     android:layout_gravity="center_vertical"
                     android:id="@+id/tv1"
                     android:textColor="#000000"

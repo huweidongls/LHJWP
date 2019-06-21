@@ -20,6 +20,15 @@ public class PositionUtil {
     public static double a = 6378245.0;
     public static double ee = 0.00669342162296594323;
 
+    public static Gps Gps84_To_bd09(double bd_lat, double bd_lon) {
+
+        Gps gcj02 = PositionUtil.gps84_To_Gcj02(bd_lat, bd_lon);
+        Gps map84 = PositionUtil.gcj02_To_Bd09(gcj02.getWgLat(),
+                gcj02.getWgLon());
+        return map84;
+
+    }
+
     /**
      * 84 to 火星坐标系 (GCJ-02) World Geodetic System ==> Mars Geodetic System
      *
