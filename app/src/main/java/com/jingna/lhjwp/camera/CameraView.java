@@ -40,11 +40,16 @@ import com.jingna.lhjwp.app.MyApp;
 import com.jingna.lhjwp.utils.Base64Utils;
 import com.jingna.lhjwp.utils.BitmapUtils;
 import com.jingna.lhjwp.utils.DateUtils;
+import com.jingna.lhjwp.utils.Distance;
 import com.jingna.lhjwp.utils.Gps;
 import com.jingna.lhjwp.utils.LocalCodeUtils;
 import com.jingna.lhjwp.utils.NetUtil;
 import com.jingna.lhjwp.utils.PositionUtil;
+import com.jingna.lhjwp.utils.ToastUtil;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -91,6 +96,9 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
     private PopupWindow popupWindow;
     private View infoFrame;
 
+    private List<Gps> gpsList;
+    private int loseCount = 0;
+
     public interface CameraListener {
         void onCapture(Bitmap bitmap, double latitude, double longitude, String address);
 
@@ -122,6 +130,7 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
 //        mSwitchView = findViewById(R.id.camera_switch);
         mPictureView = (ImageView) findViewById(R.id.camera_picture_preview);
         mCaptureLayout = (CaptureLayout) findViewById(R.id.camera_capture_layout);
+        gpsList = new ArrayList<>();
         //信息框
         llInfo = findViewById(R.id.ll_info);
         tvTime = findViewById(R.id.tv_time);
@@ -226,59 +235,73 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
         CameraManager.getInstance().takePicture(new CameraManager.Callback<Bitmap>() {
             @Override
             public void onEvent(final Bitmap bitmap) {
-                if (bitmap != null) {
-                    Observable<Bitmap> observable = Observable.create(new ObservableOnSubscribe<Bitmap>() {
-                        @Override
-                        public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
-                            Bitmap mBitmap;
-                            String textContent = latitude+";"+longitude+";"+ DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
-                            String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
-                            textContent = Base64Utils.setEncryption(textContent);
-                            textContent1 = Base64Utils.setEncryption(textContent1);
-                            Log.e("123123", textContent);
-                            if(NetUtil.isLocServiceEnable(getContext())){
-                                mBitmap = LocalCodeUtils.createImage(textContent, 150, 150, null);
-                            }else {
-                                mBitmap = LocalCodeUtils.createRedImage(textContent1, 150, 150, null);
+                double lat = 0.00;
+                double lng = 0.00;
+                for (int i = 0; i<gpsList.size(); i++){
+                    lat = lat + gpsList.get(i).getWgLat();
+                    lng = lng + gpsList.get(i).getWgLon();
+                }
+                lat = lat/gpsList.size();
+                lng = lng/gpsList.size();
+                double dis = Distance.getDistance(lng, lat, longitude, latitude);
+                if(dis > 5.00&&loseCount<4){
+                    ToastUtil.showShort(getContext(), "当前GPS信号不稳定");
+                    loseCount = loseCount + 1;
+                }else {
+                    if (bitmap != null) {
+                        Observable<Bitmap> observable = Observable.create(new ObservableOnSubscribe<Bitmap>() {
+                            @Override
+                            public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
+                                Bitmap mBitmap;
+                                String textContent = latitude+";"+longitude+";"+ DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
+                                String textContent1 = ";;"+DateUtils.stampToDateSecond1(System.currentTimeMillis()+"");
+                                textContent = Base64Utils.setEncryption(textContent);
+                                textContent1 = Base64Utils.setEncryption(textContent1);
+                                Log.e("123123", textContent);
+                                if(NetUtil.isLocServiceEnable(getContext())){
+                                    mBitmap = LocalCodeUtils.createImage(textContent, 150, 150, null);
+                                }else {
+                                    mBitmap = LocalCodeUtils.createRedImage(textContent1, 150, 150, null);
+                                }
+                                Bitmap bitmap1 = BitmapUtils.toConformBitmap(bitmap, BitmapUtils.getViewBitmap(llInfo));
+                                Bitmap bitmap2 = BitmapUtils.toConformBitmap1(bitmap1, mBitmap);
+                                e.onNext(bitmap2);
                             }
-                            Bitmap bitmap1 = BitmapUtils.toConformBitmap(bitmap, BitmapUtils.getViewBitmap(llInfo));
-                            Bitmap bitmap2 = BitmapUtils.toConformBitmap1(bitmap1, mBitmap);
-                            e.onNext(bitmap2);
-                        }
-                    });
-                    Observer<Bitmap> observer = new Observer<Bitmap>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+                        });
+                        Observer<Bitmap> observer = new Observer<Bitmap>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
 
-                        }
+                            }
 
-                        @Override
-                        public void onNext(Bitmap value) {
-                            infoFrame.setVisibility(GONE);
-                            mSurfaceView.setVisibility(GONE);
+                            @Override
+                            public void onNext(Bitmap value) {
+                                infoFrame.setVisibility(GONE);
+                                mSurfaceView.setVisibility(GONE);
 //                            mSwitchWrapper.setVisibility(GONE);
-                            mPictureView.setVisibility(VISIBLE);
-                            mPicture = value;
-                            mPictureView.setImageBitmap(mPicture);
-                            mCaptureLayout.setExpanded(true);
-                        }
+                                mPictureView.setVisibility(VISIBLE);
+                                mPicture = value;
+                                mPictureView.setImageBitmap(mPicture);
+                                mCaptureLayout.setExpanded(true);
+                            }
 
-                        @Override
-                        public void onError(Throwable e) {
+                            @Override
+                            public void onError(Throwable e) {
 
-                        }
+                            }
 
-                        @Override
-                        public void onComplete() {
+                            @Override
+                            public void onComplete() {
 
-                        }
-                    };
-                    observable.subscribeOn(Schedulers.newThread())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(observer);
-                } else {
-                    // 不知道什么原因拍照失败，重新预览
-                    onRetryClick();
+                            }
+                        };
+                        observable.subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(observer);
+                    } else {
+                        // 不知道什么原因拍照失败，重新预览
+                        onRetryClick();
+                    }
                 }
             }
         });
@@ -293,6 +316,7 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
 
     @Override
     public void onRetryClick() {
+        loseCount = 0;
         mPicture = null;
         mCaptureLayout.setExpanded(false);
         infoFrame.setVisibility(VISIBLE);
@@ -671,6 +695,12 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
                 tvAddress.setText("地址: "+address);
                 tvLong.setText("经度: "+longitude);
                 tvLat.setText("纬度: "+latitude);
+                if(gpsList.size() > 4){
+                    gpsList.add(gps);
+                    gpsList.remove(0);
+                }else {
+                    gpsList.add(gps);
+                }
             }else {
                 tvAddress.setText("地址: 未获取");
                 tvLong.setText("经度: 0.0");
