@@ -232,22 +232,22 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
 
     @Override
     public void onCaptureClick() {
-        CameraManager.getInstance().takePicture(new CameraManager.Callback<Bitmap>() {
-            @Override
-            public void onEvent(final Bitmap bitmap) {
-                double lat = 0.00;
-                double lng = 0.00;
-                for (int i = 0; i<gpsList.size(); i++){
-                    lat = lat + gpsList.get(i).getWgLat();
-                    lng = lng + gpsList.get(i).getWgLon();
-                }
-                lat = lat/gpsList.size();
-                lng = lng/gpsList.size();
-                double dis = Distance.getDistance(lng, lat, longitude, latitude);
-                if(dis > 5.00&&loseCount<4){
-                    ToastUtil.showShort(getContext(), "当前GPS信号不稳定");
-                    loseCount = loseCount + 1;
-                }else {
+        double lat = 0.00;
+        double lng = 0.00;
+        for (int i = 0; i<gpsList.size(); i++){
+            lat = lat + gpsList.get(i).getWgLat();
+            lng = lng + gpsList.get(i).getWgLon();
+        }
+        lat = lat/gpsList.size();
+        lng = lng/gpsList.size();
+        double dis = Distance.getDistance(lng, lat, longitude, latitude);
+        if(dis > 5.00&&loseCount<4){
+            ToastUtil.showShort(getContext(), "当前GPS信号不稳定");
+            loseCount = loseCount + 1;
+        }else {
+            CameraManager.getInstance().takePicture(new CameraManager.Callback<Bitmap>() {
+                @Override
+                public void onEvent(final Bitmap bitmap) {
                     if (bitmap != null) {
                         Observable<Bitmap> observable = Observable.create(new ObservableOnSubscribe<Bitmap>() {
                             @Override
@@ -303,8 +303,8 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback,
                         onRetryClick();
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
